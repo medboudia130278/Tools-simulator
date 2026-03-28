@@ -10,7 +10,13 @@ const fontStyle = `
   ::-webkit-scrollbar-thumb:hover { background:#00C9A7; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
   @keyframes slideIn { from{opacity:0;transform:scale(0.97)} to{opacity:1;transform:scale(1)} }
+  @keyframes softFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+  @keyframes budgetPulse { 0%,100%{box-shadow:0 14px 30px rgba(0,0,0,0)} 50%{box-shadow:0 18px 34px rgba(0,201,167,0.10)} }
+  @keyframes imageBreath { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
   input::placeholder { color:#3A6060; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+  }
 `;
 
 // ─── TEAL PALETTE ─────────────────────────────────────────────────────────────
@@ -261,6 +267,7 @@ function ToolVisual({ tool, size=72, radius=14 }) {
           objectFit: 'cover',
           borderRadius: radius,
           display: 'block',
+          transition: 'transform 0.25s ease, filter 0.25s ease',
         }}
       />
     );
@@ -500,12 +507,15 @@ export default function App() {
                     background:isSel?`${c.color}0D`:C.card,
                     border:`1px solid ${isSel?c.color+'50':C.border}`,
                     borderRadius:14, overflow:'hidden', cursor:'pointer',
-                    transition:'all 0.15s', animation:`fadeIn 0.18s ease ${i*0.012}s both`,
+                    transition:'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease',
+                    animation:`fadeIn 0.18s ease ${i*0.012}s both${isSel?', softFloat 3.2s ease-in-out infinite':''}`,
                     display:'flex',
                     minHeight:176,
+                    boxShadow:isSel?`0 10px 24px ${c.color}12`:'0 8px 18px rgba(0,0,0,0.10)',
+                    transform:'translateY(0)',
                   }}
-                    onMouseEnter={e=>{e.currentTarget.style.borderColor=isSel?c.color+'80':C.borderL; e.currentTarget.style.background=isSel?`${c.color}12`:C.cardHov;}}
-                    onMouseLeave={e=>{e.currentTarget.style.borderColor=isSel?c.color+'50':C.border; e.currentTarget.style.background=isSel?`${c.color}0D`:C.card;}}
+                    onMouseEnter={e=>{e.currentTarget.style.borderColor=isSel?c.color+'80':C.borderL; e.currentTarget.style.background=isSel?`${c.color}12`:C.cardHov; e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow=isSel?`0 16px 28px ${c.color}16`:'0 14px 26px rgba(0,0,0,0.18)';}}
+                    onMouseLeave={e=>{e.currentTarget.style.borderColor=isSel?c.color+'50':C.border; e.currentTarget.style.background=isSel?`${c.color}0D`:C.card; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=isSel?`0 10px 24px ${c.color}12`:'0 8px 18px rgba(0,0,0,0.10)';}}
                   >
                     {/* SVG thumb */}
                     <div onClick={()=>setModal(t)} style={{ width:96, flexShrink:0, background:isSel?`${c.color}08`:C.bgMid, display:'flex', alignItems:'center', justifyContent:'center', borderRight:`1px solid ${C.border}`, padding:'12px 10px' }}>
@@ -616,6 +626,7 @@ export default function App() {
               padding:'15px 16px',
               border:`1px solid ${total>0?acc+'55':C.border}`,
               boxShadow: total>0 ? `0 14px 30px ${acc}12` : 'none',
+              animation: total>0 ? 'budgetPulse 3.6s ease-in-out infinite' : 'none',
             }}>
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:10, marginBottom:10 }}>
                 <div>
@@ -787,7 +798,7 @@ export default function App() {
               <div style={{ display:'flex', flexDirection:isMobile?'column':'row' }}>
                 {/* Left */}
                 <div style={{ width:isMobile?'100%':228, flexShrink:0, background:C.bgMid, display:'flex', flexDirection:'column', alignItems:'center', gap:14, padding:'22px 18px', borderRight:isMobile?'none':`1px solid ${C.border}`, borderBottom:isMobile?`1px solid ${C.border}`:'none' }}>
-                  <div style={{ width:'100%', height:170, background:C.bg, borderRadius:16, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+                  <div style={{ width:'100%', height:170, background:C.bg, borderRadius:16, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center', padding:16, animation:'imageBreath 4.2s ease-in-out infinite' }}>
                     <ToolVisual tool={modal} size={122} radius={14}/>
                   </div>
 
