@@ -170,12 +170,25 @@ const RAW = [
   ['e48','E','COLLECTIF','Rugged Laptop IP65 Win11 Pro Toughbook','Panasonic','Toughbook FZ-55','All domains – Diagnostics','IP65 – MIL-STD-810H','RC',2,2800,'5-year replacement','IEC 61850 relay connection, SCADA interface, drive configuration.','https://www.panasonic.com/fr/computers/toughbook/fz-55.html'],
 ];
 
+const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,gif}", {
+  eager: true,
+  import: "default",
+});
+
+const TOOL_IMAGE_URLS = Object.fromEntries(
+  Object.entries(TOOL_IMAGE_MODULES).map(([path, url]) => [
+    path.split("/").pop().toLowerCase(),
+    url,
+  ])
+);
+
 const TOOLS = RAW.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) => {
   // derive imgFile from id + brand slug
   const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
   const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
   const imgFile = `${id}_${brandSlug}_${modelSlug}.jpg`;
-  return {id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile};
+  const imgSrc = TOOL_IMAGE_URLS[imgFile.toLowerCase()] || null;
+  return {id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc};
 });
 
 // ─── SVG CATEGORY ICONS ───────────────────────────────────────────────────────
@@ -235,6 +248,26 @@ const CatSVG = ({ cat, size=72 }) => {
     </svg>
   );
 };
+
+function ToolVisual({ tool, size=72, radius=14 }) {
+  if (tool.imgSrc) {
+    return (
+      <img
+        src={tool.imgSrc}
+        alt={tool.name}
+        style={{
+          width: size,
+          height: size,
+          objectFit: 'cover',
+          borderRadius: radius,
+          display: 'block',
+        }}
+      />
+    );
+  }
+
+  return <CatSVG cat={tool.cat} size={size} />;
+}
 
 // ─── COPY BUTTON ─────────────────────────────────────────────────────────────
 function CopyBtn({ text, label, accent=C.teal }) {
@@ -439,7 +472,7 @@ export default function App() {
                   >
                     {/* SVG thumb */}
                     <div onClick={()=>setModal(t)} style={{ width:82, flexShrink:0, background:isSel?`${c.color}08`:C.bgMid, display:'flex', alignItems:'center', justifyContent:'center', borderRight:`1px solid ${C.border}` }}>
-                      <CatSVG cat={t.cat} size={58}/>
+                      <ToolVisual tool={t} size={58} radius={10}/>
                     </div>
 
                     {/* Content */}
@@ -656,7 +689,7 @@ export default function App() {
                 {/* Left */}
                 <div style={{ width:195, flexShrink:0, background:C.bgMid, display:'flex', flexDirection:'column', alignItems:'center', gap:14, padding:'22px 16px', borderRight:`1px solid ${C.border}` }}>
                   <div style={{ width:150, height:130, background:C.bg, borderRadius:14, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <CatSVG cat={modal.cat} size={100}/>
+                    <ToolVisual tool={modal} size={100} radius={12}/>
                   </div>
                   <div style={{ textAlign:'center' }}>
                     <div style={{ fontSize:13, fontWeight:700, color:c.color, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{modal.brand}</div>
