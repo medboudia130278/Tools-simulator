@@ -285,6 +285,21 @@ function CopyBtn({ text, label, accent=C.teal }) {
   );
 }
 
+function PrimaryUse({ tool }) {
+  return tool.notes;
+}
+
+function MetaTile({ label, value, accent }) {
+  return (
+    <div style={{ background:C.bgMid, borderRadius:10, padding:'11px 12px', border:`1px solid ${C.border}` }}>
+      <div style={{ fontSize:9, color:accent||C.textSub, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>
+        {label.toUpperCase()}
+      </div>
+      <div style={{ fontSize:12, color:C.text, fontWeight:500, lineHeight:1.45 }}>{value}</div>
+    </div>
+  );
+}
+
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [ctx, setCtx]     = useState('metro');
@@ -456,40 +471,46 @@ export default function App() {
 
           {/* Tool cards */}
           <div style={{ flex:1, overflowY:'auto', padding:'14px 18px' }}>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(310px, 1fr))', gap:10 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(325px, 1fr))', gap:12 }}>
               {filtered.map((t,i)=>{
                 const isSel=sel.has(t.id), c=CATS[t.cat], s=STATUTS[t.statut];
                 return (
                   <div key={t.id} style={{
                     background:isSel?`${c.color}0D`:C.card,
                     border:`1px solid ${isSel?c.color+'50':C.border}`,
-                    borderRadius:10, overflow:'hidden', cursor:'pointer',
+                    borderRadius:14, overflow:'hidden', cursor:'pointer',
                     transition:'all 0.15s', animation:`fadeIn 0.18s ease ${i*0.012}s both`,
                     display:'flex',
+                    minHeight:176,
                   }}
                     onMouseEnter={e=>{e.currentTarget.style.borderColor=isSel?c.color+'80':C.borderL; e.currentTarget.style.background=isSel?`${c.color}12`:C.cardHov;}}
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=isSel?c.color+'50':C.border; e.currentTarget.style.background=isSel?`${c.color}0D`:C.card;}}
                   >
                     {/* SVG thumb */}
-                    <div onClick={()=>setModal(t)} style={{ width:82, flexShrink:0, background:isSel?`${c.color}08`:C.bgMid, display:'flex', alignItems:'center', justifyContent:'center', borderRight:`1px solid ${C.border}` }}>
-                      <ToolVisual tool={t} size={58} radius={10}/>
+                    <div onClick={()=>setModal(t)} style={{ width:96, flexShrink:0, background:isSel?`${c.color}08`:C.bgMid, display:'flex', alignItems:'center', justifyContent:'center', borderRight:`1px solid ${C.border}`, padding:'12px 10px' }}>
+                      <ToolVisual tool={t} size={66} radius={12}/>
                     </div>
 
                     {/* Content */}
-                    <div onClick={()=>setModal(t)} style={{ flex:1, padding:'11px 13px', display:'flex', flexDirection:'column', gap:7 }}>
+                    <div onClick={()=>setModal(t)} style={{ flex:1, padding:'13px 14px', display:'flex', flexDirection:'column', gap:9 }}>
                       {/* Badges row */}
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:6 }}>
                         <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
-                          <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}30`, borderRadius:4, padding:'2px 7px', fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
-                            {c.icon} {c.label}
+                          <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}30`, borderRadius:999, padding:'3px 8px', fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                            {c.icon} {t.cat}
                           </span>
-                          <span style={{ background:`${s.color}15`, color:s.color, border:`1px solid ${s.color}30`, borderRadius:4, padding:'2px 7px', fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
+                          <span style={{ background:`${s.color}15`, color:s.color, border:`1px solid ${s.color}30`, borderRadius:999, padding:'3px 8px', fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
                             {s.label}
+                          </span>
+                          <span style={{ fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em',
+                            color:t.level==='T'?C.teal:C.blue, background:t.level==='T'?C.tealDim:C.blueDim,
+                            padding:'3px 8px', borderRadius:999 }}>
+                            {t.level==='T'?'TECH':'TEAM'}
                           </span>
                         </div>
                         {/* Checkbox */}
                         <div onClick={e=>{e.stopPropagation();toggle(t.id);}} style={{
-                          width:21, height:21, borderRadius:6,
+                          width:23, height:23, borderRadius:7,
                           border:`1.5px solid ${isSel?c.color:C.borderL}`,
                           background:isSel?c.color:'transparent',
                           display:'flex', alignItems:'center', justifyContent:'center',
@@ -500,26 +521,41 @@ export default function App() {
                       </div>
 
                       {/* Name */}
-                      <div style={{ fontSize:12.5, fontWeight:600, lineHeight:1.3, color:C.text }}>{t.name}</div>
+                      <div style={{ fontSize:13.5, fontWeight:600, lineHeight:1.35, color:C.text }}>{t.name}</div>
 
                       {/* Brand + model */}
-                      <div style={{ display:'flex', alignItems:'center', gap:7 }}>
-                        <span style={{ fontSize:11, color:c.color, fontWeight:700 }}>{t.brand}</span>
-                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:9, color:C.textSub, background:C.bg, padding:'2px 6px', borderRadius:4, border:`1px solid ${C.border}` }}>{t.model}</span>
+                      <div style={{ display:'flex', alignItems:'center', gap:7, flexWrap:'wrap' }}>
+                        <span style={{ fontSize:11.5, color:c.color, fontWeight:700 }}>{t.brand}</span>
+                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:9.5, color:C.textSub, background:C.bg, padding:'3px 7px', borderRadius:5, border:`1px solid ${C.border}` }}>{t.model}</span>
+                      </div>
+
+                      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:7 }}>
+                        <div style={{ background:C.bgMid, border:`1px solid ${C.border}`, borderRadius:8, padding:'8px 10px' }}>
+                          <div style={{ fontSize:9, color:C.textSub, marginBottom:4, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>USE AREA</div>
+                          <div style={{ fontSize:11, color:C.text, lineHeight:1.35 }}>{t.domain}</div>
+                        </div>
+                        <div style={{ background:C.bgMid, border:`1px solid ${C.border}`, borderRadius:8, padding:'8px 10px' }}>
+                          <div style={{ fontSize:9, color:C.textSub, marginBottom:4, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>MAINTENANCE</div>
+                          <div style={{ fontSize:11, color:C.text, lineHeight:1.35 }}>{t.period}</div>
+                        </div>
                       </div>
 
                       {/* Price row */}
-                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', paddingTop:7, borderTop:`1px solid ${C.border}`, marginTop:'auto' }}>
-                        <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:14, fontWeight:700, color:isSel?c.color:C.text }}>
-                          {fmt(t.price)} €
-                          <span style={{ fontSize:10, fontWeight:400, color:C.textSub }}> ×{t.qty}</span>
+                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', paddingTop:8, borderTop:`1px solid ${C.border}`, marginTop:'auto' }}>
+                        <div>
+                          <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700, color:isSel?c.color:C.text }}>
+                            {fmt(t.price)} €
+                          </div>
+                          <div style={{ fontSize:10, color:C.textSub, marginTop:3 }}>
+                            {t.qty} {t.level==='T'?'per technician':'per team'}
+                          </div>
                         </div>
-                        {isSel&&<span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:c.color, fontWeight:600 }}>= {fmt(t.qty*t.price)} €</span>}
-                        <span style={{ fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em',
-                          color:t.level==='T'?C.teal:C.blue, background:t.level==='T'?C.tealDim:C.blueDim,
-                          padding:'2px 7px', borderRadius:4 }}>
-                          {t.level==='T'?'TECH':'TEAM'}
-                        </span>
+                        <div style={{ textAlign:'right' }}>
+                          <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:isSel?c.color:C.textSub, fontWeight:600 }}>
+                            {fmt(t.qty*t.price)} €
+                          </div>
+                          <div style={{ fontSize:9, color:C.textMuted, marginTop:2 }}>estimated block</div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -670,38 +706,50 @@ export default function App() {
         return (
           <div style={{ position:'fixed', inset:0, background:'rgba(0,10,10,0.88)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:20, backdropFilter:'blur(6px)' }}
             onClick={()=>setModal(null)}>
-            <div style={{ background:C.card, borderRadius:16, width:'100%', maxWidth:740, border:`1px solid ${c.color}40`, animation:'slideIn 0.18s ease', overflow:'hidden' }}
+            <div style={{ background:C.card, borderRadius:18, width:'100%', maxWidth:860, border:`1px solid ${c.color}40`, animation:'slideIn 0.18s ease', overflow:'hidden', boxShadow:'0 24px 80px rgba(0,0,0,0.45)' }}
               onClick={e=>e.stopPropagation()}>
 
               {/* Header */}
-              <div style={{ background:C.bgMid, padding:'14px 20px', display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:`1px solid ${C.border}` }}>
-                <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-                  <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}35`, borderRadius:6, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{c.icon} {c.label}</span>
-                  <span style={{ background:`${s.color}15`, color:s.color, border:`1px solid ${s.color}30`, borderRadius:6, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>{s.label}</span>
-                  <span style={{ background:modal.level==='T'?C.tealDim:C.blueDim, color:modal.level==='T'?C.teal:C.blue, borderRadius:6, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
-                    {modal.level==='T'?'👤 Technician':'👥 Team'}
-                  </span>
+              <div style={{ background:C.bgMid, padding:'16px 22px', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:16, borderBottom:`1px solid ${C.border}` }}>
+                <div style={{ minWidth:0 }}>
+                  <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', marginBottom:10 }}>
+                    <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}35`, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{c.icon} {c.label}</span>
+                    <span style={{ background:`${s.color}15`, color:s.color, border:`1px solid ${s.color}30`, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>{s.label}</span>
+                    <span style={{ background:modal.level==='T'?C.tealDim:C.blueDim, color:modal.level==='T'?C.teal:C.blue, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
+                      {modal.level==='T'?'👤 Technician':'👥 Team'}
+                    </span>
+                  </div>
+                  <div style={{ fontSize:20, fontWeight:700, lineHeight:1.25, color:C.text, marginBottom:8 }}>{modal.name}</div>
+                  <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
+                    <span style={{ fontSize:13, fontWeight:700, color:c.color }}>{modal.brand}</span>
+                    <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:C.textSub, background:C.bg, padding:'4px 9px', borderRadius:6, border:`1px solid ${C.border}` }}>{modal.model}</span>
+                  </div>
                 </div>
                 <button onClick={()=>setModal(null)} style={{ background:'transparent', border:'none', cursor:'pointer', color:C.textSub, padding:4 }}><X size={18}/></button>
               </div>
 
               <div style={{ display:'flex' }}>
                 {/* Left */}
-                <div style={{ width:195, flexShrink:0, background:C.bgMid, display:'flex', flexDirection:'column', alignItems:'center', gap:14, padding:'22px 16px', borderRight:`1px solid ${C.border}` }}>
-                  <div style={{ width:150, height:130, background:C.bg, borderRadius:14, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <ToolVisual tool={modal} size={100} radius={12}/>
-                  </div>
-                  <div style={{ textAlign:'center' }}>
-                    <div style={{ fontSize:13, fontWeight:700, color:c.color, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{modal.brand}</div>
-                    <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:C.textSub, marginTop:5, background:C.bg, padding:'3px 10px', borderRadius:5, border:`1px solid ${C.border}`, display:'inline-block' }}>{modal.model}</div>
+                <div style={{ width:228, flexShrink:0, background:C.bgMid, display:'flex', flexDirection:'column', alignItems:'center', gap:14, padding:'22px 18px', borderRight:`1px solid ${C.border}` }}>
+                  <div style={{ width:'100%', height:170, background:C.bg, borderRadius:16, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+                    <ToolVisual tool={modal} size={122} radius={14}/>
                   </div>
 
                   {/* Price */}
-                  <div style={{ background:C.bg, borderRadius:10, padding:'12px 14px', textAlign:'center', width:'100%', border:`1px solid ${c.color}30` }}>
-                    <div style={{ fontSize:9, color:C.textSub, marginBottom:3, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>UNIT PRICE</div>
-                    <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:22, fontWeight:700, color:c.color }}>{fmt(modal.price)} €</div>
-                    <div style={{ fontSize:10, color:C.textSub }}>× {modal.qty} {modal.level==='E'?'/ team':'/ tech'}</div>
-                    <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:13, fontWeight:600, color:C.text, marginTop:6, paddingTop:6, borderTop:`1px solid ${C.border}` }}>= {fmt(modal.qty*modal.price)} €</div>
+                  <div style={{ background:C.bg, borderRadius:12, padding:'14px 16px', textAlign:'left', width:'100%', border:`1px solid ${c.color}30` }}>
+                    <div style={{ fontSize:9, color:C.textSub, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>COST SNAPSHOT</div>
+                    <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:24, fontWeight:700, color:c.color }}>{fmt(modal.price)} €</div>
+                    <div style={{ fontSize:11, color:C.textSub, marginTop:4 }}>{modal.qty} {modal.level==='E'?'per team':'per technician'}</div>
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:10, paddingTop:10, borderTop:`1px solid ${C.border}` }}>
+                      <span style={{ fontSize:10, color:C.textSub }}>Selection block</span>
+                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:13, fontWeight:700, color:C.text }}>{fmt(modal.qty*modal.price)} €</span>
+                    </div>
+                  </div>
+
+                  <div style={{ width:'100%', display:'grid', gridTemplateColumns:'1fr', gap:8 }}>
+                    <MetaTile label="Voltage domain" value={modal.domain} accent={c.color}/>
+                    <MetaTile label="Maintenance" value={modal.period} accent={C.violet}/>
+                    <MetaTile label="Quantity baseline" value={`${modal.qty} ${modal.level==='T'?'per technician':'per team'}`} accent={modal.level==='T'?C.teal:C.blue}/>
                   </div>
 
                   <button onClick={()=>toggle(modal.id)} style={{
@@ -717,29 +765,46 @@ export default function App() {
                 </div>
 
                 {/* Right */}
-                <div style={{ flex:1, padding:'20px 22px', overflowY:'auto', maxHeight:490 }}>
-                  <div style={{ fontSize:16, fontWeight:600, lineHeight:1.35, color:C.text, marginBottom:16 }}>{modal.name}</div>
-
-                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:9, marginBottom:14 }}>
-                    {[['Voltage Domain',modal.domain],['Standard / Insulation',modal.norm],['Verification / Calibration',modal.period],['Quantity',`${modal.qty} ${modal.level==='T'?'per technician':'per team'}`]].map(([l,v])=>(
-                      <div key={l} style={{ background:C.bgMid, borderRadius:8, padding:'9px 12px', border:`1px solid ${C.border}` }}>
-                        <div style={{ fontSize:9, color:C.textSub, marginBottom:4, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>{l.toUpperCase()}</div>
-                        <div style={{ fontSize:12, color:C.text, fontWeight:500 }}>{v}</div>
-                      </div>
-                    ))}
+                <div style={{ flex:1, padding:'20px 22px', overflowY:'auto', maxHeight:560, display:'flex', flexDirection:'column', gap:12 }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                    <MetaTile label="Standard / insulation" value={modal.norm} accent={C.blue}/>
+                    <MetaTile label="Selection status" value={s.label} accent={s.color}/>
                   </div>
 
                   {/* Notes */}
-                  <div style={{ background:`${c.color}0D`, borderRadius:8, padding:'12px 14px', border:`1px solid ${c.color}25`, marginBottom:12 }}>
-                    <div style={{ fontSize:9, color:c.color, marginBottom:5, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em', display:'flex', alignItems:'center', gap:4 }}>
+                  <div style={{ background:`${c.color}0D`, borderRadius:12, padding:'14px 15px', border:`1px solid ${c.color}25` }}>
+                    <div style={{ fontSize:10, color:c.color, marginBottom:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em', display:'flex', alignItems:'center', gap:5 }}>
                       <Info size={10}/> TECHNICAL NOTES
                     </div>
-                    <div style={{ fontSize:12, color:C.text, lineHeight:1.6 }}>{modal.notes}</div>
+                    <div style={{ display:'grid', gap:10 }}>
+                      <div style={{ background:C.bgMid, border:`1px solid ${C.border}`, borderRadius:10, padding:'10px 12px' }}>
+                        <div style={{ fontSize:9, color:C.textSub, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>PRIMARY USE</div>
+                        <div style={{ fontSize:12, color:C.text, lineHeight:1.65 }}>
+                          <PrimaryUse tool={modal}/>
+                        </div>
+                      </div>
+                      <div style={{ background:C.bgMid, border:`1px solid ${C.border}`, borderRadius:10, padding:'10px 12px' }}>
+                        <div style={{ fontSize:9, color:C.textSub, marginBottom:8, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>ESSENTIAL SPECIFICATIONS</div>
+                        <div style={{ display:'grid', gap:7 }}>
+                          {[
+                            ['Voltage domain', modal.domain],
+                            ['Standard / insulation', modal.norm],
+                            ['Verification / calibration', modal.period],
+                            ['Quantity baseline', `${modal.qty} ${modal.level==='T'?'per technician':'per team'}`],
+                          ].map(([label, value])=>(
+                            <div key={label} style={{ display:'grid', gridTemplateColumns:'140px 1fr', gap:10, alignItems:'start', paddingBottom:7, borderBottom:`1px solid ${C.border}` }}>
+                              <div style={{ fontSize:10, color:C.textSub }}>{label}</div>
+                              <div style={{ fontSize:11.5, color:C.text, lineHeight:1.45 }}>{value}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Alerts */}
                   {modal.statut==='OB'&&(
-                    <div style={{ background:C.orangeDim, borderRadius:8, padding:'10px 14px', border:`1px solid ${C.orange}30`, display:'flex', gap:8, alignItems:'flex-start', marginBottom:10 }}>
+                    <div style={{ background:C.orangeDim, borderRadius:10, padding:'11px 14px', border:`1px solid ${C.orange}30`, display:'flex', gap:8, alignItems:'flex-start' }}>
                       <AlertTriangle size={13} color={C.orange} style={{ flexShrink:0, marginTop:1 }}/>
                       <div style={{ fontSize:11, color:C.orange, lineHeight:1.45 }}>
                         This tool is <strong>mandatory</strong> — its absence may constitute a breach of regulatory or safety requirements.
@@ -747,7 +812,7 @@ export default function App() {
                     </div>
                   )}
                   {modal.period.toLowerCase().includes('calibration')&&(
-                    <div style={{ background:C.violetDim, borderRadius:8, padding:'10px 14px', border:`1px solid ${C.violet}30`, display:'flex', gap:8, marginBottom:10 }}>
+                    <div style={{ background:C.violetDim, borderRadius:10, padding:'11px 14px', border:`1px solid ${C.violet}30`, display:'flex', gap:8 }}>
                       <Info size={13} color={C.violet} style={{ flexShrink:0, marginTop:1 }}/>
                       <div style={{ fontSize:11, color:C.violet, lineHeight:1.45 }}>
                         <strong>Periodic calibration required</strong> — must be included in the team's metrological maintenance plan.
@@ -756,20 +821,22 @@ export default function App() {
                   )}
 
                   {/* Product URL + image filename */}
-                  <div style={{ background:C.bgMid, borderRadius:8, padding:'12px 14px', border:`1px solid ${C.border}` }}>
-                    <div style={{ fontSize:9, color:C.textSub, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>OFFICIAL PRODUCT PAGE LINK</div>
-                    <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:C.teal, wordBreak:'break-all', marginBottom:9, lineHeight:1.55 }}>{modal.productUrl}</div>
-                    <CopyBtn text={modal.productUrl} label="Copy product link" accent={C.teal}/>
-                  </div>
-
-                  {/* Image filename */}
-                  <div style={{ background:C.bgMid, borderRadius:8, padding:'12px 14px', border:`1px solid ${C.amber}30` }}>
-                    <div style={{ fontSize:9, color:C.textSub, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>LOCAL IMAGE FILE</div>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, background:C.bg, borderRadius:6, padding:'7px 10px', marginBottom:9, border:`1px solid ${C.border}` }}>
-                      <span style={{ fontSize:9, color:C.textSub, flexShrink:0 }}>→ ./images/</span>
-                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:C.amber, flex:1, wordBreak:'break-all' }}>{modal.imgFile}</span>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                    <div style={{ background:C.bgMid, borderRadius:10, padding:'12px 14px', border:`1px solid ${C.border}` }}>
+                      <div style={{ fontSize:9, color:C.textSub, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>OFFICIAL PRODUCT PAGE</div>
+                      <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:C.teal, wordBreak:'break-all', marginBottom:9, lineHeight:1.55 }}>{modal.productUrl}</div>
+                      <CopyBtn text={modal.productUrl} label="Copy product link" accent={C.teal}/>
                     </div>
-                    <CopyBtn text={modal.imgFile} label="Copy filename" accent={C.amber}/>
+
+                    {/* Image filename */}
+                    <div style={{ background:C.bgMid, borderRadius:10, padding:'12px 14px', border:`1px solid ${C.amber}30` }}>
+                      <div style={{ fontSize:9, color:C.textSub, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>LOCAL IMAGE FILE</div>
+                      <div style={{ display:'flex', alignItems:'center', gap:8, background:C.bg, borderRadius:6, padding:'7px 10px', marginBottom:9, border:`1px solid ${C.border}` }}>
+                        <span style={{ fontSize:9, color:C.textSub, flexShrink:0 }}>./images/</span>
+                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:C.amber, flex:1, wordBreak:'break-all' }}>{modal.imgFile}</span>
+                      </div>
+                      <CopyBtn text={modal.imgFile} label="Copy filename" accent={C.amber}/>
+                    </div>
                   </div>
                 </div>
               </div>
