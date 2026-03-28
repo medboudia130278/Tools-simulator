@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Search, X, Check, BarChart2, AlertTriangle, Info, Copy, CheckCheck, Users, Layers } from "lucide-react";
 
 const fontStyle = `
@@ -309,6 +309,7 @@ export default function App() {
   const [q, setQ]         = useState('');
   const [sel, setSel]     = useState(new Set());
   const [modal, setModal] = useState(null);
+  const [vw, setVw]       = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
   // ── Workforce config per subsystem ──
   const [workforce, setWorkforce] = useState({
     POS:   { tech:4, equipe:1 },
@@ -325,6 +326,14 @@ export default function App() {
 
   const context = CONTEXTS.find(c=>c.id===ctx);
   const acc = context.accent;
+  const isTablet = vw < 1120;
+  const isMobile = vw < 760;
+
+  useEffect(() => {
+    const onResize = () => setVw(window.innerWidth);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const filtered = useMemo(()=>TOOLS.filter(t=>{
     if(lvl!=='ALL'&&t.level!==lvl) return false;
@@ -358,7 +367,7 @@ export default function App() {
       {/* ── HEADER ── */}
       <div style={{ background:C.bgMid, borderBottom:`1px solid ${C.border}` }}>
         {/* Top bar */}
-        <div style={{ padding:'0 22px', display:'flex', alignItems:'center', gap:16, height:54, borderBottom:`1px solid ${C.border}` }}>
+        <div style={{ padding:isMobile?'10px 14px':'0 22px', display:'flex', alignItems:'center', gap:16, minHeight:isMobile?null:54, flexWrap:isTablet?'wrap':'nowrap', borderBottom:`1px solid ${C.border}` }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
             <div style={{ width:32, height:32, background:C.tealMid, borderRadius:8, border:`1px solid ${C.teal}40`, display:'flex', alignItems:'center', justifyContent:'center' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -376,7 +385,7 @@ export default function App() {
           </div>
 
           {/* Context pills */}
-          <div style={{ marginLeft:'auto', display:'flex', gap:6 }}>
+          <div style={{ marginLeft:isTablet?0:'auto', display:'flex', gap:6, flexWrap:'wrap', width:isTablet?'100%':'auto' }}>
             {CONTEXTS.map(c=>(
               <button key={c.id} onClick={()=>setCtx(c.id)} style={{
                 background:ctx===c.id?c.accent+'20':C.bg,
@@ -389,12 +398,12 @@ export default function App() {
           </div>
 
           {/* Summary KPIs */}
-          <div style={{ display:'flex', gap:1, marginLeft:16 }}>
+          <div style={{ display:'flex', gap:1, marginLeft:isTablet?0:16, width:isTablet?'100%':'auto' }}>
             {[
               ['SELECTED', sel.size, C.teal],
               ['BUDGET', fmt(total)+' €', acc],
             ].map(([l,v,col])=>(
-              <div key={l} style={{ background:C.bg, padding:'6px 16px', textAlign:'center', borderLeft:`1px solid ${C.border}` }}>
+              <div key={l} style={{ background:C.bg, padding:'6px 16px', textAlign:'center', borderLeft:`1px solid ${C.border}`, flex:isTablet?1:'none' }}>
                 <div style={{ fontSize:9, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em' }}>{l}</div>
                 <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:14, fontWeight:600, color:col, marginTop:1 }}>{v}</div>
               </div>
@@ -403,7 +412,7 @@ export default function App() {
         </div>
 
         {/* Subsystem tabs */}
-        <div style={{ display:'flex', padding:'0 22px' }}>
+        <div style={{ display:'flex', padding:isMobile?'0 14px':'0 22px', overflowX:'auto' }}>
           {SUBSYSTEMS.map(s=>(
             <div key={s.id} style={{
               padding:'10px 18px', cursor:s.active?'pointer':'default',
@@ -418,7 +427,7 @@ export default function App() {
       </div>
 
       {/* ── BODY ── */}
-      <div style={{ display:'flex', height:'calc(100vh - 118px)', overflow:'hidden' }}>
+      <div style={{ display:'flex', flexDirection:isTablet?'column':'row', height:isTablet?'auto':'calc(100vh - 118px)', overflow:'hidden' }}>
 
         {/* ── MAIN PANEL ── */}
         <div style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>
@@ -426,7 +435,7 @@ export default function App() {
           {/* Filter bar */}
           <div style={{ padding:'10px 18px', borderBottom:`1px solid ${C.border}`, display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', background:C.bgMid }}>
             {/* Search */}
-            <div style={{ position:'relative', flex:'0 0 210px' }}>
+            <div style={{ position:'relative', flex:isMobile?'1 1 100%':'1 1 240px', minWidth:isMobile?'100%':210 }}>
               <Search size={13} color={C.textSub} style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)' }}/>
               <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search tool, brand..." style={{
                 width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8,
@@ -456,22 +465,22 @@ export default function App() {
               {Object.entries(CATS).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
             </select>
 
-            <div style={{ marginLeft:'auto', display:'flex', alignItems:'center', gap:8 }}>
+            <div style={{ marginLeft:isMobile?0:'auto', display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', width:isMobile?'100%':'auto' }}>
               <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:C.textSub }}>{filtered.length} tools</span>
               <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.add(t.id));return n;})}
                 style={{ background:C.bg, border:`1px solid ${C.border}`, color:C.textSub, padding:'5px 11px', borderRadius:6, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
-                Select all
+                Select visible
               </button>
               <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.delete(t.id));return n;})}
                 style={{ background:C.bg, border:`1px solid ${C.border}`, color:C.textSub, padding:'5px 11px', borderRadius:6, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
-                Clear
+                Clear visible
               </button>
             </div>
           </div>
 
           {/* Tool cards */}
-          <div style={{ flex:1, overflowY:'auto', padding:'14px 18px' }}>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(325px, 1fr))', gap:12 }}>
+          <div style={{ flex:1, overflowY:'auto', padding:isMobile?'12px 12px 16px':'14px 18px' }}>
+            <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(auto-fill, minmax(325px, 1fr))', gap:12 }}>
               {filtered.map((t,i)=>{
                 const isSel=sel.has(t.id), c=CATS[t.cat], s=STATUTS[t.statut];
                 return (
@@ -566,7 +575,7 @@ export default function App() {
         </div>
 
         {/* ── SYNTHESIS PANEL ── */}
-        <div style={{ width:270, background:C.bgMid, borderLeft:`1px solid ${C.border}`, overflowY:'auto', display:'flex', flexDirection:'column' }}>
+        <div style={{ width:isTablet?'100%':270, background:C.bgMid, borderLeft:isTablet?'none':`1px solid ${C.border}`, borderTop:isTablet?`1px solid ${C.border}`:'none', overflowY:'auto', display:'flex', flexDirection:'column', maxHeight:isTablet?360:'none' }}>
 
           {/* Panel header */}
           <div style={{ padding:'14px 16px', borderBottom:`1px solid ${C.border}`, display:'flex', alignItems:'center', gap:7 }}>
@@ -678,13 +687,13 @@ export default function App() {
             {sel.size===0&&(
               <div style={{ textAlign:'center', padding:'28px 0', color:C.textMuted, fontSize:12 }}>
                 <div style={{ fontSize:28, marginBottom:8, opacity:0.5 }}>☑</div>
-                Cochez des tools<br/>to calculate budget
+                Select tools<br/>to calculate budget
               </div>
             )}
 
             {/* Database stats */}
             <div style={{ marginTop:'auto', paddingTop:12, borderTop:`1px solid ${C.border}` }}>
-              <div style={{ fontSize:9, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', marginBottom:8 }}>POS DATABASE — {TOOLS.length} OUTILS</div>
+              <div style={{ fontSize:9, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', marginBottom:8 }}>POS DATABASE — {TOOLS.length} TOOLS</div>
               {[
                 ['Technician', TOOLS.filter(t=>t.level==='T').length, C.teal],
                 ['Team', TOOLS.filter(t=>t.level==='E').length, C.blue],
@@ -704,9 +713,9 @@ export default function App() {
       {modal&&(()=>{
         const c=CATS[modal.cat], s=STATUTS[modal.statut], isSel=sel.has(modal.id);
         return (
-          <div style={{ position:'fixed', inset:0, background:'rgba(0,10,10,0.88)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:20, backdropFilter:'blur(6px)' }}
+          <div style={{ position:'fixed', inset:0, background:'rgba(0,10,10,0.88)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:isMobile?10:20, backdropFilter:'blur(6px)' }}
             onClick={()=>setModal(null)}>
-            <div style={{ background:C.card, borderRadius:18, width:'100%', maxWidth:860, border:`1px solid ${c.color}40`, animation:'slideIn 0.18s ease', overflow:'hidden', boxShadow:'0 24px 80px rgba(0,0,0,0.45)' }}
+            <div style={{ background:C.card, borderRadius:18, width:'100%', maxWidth:860, maxHeight:'92vh', border:`1px solid ${c.color}40`, animation:'slideIn 0.18s ease', overflow:'auto', boxShadow:'0 24px 80px rgba(0,0,0,0.45)' }}
               onClick={e=>e.stopPropagation()}>
 
               {/* Header */}
@@ -728,9 +737,9 @@ export default function App() {
                 <button onClick={()=>setModal(null)} style={{ background:'transparent', border:'none', cursor:'pointer', color:C.textSub, padding:4 }}><X size={18}/></button>
               </div>
 
-              <div style={{ display:'flex' }}>
+              <div style={{ display:'flex', flexDirection:isMobile?'column':'row' }}>
                 {/* Left */}
-                <div style={{ width:228, flexShrink:0, background:C.bgMid, display:'flex', flexDirection:'column', alignItems:'center', gap:14, padding:'22px 18px', borderRight:`1px solid ${C.border}` }}>
+                <div style={{ width:isMobile?'100%':228, flexShrink:0, background:C.bgMid, display:'flex', flexDirection:'column', alignItems:'center', gap:14, padding:'22px 18px', borderRight:isMobile?'none':`1px solid ${C.border}`, borderBottom:isMobile?`1px solid ${C.border}`:'none' }}>
                   <div style={{ width:'100%', height:170, background:C.bg, borderRadius:16, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
                     <ToolVisual tool={modal} size={122} radius={14}/>
                   </div>
@@ -760,13 +769,13 @@ export default function App() {
                     display:'flex', alignItems:'center', justifyContent:'center', gap:6, transition:'all 0.15s',
                     color:isSel?'#fff':C.textSub,
                   }}>
-                    {isSel?<><Check size={13}/> SÉLECTIONNÉ</>:'+ ADD TO SELECTION'}
+                    {isSel?<><Check size={13}/> SELECTED</>:'+ ADD TO SELECTION'}
                   </button>
                 </div>
 
                 {/* Right */}
-                <div style={{ flex:1, padding:'20px 22px', overflowY:'auto', maxHeight:560, display:'flex', flexDirection:'column', gap:12 }}>
-                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                <div style={{ flex:1, padding:isMobile?'16px 16px 18px':'20px 22px', overflowY:'auto', maxHeight:isMobile?'none':560, display:'flex', flexDirection:'column', gap:12 }}>
+                  <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:10 }}>
                     <MetaTile label="Standard / insulation" value={modal.norm} accent={C.blue}/>
                     <MetaTile label="Selection status" value={s.label} accent={s.color}/>
                   </div>
@@ -821,7 +830,7 @@ export default function App() {
                   )}
 
                   {/* Product URL + image filename */}
-                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                  <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:10 }}>
                     <div style={{ background:C.bgMid, borderRadius:10, padding:'12px 14px', border:`1px solid ${C.border}` }}>
                       <div style={{ fontSize:9, color:C.textSub, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>OFFICIAL PRODUCT PAGE</div>
                       <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:C.teal, wordBreak:'break-all', marginBottom:9, lineHeight:1.55 }}>{modal.productUrl}</div>
