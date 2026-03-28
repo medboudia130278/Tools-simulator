@@ -170,13 +170,8 @@ const RAW = [
   ['e48','E','COLLECTIF','Rugged Laptop IP65 Win11 Pro Toughbook','Panasonic','Toughbook FZ-55','All domains – Diagnostics','IP65 – MIL-STD-810H','RC',2,2800,'5-year replacement','IEC 61850 relay connection, SCADA interface, drive configuration.','https://www.panasonic.com/fr/computers/toughbook/fz-55.html'],
 ];
 
-const TOOLS = RAW.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) => {
-  // derive imgFile from id + brand slug
-  const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
-  const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
-  const imgFile = `${id}_${brandSlug}_${modelSlug}.jpg`;
-  return {id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile};
-});
+const TOOLS = RAW.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) =>
+  ({id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl}));
 
 // ─── SVG CATEGORY ICONS ───────────────────────────────────────────────────────
 const CatSVG = ({ cat, size=72 }) => {
@@ -722,21 +717,11 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* Product URL + image filename */}
+                  {/* Product URL */}
                   <div style={{ background:C.bgMid, borderRadius:8, padding:'12px 14px', border:`1px solid ${C.border}` }}>
                     <div style={{ fontSize:9, color:C.textSub, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>OFFICIAL PRODUCT PAGE LINK</div>
                     <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:C.teal, wordBreak:'break-all', marginBottom:9, lineHeight:1.55 }}>{modal.productUrl}</div>
-                    <CopyBtn text={modal.productUrl} label="Copy product link" accent={C.teal}/>
-                  </div>
-
-                  {/* Image filename */}
-                  <div style={{ background:C.bgMid, borderRadius:8, padding:'12px 14px', border:`1px solid ${C.amber}30` }}>
-                    <div style={{ fontSize:9, color:C.textSub, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>LOCAL IMAGE FILE</div>
-                    <div style={{ display:'flex', alignItems:'center', gap:8, background:C.bg, borderRadius:6, padding:'7px 10px', marginBottom:9, border:`1px solid ${C.border}` }}>
-                      <span style={{ fontSize:9, color:C.textSub, flexShrink:0 }}>→ ./images/</span>
-                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:C.amber, flex:1, wordBreak:'break-all' }}>{modal.imgFile}</span>
-                    </div>
-                    <CopyBtn text={modal.imgFile} label="Copy filename" accent={C.amber}/>
+                    <CopyBtn text={modal.productUrl} label="Copier le lien produit" accent={C.teal}/>
                   </div>
                 </div>
               </div>
