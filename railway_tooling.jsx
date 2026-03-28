@@ -348,6 +348,9 @@ export default function App() {
   const total  = selT.reduce((s,t)=>s+t.qty*t.price,0);
   const tTotal = selT.filter(t=>t.level==='T').reduce((s,t)=>s+t.qty*t.price,0);
   const eTotal = selT.filter(t=>t.level==='E').reduce((s,t)=>s+t.qty*t.price,0);
+  const mandatorySelected = selT.filter(t=>t.statut==='OB').length;
+  const mandatoryTotal = TOOLS.filter(t=>t.statut==='OB').length;
+  const coveragePct = mandatoryTotal ? Math.round((mandatorySelected / mandatoryTotal) * 100) : 0;
   const byCat  = Object.entries(CATS).map(([k,v])=>({key:k,...v,total:selT.filter(t=>t.cat===k).reduce((s,t)=>s+t.qty*t.price,0)})).filter(c=>c.total>0);
   const fmt    = n => new Intl.NumberFormat('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0}).format(n);
 
@@ -361,11 +364,20 @@ export default function App() {
   );
 
   return (
-    <div style={{ fontFamily:"'Barlow', sans-serif", background:C.bg, minHeight:'100vh', color:C.text }}>
+    <div style={{
+      fontFamily:"'Barlow', sans-serif",
+      background:`
+        radial-gradient(circle at top right, rgba(0,201,167,0.14), transparent 24%),
+        radial-gradient(circle at top left, rgba(78,205,196,0.08), transparent 22%),
+        linear-gradient(180deg, #0E2121 0%, ${C.bg} 22%, ${C.bg} 100%)
+      `,
+      minHeight:'100vh',
+      color:C.text,
+    }}>
       <style>{fontStyle}</style>
 
       {/* ── HEADER ── */}
-      <div style={{ background:C.bgMid, borderBottom:`1px solid ${C.border}` }}>
+      <div style={{ background:`linear-gradient(180deg, rgba(13,32,32,0.96) 0%, rgba(10,26,26,0.96) 100%)`, borderBottom:`1px solid ${C.border}` }}>
         {/* Top bar */}
         <div style={{ padding:isMobile?'10px 14px':'0 22px', display:'flex', alignItems:'center', gap:16, minHeight:isMobile?null:54, flexWrap:isTablet?'wrap':'nowrap', borderBottom:`1px solid ${C.border}` }}>
           <div style={{ display:'flex', alignItems:'center', gap:10 }}>
@@ -575,7 +587,17 @@ export default function App() {
         </div>
 
         {/* ── SYNTHESIS PANEL ── */}
-        <div style={{ width:isTablet?'100%':270, background:C.bgMid, borderLeft:isTablet?'none':`1px solid ${C.border}`, borderTop:isTablet?`1px solid ${C.border}`:'none', overflowY:'auto', display:'flex', flexDirection:'column', maxHeight:isTablet?360:'none' }}>
+        <div style={{
+          width:isTablet?'100%':292,
+          background:`linear-gradient(180deg, rgba(13,32,32,0.98) 0%, rgba(10,26,26,0.98) 100%)`,
+          borderLeft:isTablet?'none':`1px solid ${C.border}`,
+          borderTop:isTablet?`1px solid ${C.border}`:'none',
+          overflowY:'auto',
+          display:'flex',
+          flexDirection:'column',
+          maxHeight:isTablet?380:'none',
+          boxShadow:isTablet?'none':'inset 1px 0 0 rgba(255,255,255,0.02)',
+        }}>
 
           {/* Panel header */}
           <div style={{ padding:'14px 16px', borderBottom:`1px solid ${C.border}`, display:'flex', alignItems:'center', gap:7 }}>
@@ -586,20 +608,45 @@ export default function App() {
           <div style={{ padding:'14px 16px', display:'flex', flexDirection:'column', gap:12, flex:1 }}>
 
             {/* Total budget */}
-            <div style={{ background:C.bg, borderRadius:10, padding:'14px 16px', border:`1px solid ${total>0?acc+'40':C.border}` }}>
-              <div style={{ fontSize:9, color:C.textSub, marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em' }}>TOTAL SELECTED BUDGET</div>
-              <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:26, fontWeight:700, color:total>0?acc:C.textMuted }}>
+            <div style={{
+              background:total>0
+                ? `linear-gradient(180deg, ${acc}16 0%, rgba(10,26,26,0.92) 100%)`
+                : C.bg,
+              borderRadius:14,
+              padding:'15px 16px',
+              border:`1px solid ${total>0?acc+'55':C.border}`,
+              boxShadow: total>0 ? `0 14px 30px ${acc}12` : 'none',
+            }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:10, marginBottom:10 }}>
+                <div>
+                  <div style={{ fontSize:9, color:total>0?acc:C.textSub, marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.10em' }}>TOTAL SELECTED BUDGET</div>
+                  <div style={{ fontSize:11, color:C.textSub }}>Ready-to-demo snapshot for {context.label}</div>
+                </div>
+                <div style={{ background:C.bg, border:`1px solid ${acc}35`, color:acc, borderRadius:999, padding:'4px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>
+                  {coveragePct}% mandatory covered
+                </div>
+              </div>
+              <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:30, fontWeight:700, color:total>0?acc:C.textMuted }}>
                 {fmt(total)} €
               </div>
               <div style={{ fontSize:11, color:C.textSub, marginTop:4 }}>
                 {sel.size} tool{sel.size!==1?'s':''} selected{sel.size!==1?'s':''}
+              </div>
+              <div style={{ marginTop:12 }}>
+                <div style={{ display:'flex', justifyContent:'space-between', marginBottom:5 }}>
+                  <span style={{ fontSize:9, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>MANDATORY COVERAGE</span>
+                  <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:acc }}>{mandatorySelected}/{mandatoryTotal}</span>
+                </div>
+                <div style={{ height:6, background:C.border, borderRadius:999, overflow:'hidden' }}>
+                  <div style={{ height:'100%', width:`${coveragePct}%`, background:`linear-gradient(90deg, ${acc}66, ${acc})`, borderRadius:999, transition:'width 0.35s ease' }} />
+                </div>
               </div>
             </div>
 
             {/* By level */}
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
               {[['T','Technician',C.teal,tTotal],['E','Team',C.blue,eTotal]].map(([lv,label,color,budget])=>(
-                <div key={lv} style={{ background:C.bg, borderRadius:8, padding:'10px 11px', border:`1px solid ${color}25` }}>
+                <div key={lv} style={{ background:`linear-gradient(180deg, ${color}10 0%, ${C.bg} 100%)`, borderRadius:10, padding:'10px 11px', border:`1px solid ${color}25` }}>
                   <div style={{ fontSize:9, color, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>{label.toUpperCase()}</div>
                   <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:14, fontWeight:700, color, marginTop:4 }}>{fmt(budget)} €</div>
                   <div style={{ fontSize:9, color:C.textSub, marginTop:2 }}>{selT.filter(t=>t.level===lv).length} tools</div>
