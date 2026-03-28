@@ -190,12 +190,21 @@ const TOOL_IMAGE_URLS = Object.fromEntries(
   ])
 );
 
+const TOOL_IMAGE_FILES_BY_BASE = Object.fromEntries(
+  Object.keys(TOOL_IMAGE_URLS).map((filename) => [
+    filename.replace(/\.[^.]+$/, ""),
+    filename,
+  ])
+);
+
 const TOOLS = RAW.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) => {
   // derive imgFile from id + brand slug
   const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
   const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
-  const imgFile = `${id}_${brandSlug}_${modelSlug}.jpg`;
-  const imgSrc = TOOL_IMAGE_URLS[imgFile.toLowerCase()] || null;
+  const imgBase = `${id}_${brandSlug}_${modelSlug}`.toLowerCase();
+  const matchedImgFile = TOOL_IMAGE_FILES_BY_BASE[imgBase] || `${imgBase}.jpg`;
+  const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
+  const imgFile = matchedImgFile;
   return {id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc};
 });
 
