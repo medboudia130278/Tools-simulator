@@ -345,7 +345,8 @@ function ToolVisual({ tool, size=72, radius=14 }) {
         style={{
           width: size,
           height: size,
-          objectFit: 'cover',
+          objectFit: 'contain',
+          objectPosition: 'center',
           borderRadius: radius,
           display: 'block',
           transition: 'transform 0.25s ease, filter 0.25s ease',
