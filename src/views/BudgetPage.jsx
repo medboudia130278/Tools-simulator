@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
-import { Activity, Layers3, ShieldCheck, Wallet } from "lucide-react";
-import { TOOLING_CATALOG } from "../../railway_tooling.jsx";
+import { CalendarClock, Layers3, Wallet } from "lucide-react";
+import { TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { palette } from "../app/theme.js";
+import { useProjects } from "../projects/ProjectStore.jsx";
+import { getProjectBudgetMetrics, getProjectSubsystemIds } from "../projects/projectSelectors.js";
 
 const fmt = (value) =>
   new Intl.NumberFormat("fr-FR", {
@@ -9,60 +11,531 @@ const fmt = (value) =>
     maximumFractionDigits: 0,
   }).format(value);
 
+const pct = (value, total) => {
+  if (!total) return 0;
+  return Math.round((value / total) * 100);
+};
+
+const lifecycleLabel = (tool) => {
+  const lifecycle = tool?.lifecycle || {};
+  const intervalValue = Number(lifecycle.intervalValue);
+  const unit = lifecycle.intervalUnit === "months" ? "month" : "year";
+
+  if (lifecycle.type === "consumable") {
+    if (intervalValue > 0) {
+      return `Consumable replenishment every ${intervalValue} ${unit}${intervalValue > 1 ? "s" : ""}`;
+    }
+    return "Consumable replenishment";
+  }
+
+  if (lifecycle.type === "periodic_replacement") {
+    if (intervalValue > 0) {
+      return `Periodic replacement every ${intervalValue} ${unit}${intervalValue > 1 ? "s" : ""}`;
+    }
+    return "Periodic replacement";
+  }
+
+  if (lifecycle.type === "condition_based") {
+    return "Condition-based replacement";
+  }
+
+  return "Durable tool";
+};
+
 const cardStyle = {
   background: palette.surfaceLowest,
-  borderRadius: "16px",
+  borderRadius: "18px",
   padding: "20px",
   boxShadow: "0 16px 34px rgba(17, 24, 39, 0.06)",
 };
 
-export default function BudgetPage() {
-  const metrics = useMemo(() => {
-    const catalogTotal = TOOLING_CATALOG.reduce((sum, tool) => sum + tool.qty * tool.price, 0);
-    const technicianTotal = TOOLING_CATALOG
-      .filter((tool) => tool.level === "T")
-      .reduce((sum, tool) => sum + tool.qty * tool.price, 0);
-    const teamTotal = TOOLING_CATALOG
-      .filter((tool) => tool.level === "E")
-      .reduce((sum, tool) => sum + tool.qty * tool.price, 0);
-    const mandatoryCount = TOOLING_CATALOG.filter((tool) => tool.statut === "OB").length;
-    return { catalogTotal, technicianTotal, teamTotal, mandatoryCount };
-  }, []);
+function KpiCard({ icon: Icon, label, value, note, accent, tone }) {
+  return (
+    <div style={cardStyle}>
+      <div
+        style={{
+          width: "46px",
+          height: "46px",
+          borderRadius: "14px",
+          background: tone,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: accent,
+          marginBottom: "16px",
+        }}
+      >
+        <Icon size={20} />
+      </div>
+      <div style={{ color: palette.inkMuted, fontSize: "13px", marginBottom: "8px" }}>{label}</div>
+      <div
+        style={{
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: "30px",
+          fontWeight: 700,
+          color: accent,
+          marginBottom: "10px",
+        }}
+      >
+        {value}
+      </div>
+      <div style={{ color: palette.inkSoft, lineHeight: 1.55, fontSize: "14px" }}>{note}</div>
+    </div>
+  );
+}
 
-  const cards = [
+function StackedBarChart({ rows, total }) {
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "14px" }}>
+      <div>
+        <div
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "22px",
+            fontWeight: 700,
+            marginBottom: "8px",
+          }}
+        >
+          Cost by subsystem
+        </div>
+        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
+          Mobilization and renewals are stacked to show the full contract cost footprint by subsystem.
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gap: "14px" }}>
+        {rows.map((row) => {
+          const mobilizationWidth = total ? (row.mobilization / total) * 100 : 0;
+          const renewalsWidth = total ? (row.renewals / total) * 100 : 0;
+          return (
+            <div key={row.subsystemId} style={{ display: "grid", gap: "8px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "baseline" }}>
+                <div>
+                  <div style={{ fontWeight: 700, color: palette.ink }}>{row.label}</div>
+                  <div style={{ color: palette.inkMuted, fontSize: "12px" }}>{row.full}</div>
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    color: palette.primary,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {fmt(row.total)} EUR
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  height: "14px",
+                  borderRadius: "999px",
+                  overflow: "hidden",
+                  background: palette.surfaceLow,
+                }}
+              >
+                <div
+                  style={{
+                    width: `${mobilizationWidth}%`,
+                    background: palette.teal,
+                    minWidth: row.mobilization > 0 ? "2px" : 0,
+                  }}
+                />
+                <div
+                  style={{
+                    width: `${renewalsWidth}%`,
+                    background: "#7c3aed",
+                    minWidth: row.renewals > 0 ? "2px" : 0,
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", fontSize: "12px", color: palette.inkMuted }}>
+                <span>Mobilization: <strong style={{ color: palette.teal }}>{fmt(row.mobilization)} EUR</strong></span>
+                <span>Renewals: <strong style={{ color: "#7c3aed" }}>{fmt(row.renewals)} EUR</strong></span>
+                <span>Renewals/year: <strong style={{ color: palette.ink }}>{fmt(row.annualRenewals)} EUR</strong></span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", fontSize: "12px", color: palette.inkMuted }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ width: "10px", height: "10px", borderRadius: "999px", background: palette.teal }} />
+          Mobilization
+        </span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ width: "10px", height: "10px", borderRadius: "999px", background: "#7c3aed" }} />
+          Renewals
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function DonutLevelChart({ metrics }) {
+  const segments = [
     {
-      label: "Catalog baseline",
-      value: `${fmt(metrics.catalogTotal)} €`,
-      icon: Wallet,
-      accent: palette.primary,
-      tone: palette.primarySoft,
-      note: "Base budget if every listed block is procured once.",
+      label: "Technician",
+      mobilization: metrics.levelTotals.T,
+      renewals: metrics.renewalLevelTotals.T,
+      annualRenewals: metrics.renewalLevelAnnualTotals.T,
+      color: palette.teal,
     },
     {
-      label: "Technician kit",
-      value: `${fmt(metrics.technicianTotal)} €`,
-      icon: Layers3,
-      accent: palette.teal,
-      tone: palette.tealSoft,
-      note: "Individual equipment baseline before workforce scaling.",
+      label: "Team",
+      mobilization: metrics.levelTotals.E,
+      renewals: metrics.renewalLevelTotals.E,
+      annualRenewals: metrics.renewalLevelAnnualTotals.E,
+      color: palette.primary,
     },
     {
-      label: "Team equipment",
-      value: `${fmt(metrics.teamTotal)} €`,
-      icon: Activity,
-      accent: palette.ink,
-      tone: palette.surfaceHigh,
-      note: "Shared assets for testing, diagnostics and collective safety.",
+      label: "Project / depot",
+      mobilization: metrics.levelTotals.P,
+      renewals: metrics.renewalLevelTotals.P,
+      annualRenewals: metrics.renewalLevelAnnualTotals.P,
+      color: "#7c3aed",
     },
-    {
-      label: "Mandatory tools",
-      value: metrics.mandatoryCount,
-      icon: ShieldCheck,
-      accent: palette.safety,
-      tone: palette.safetySoft,
-      note: "Coverage target to carry into the future budget screen.",
-    },
-  ];
+  ].map((segment) => ({
+    ...segment,
+    total: segment.mobilization + segment.renewals,
+  }));
+
+  const total = segments.reduce((sum, segment) => sum + segment.total, 0);
+
+  let cursor = 0;
+  const gradient = segments
+    .map((segment) => {
+      const start = total ? (cursor / total) * 100 : 0;
+      cursor += segment.total;
+      const end = total ? (cursor / total) * 100 : 0;
+      return `${segment.color} ${start}% ${end}%`;
+    })
+    .join(", ");
+
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "18px" }}>
+      <div>
+        <div
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "22px",
+            fontWeight: 700,
+            marginBottom: "8px",
+          }}
+        >
+          Contract mix by level
+        </div>
+        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
+          Distribution of mobilization plus renewals across Technician, Team and Project / depot tooling.
+        </div>
+      </div>
+
+      <div style={{ display: "grid", justifyItems: "center", gap: "18px" }}>
+        <div
+          style={{
+            width: "220px",
+            height: "220px",
+            borderRadius: "50%",
+            background: total
+              ? `conic-gradient(${gradient})`
+              : palette.surfaceLow,
+            display: "grid",
+            placeItems: "center",
+          }}
+        >
+          <div
+            style={{
+              width: "132px",
+              height: "132px",
+              borderRadius: "50%",
+              background: palette.surfaceLowest,
+              display: "grid",
+              placeItems: "center",
+              textAlign: "center",
+              padding: "16px",
+            }}
+          >
+            <div>
+              <div style={{ color: palette.inkMuted, fontSize: "12px", marginBottom: "6px" }}>Contract total</div>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "20px",
+                  fontWeight: 700,
+                  color: palette.ink,
+                }}
+              >
+                {fmt(metrics.contractTotal)}
+              </div>
+              <div style={{ color: palette.inkMuted, fontSize: "11px", marginTop: "4px" }}>EUR</div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ width: "100%", display: "grid", gap: "10px" }}>
+          {segments.map((segment) => (
+            <div
+              key={segment.label}
+              style={{
+                background: palette.surfaceLow,
+                borderRadius: "14px",
+                padding: "12px 14px",
+                display: "grid",
+                gap: "6px",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontWeight: 700, color: palette.ink }}>
+                  <span style={{ width: "10px", height: "10px", borderRadius: "999px", background: segment.color }} />
+                  {segment.label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    color: segment.color,
+                  }}
+                >
+                  {fmt(segment.total)} EUR
+                </div>
+              </div>
+              <div style={{ color: palette.inkMuted, fontSize: "12px", lineHeight: 1.5 }}>
+                {pct(segment.total, total)}% of contract total
+                <br />
+                Mobilization {fmt(segment.mobilization)} EUR · Renewals {fmt(segment.renewals)} EUR
+                <br />
+                Renewals/year {fmt(segment.annualRenewals)} EUR
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SubsystemTable({ rows, contractTotal }) {
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
+      <div>
+        <div
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "22px",
+            fontWeight: 700,
+            marginBottom: "8px",
+          }}
+        >
+          Budget table by subsystem
+        </div>
+        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
+          Main operating table for maintenance budgeting. Each row combines workforce footprint,
+          mobilization budget and lifecycle-driven renewals.
+        </div>
+      </div>
+
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "980px" }}>
+          <thead>
+            <tr style={{ textAlign: "left", color: palette.inkMuted, fontSize: "12px" }}>
+              {[
+                "Subsystem",
+                "Tech",
+                "Team",
+                "Project / depot",
+                "Mobilization",
+                "Renewals",
+                "Renewals / year",
+                "Contract total",
+                "% of total",
+              ].map((label) => (
+                <th key={label} style={{ padding: "0 0 12px", borderBottom: `1px solid ${palette.surfaceLow}` }}>
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.subsystemId}>
+                <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}` }}>
+                  <div style={{ fontWeight: 700, color: palette.ink }}>{row.label}</div>
+                  <div style={{ color: palette.inkMuted, fontSize: "12px", marginTop: "4px" }}>{row.full}</div>
+                </td>
+                <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink }}>
+                  {row.counts.tech}
+                </td>
+                <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink }}>
+                  {row.counts.equipe}
+                </td>
+                <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink }}>
+                  {row.counts.project}
+                </td>
+                <td
+                  style={{
+                    padding: "14px 8px",
+                    borderBottom: `1px solid ${palette.surfaceLow}`,
+                    color: palette.teal,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  {fmt(row.mobilization)}
+                </td>
+                <td
+                  style={{
+                    padding: "14px 8px",
+                    borderBottom: `1px solid ${palette.surfaceLow}`,
+                    color: "#7c3aed",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  {fmt(row.renewals)}
+                </td>
+                <td
+                  style={{
+                    padding: "14px 8px",
+                    borderBottom: `1px solid ${palette.surfaceLow}`,
+                    color: palette.ink,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  {fmt(row.annualRenewals)}
+                </td>
+                <td
+                  style={{
+                    padding: "14px 8px",
+                    borderBottom: `1px solid ${palette.surfaceLow}`,
+                    color: palette.primary,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  {fmt(row.total)}
+                </td>
+                <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink }}>
+                  {pct(row.total, contractTotal)}%
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function RenewalDrivers({ metrics }) {
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "14px" }}>
+      <div>
+        <div
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "22px",
+            fontWeight: 700,
+            marginBottom: "8px",
+          }}
+        >
+          Main renewal drivers
+        </div>
+        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
+          Highest projected renewal costs over the contract, based on the lifecycle assumptions currently stored on the selected tools.
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gap: "12px" }}>
+        {metrics.renewalDrivers.map((tool) => (
+          <div
+            key={tool.uid}
+            style={{
+              background: palette.surfaceLow,
+              borderRadius: "14px",
+              padding: "14px 16px",
+              display: "grid",
+              gap: "8px",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
+              <div>
+                <div style={{ fontWeight: 700, color: palette.ink }}>{tool.name}</div>
+                <div style={{ color: palette.inkMuted, fontSize: "12px", marginTop: "4px" }}>
+                  {tool.subsystem} · {tool.brand} · {tool.model}
+                </div>
+              </div>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  color: "#7c3aed",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {fmt(tool.renewalCost)} EUR
+              </div>
+            </div>
+            <div style={{ color: palette.inkMuted, fontSize: "12px", lineHeight: 1.55 }}>
+              {lifecycleLabel(tool)} · {tool.renewalCount} renewal cycle(s)
+              <br />
+              Renewals/year {fmt(tool.renewalCost / Math.max(1, metrics.contractDurationMonths / 12))} EUR
+            </div>
+          </div>
+        ))}
+        {metrics.renewalDrivers.length === 0 && (
+          <div style={{ color: palette.inkMuted, lineHeight: 1.6 }}>
+            No renewal budget is currently forecast for this project.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function BudgetPage() {
+  const { activeProject } = useProjects();
+  const metrics = useMemo(() => getProjectBudgetMetrics(activeProject), [activeProject]);
+  const activeSubsystemIds = useMemo(() => getProjectSubsystemIds(activeProject), [activeProject]);
+  const coveragePct = metrics.mandatoryTotal
+    ? Math.round((metrics.mandatorySelected / metrics.mandatoryTotal) * 100)
+    : 0;
+
+  const subsystemRows = useMemo(
+    () =>
+      activeSubsystemIds.map((subsystemId) => {
+        const meta = TOOLING_SUBSYSTEMS.find((item) => item.id === subsystemId);
+        const counts = activeProject?.workforce?.[subsystemId] || {
+          tech: 0,
+          equipe: 0,
+          project: 0,
+        };
+        const totals = metrics.subsystemTotals.find((item) => item.subsystem === subsystemId) || {
+          mobilization: 0,
+          renewals: 0,
+          annualRenewals: 0,
+          total: 0,
+        };
+
+        return {
+          subsystemId,
+          label: meta?.label || subsystemId,
+          full: meta?.full || subsystemId,
+          counts,
+          mobilization: totals.mobilization,
+          renewals: totals.renewals,
+          annualRenewals: totals.annualRenewals,
+          total: totals.total,
+        };
+      }),
+    [activeProject, activeSubsystemIds, metrics.subsystemTotals]
+  );
 
   return (
     <div style={{ display: "grid", gap: "20px" }}>
@@ -83,7 +556,7 @@ export default function BudgetPage() {
             marginBottom: "12px",
           }}
         >
-          Budget workspace
+          Contract budget · {activeProject?.name}
         </div>
         <div
           style={{
@@ -94,69 +567,86 @@ export default function BudgetPage() {
             marginBottom: "12px",
           }}
         >
-          {fmt(metrics.catalogTotal)} €
+          {fmt(metrics.contractTotal)} EUR
         </div>
-        <div style={{ maxWidth: "720px", lineHeight: 1.6, opacity: 0.92 }}>
-          Cette vue est maintenant prête à accueillir la vraie projection `workforce × selection`.
-          La logique catalogue est disponible; l’étape suivante sera de brancher ici les calculs
-          actuellement encore enfermés dans l’écran legacy Inventory.
+        <div style={{ maxWidth: "820px", lineHeight: 1.6, opacity: 0.92 }}>
+          The budget view is now organized as an analysis workspace: a small KPI strip, a stacked
+          subsystem histogram, a level mix donut, an operating table and a focused renewal driver list.
+        </div>
+        <div
+          style={{
+            marginTop: "18px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: "12px",
+          }}
+        >
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
+            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Maintenance contract</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+              {metrics.contractDurationLabel}
+            </div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
+            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Renewals / year</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+              {fmt(metrics.annualRenewalBudget)} EUR
+            </div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
+            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Mandatory coverage</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{coveragePct}%</div>
+          </div>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "18px" }}>
-        {cards.map(({ label, value, icon: Icon, accent, tone, note }) => (
-          <div key={label} style={cardStyle}>
-            <div
-              style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "12px",
-                background: tone,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: accent,
-                marginBottom: "16px",
-              }}
-            >
-              <Icon size={20} />
-            </div>
-            <div style={{ color: palette.inkMuted, fontSize: "13px", marginBottom: "10px" }}>{label}</div>
-            <div
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "26px",
-                fontWeight: 600,
-                color: accent,
-                marginBottom: "10px",
-              }}
-            >
-              {value}
-            </div>
-            <div style={{ color: palette.inkSoft, lineHeight: 1.55, fontSize: "14px" }}>{note}</div>
-          </div>
-        ))}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gap: "18px",
+        }}
+      >
+        <KpiCard
+          icon={Layers3}
+          label="Initial mobilization"
+          value={`${fmt(metrics.initialMobilization)} EUR`}
+          note="Budget needed before the maintenance contract starts."
+          accent={palette.teal}
+          tone={palette.tealSoft}
+        />
+        <KpiCard
+          icon={CalendarClock}
+          label="Renewals over contract"
+          value={`${fmt(metrics.renewalBudget)} EUR`}
+          note={`Average ${fmt(metrics.annualRenewalBudget)} EUR/year over ${metrics.contractDurationLabel}.`}
+          accent="#7c3aed"
+          tone="rgba(124, 58, 237, 0.08)"
+        />
+        <KpiCard
+          icon={Wallet}
+          label="Total contract tooling cost"
+          value={`${fmt(metrics.contractTotal)} EUR`}
+          note="Mobilization plus all forecast renewals over the contract."
+          accent={palette.primary}
+          tone={palette.primarySoft}
+        />
       </div>
 
-      <div style={{ ...cardStyle, display: "grid", gap: "18px" }}>
-        <div>
-          <div
-            style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: "22px",
-              fontWeight: 700,
-              marginBottom: "8px",
-            }}
-          >
-            Next migration for Budget
-          </div>
-          <div style={{ color: palette.inkSoft, lineHeight: 1.65, maxWidth: "760px" }}>
-            1. Extraire la sélection et la configuration workforce dans un état partagé.
-            2. Déporter ici le budget monolith, la coverage mandatory et le breakdown `Technician / Team / OPEX`.
-            3. Conserver sur `Inventory` une simple action bar flottante au lieu du panneau de synthèse actuel.
-          </div>
-        </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(420px, 1.15fr) minmax(320px, 0.85fr)",
+          gap: "18px",
+        }}
+      >
+        <StackedBarChart rows={subsystemRows} total={metrics.contractTotal} />
+        <DonutLevelChart metrics={metrics} />
       </div>
+
+      <SubsystemTable rows={subsystemRows} contractTotal={metrics.contractTotal} />
+
+      <RenewalDrivers metrics={metrics} />
     </div>
   );
 }

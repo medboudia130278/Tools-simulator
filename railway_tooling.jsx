@@ -247,6 +247,14 @@ const TOOL_CONTEXT_OVERRIDES = {
   'POS:e24': ['heavy'],
 };
 const PRICE_OVERRIDE_STORAGE_KEY = 'railway-tooling-price-overrides-v1';
+const LIFECYCLE_OVERRIDE_STORAGE_KEY = 'railway-tooling-lifecycle-overrides-v1';
+
+const LIFECYCLE_TYPES = {
+  durable: { label: 'Durable asset' },
+  periodic_replacement: { label: 'Periodic replacement' },
+  condition_based: { label: 'Condition-based replacement' },
+  consumable: { label: 'Consumable / replenishment' },
+};
 
 function loadStoredPriceOverrides() {
   if (typeof window === 'undefined') return {};
@@ -258,6 +266,82 @@ function loadStoredPriceOverrides() {
   } catch {
     return {};
   }
+}
+
+function loadStoredLifecycleOverrides() {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(LIFECYCLE_OVERRIDE_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function inferLifecycleBaseline(tool) {
+  const period = String(tool.period || '').toLowerCase();
+  let type = 'durable';
+  let intervalValue = '';
+  let intervalUnit = 'years';
+  let replacementRatio = '100';
+
+  if (period.includes('consumable')) {
+    type = 'consumable';
+    intervalValue = '12';
+    intervalUnit = 'months';
+  } else if (
+    period.includes('replace when worn') ||
+    period.includes('replace if defective') ||
+    period.includes('after arc event')
+  ) {
+    type = 'condition_based';
+  } else {
+    const yearMatch = period.match(/(\d+)\s*year/);
+    const monthMatch = period.match(/(\d+)\s*month/);
+    if (yearMatch) {
+      type = 'periodic_replacement';
+      intervalValue = yearMatch[1];
+      intervalUnit = 'years';
+    } else if (monthMatch) {
+      type = 'periodic_replacement';
+      intervalValue = monthMatch[1];
+      intervalUnit = 'months';
+    } else if (period.includes('annual')) {
+      type = 'periodic_replacement';
+      intervalValue = '1';
+      intervalUnit = 'years';
+    }
+  }
+
+  return {
+    type,
+    intervalValue,
+    intervalUnit,
+    replacementRatio,
+    source: '',
+    year: '',
+  };
+}
+
+function resolveLifecycle(tool, lifecycleOverrides) {
+  const baseline = inferLifecycleBaseline(tool);
+  const override = lifecycleOverrides?.[tool.uid];
+  return {
+    lifecycleType: override?.type || baseline.type,
+    lifecycleIntervalValue: String(
+      override?.intervalValue ?? baseline.intervalValue ?? ''
+    ),
+    lifecycleIntervalUnit: override?.intervalUnit || baseline.intervalUnit,
+    lifecycleReplacementRatio: String(
+      override?.replacementRatio ?? baseline.replacementRatio ?? '100'
+    ),
+    lifecycleSource: typeof override?.source === 'string' ? override.source.trim() : '',
+    lifecycleYear: typeof override?.year === 'string' ? override.year.trim() : '',
+    hasLifecycleOverride: Boolean(override),
+    lifecycleBaseline: baseline,
+  };
 }
 
 const TOOL_IMAGE_URLS = Object.fromEntries(
@@ -447,24 +531,51 @@ export const TOOLING_CATALOG = TOOLS;
 export const TOOLING_SUBSYSTEMS = SUBSYSTEMS;
 export const TOOLING_CONTEXTS = CONTEXTS;
 
-export default function App({ embedded = false, subsystem: controlledSubsystem, onSubsystemChange, context: controlledContext, onContextChange }) {
+export default function App({
+  embedded = false,
+  subsystem: controlledSubsystem,
+  onSubsystemChange,
+  context: controlledContext,
+  onContextChange,
+  selection: controlledSelection,
+  onSelectionChange,
+  workforceState: controlledWorkforce,
+  onWorkforceChange,
+  priceOverrides: controlledPriceOverrides,
+  onPriceOverridesChange,
+  lifecycleOverrides: controlledLifecycleOverrides,
+  onLifecycleOverridesChange,
+}) {
   const [localSubsystem, setLocalSubsystem] = useState(controlledSubsystem || 'POS');
   const subsystem = controlledSubsystem ?? localSubsystem;
   const setSubsystem = onSubsystemChange ?? setLocalSubsystem;
   const [localContext, setLocalContext] = useState(controlledContext || 'metro');
   const ctx = controlledContext ?? localContext;
   const setCtx = onContextChange ?? setLocalContext;
+  const isSelectionControlled = controlledSelection !== undefined;
+  const isWorkforceControlled = controlledWorkforce !== undefined;
+  const isPriceOverridesControlled = controlledPriceOverrides !== undefined;
+  const isLifecycleOverridesControlled = controlledLifecycleOverrides !== undefined;
   const [lvl, setLvl]     = useState('ALL');
   const [cat, setCat]     = useState('ALL');
   const [stat, setStat]   = useState('ALL');
   const [q, setQ]         = useState('');
-  const [sel, setSel]     = useState(new Set());
+  const [localSel, setLocalSel] = useState(new Set());
   const [modal, setModal] = useState(null);
-  const [priceOverrides, setPriceOverrides] = useState(loadStoredPriceOverrides);
+  const [localPriceOverrides, setLocalPriceOverrides] = useState(loadStoredPriceOverrides);
   const [priceDraft, setPriceDraft] = useState({ price:'', source:'', year:'' });
+  const [localLifecycleOverrides, setLocalLifecycleOverrides] = useState(loadStoredLifecycleOverrides);
+  const [lifecycleDraft, setLifecycleDraft] = useState({
+    type: 'durable',
+    intervalValue: '',
+    intervalUnit: 'years',
+    replacementRatio: '100',
+    source: '',
+    year: '',
+  });
   const [vw, setVw]       = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
   // ── Workforce config per subsystem ──
-  const [workforce, setWorkforce] = useState({
+  const [localWorkforce, setLocalWorkforce] = useState({
     POS:   { tech:4, equipe:1, project:1 },
     PSD:   { tech:3, equipe:1, project:1 },
     CAT:   { tech:4, equipe:1, project:1 },
@@ -474,12 +585,49 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
     DEQ:   { tech:2, equipe:1, project:1 },
     MEP:   { tech:3, equipe:1, project:1 },
   });
+  const sel = isSelectionControlled ? controlledSelection : localSel;
+  const setSel = updater => {
+    const nextValue = typeof updater === 'function' ? updater(new Set(sel || [])) : updater;
+    const normalized = nextValue instanceof Set ? new Set(nextValue) : new Set(nextValue || []);
+    if (isSelectionControlled) {
+      onSelectionChange?.(normalized);
+      return;
+    }
+    setLocalSel(normalized);
+  };
+  const workforce = isWorkforceControlled ? controlledWorkforce : localWorkforce;
+  const setWorkforce = updater => {
+    const nextValue = typeof updater === 'function' ? updater(workforce) : updater;
+    if (isWorkforceControlled) {
+      onWorkforceChange?.(nextValue);
+      return;
+    }
+    setLocalWorkforce(nextValue);
+  };
+  const priceOverrides = isPriceOverridesControlled ? controlledPriceOverrides : localPriceOverrides;
+  const setPriceOverrides = updater => {
+    const nextValue = typeof updater === 'function' ? updater(priceOverrides) : updater;
+    if (isPriceOverridesControlled) {
+      onPriceOverridesChange?.(nextValue);
+      return;
+    }
+    setLocalPriceOverrides(nextValue);
+  };
+  const lifecycleOverrides = isLifecycleOverridesControlled ? controlledLifecycleOverrides : localLifecycleOverrides;
+  const setLifecycleOverrides = updater => {
+    const nextValue = typeof updater === 'function' ? updater(lifecycleOverrides) : updater;
+    if (isLifecycleOverridesControlled) {
+      onLifecycleOverridesChange?.(nextValue);
+      return;
+    }
+    setLocalLifecycleOverrides(nextValue);
+  };
   const nbTech  = workforce[subsystem].tech;
   const nbEquipe = workforce[subsystem].equipe;
   const nbProject = workforce[subsystem].project;
-  const setNbTech  = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], tech:Math.max(1,v)}}));
-  const setNbEquipe = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], equipe:Math.max(1,v)}}));
-  const setNbProject = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], project:Math.max(1,v)}}));
+  const setNbTech  = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], tech:Math.max(0,v)}}));
+  const setNbEquipe = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], equipe:Math.max(0,v)}}));
+  const setNbProject = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], project:Math.max(0,v)}}));
 
   const context = CONTEXTS.find(c=>c.id===ctx);
   const acc = context.accent;
@@ -494,15 +642,17 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
         const currentPrice = typeof override?.price === 'number' ? override.price : tool.price;
         const priceSource = typeof override?.source === 'string' ? override.source.trim() : '';
         const priceYear = typeof override?.year === 'string' ? override.year.trim() : '';
+        const lifecycle = resolveLifecycle(tool, lifecycleOverrides);
         return {
           ...tool,
           currentPrice,
           priceSource,
           priceYear,
+          ...lifecycle,
           hasPriceOverride: Boolean(override),
         };
       }),
-    [ctx, subsystem, priceOverrides]
+    [ctx, subsystem, priceOverrides, lifecycleOverrides]
   );
   const modalTool = modal ? activeTools.find(t=>t.uid===modal.uid) || TOOLS.find(t=>t.uid===modal.uid) || modal : null;
 
@@ -513,9 +663,14 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || isPriceOverridesControlled) return;
     window.localStorage.setItem(PRICE_OVERRIDE_STORAGE_KEY, JSON.stringify(priceOverrides));
-  }, [priceOverrides]);
+  }, [isPriceOverridesControlled, priceOverrides]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || isLifecycleOverridesControlled) return;
+    window.localStorage.setItem(LIFECYCLE_OVERRIDE_STORAGE_KEY, JSON.stringify(lifecycleOverrides));
+  }, [isLifecycleOverridesControlled, lifecycleOverrides]);
 
   useEffect(() => {
     if (!modalTool) return;
@@ -523,6 +678,14 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
       price: String(modalTool.currentPrice ?? modalTool.price ?? ''),
       source: modalTool.priceSource || '',
       year: modalTool.priceYear || '',
+    });
+    setLifecycleDraft({
+      type: modalTool.lifecycleType || 'durable',
+      intervalValue: String(modalTool.lifecycleIntervalValue ?? ''),
+      intervalUnit: modalTool.lifecycleIntervalUnit || 'years',
+      replacementRatio: String(modalTool.lifecycleReplacementRatio ?? '100'),
+      source: modalTool.lifecycleSource || '',
+      year: modalTool.lifecycleYear || '',
     });
   }, [modalTool]);
 
@@ -548,6 +711,15 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const currentYear = String(new Date().getFullYear());
   const priceDraftValue = Number.parseFloat(String(priceDraft.price).replace(',', '.'));
   const canSavePriceOverride = Number.isFinite(priceDraftValue) && priceDraftValue >= 0;
+  const lifecycleIntervalValue = Number.parseFloat(String(lifecycleDraft.intervalValue).replace(',', '.'));
+  const lifecycleReplacementRatio = Number.parseFloat(String(lifecycleDraft.replacementRatio).replace(',', '.'));
+  const lifecycleNeedsInterval = lifecycleDraft.type === 'periodic_replacement' || lifecycleDraft.type === 'consumable';
+  const canSaveLifecycleOverride =
+    Boolean(lifecycleDraft.type) &&
+    Number.isFinite(lifecycleReplacementRatio) &&
+    lifecycleReplacementRatio >= 0 &&
+    lifecycleReplacementRatio <= 100 &&
+    (!lifecycleNeedsInterval || (Number.isFinite(lifecycleIntervalValue) && lifecycleIntervalValue > 0));
   const getLevelMeta = level => LEVELS[level] || LEVELS.T;
   const getUnitLabel = tool => `${tool.qty} ${getLevelMeta(tool.level).unit}`;
   const getPriceReferenceLabel = tool => {
@@ -555,6 +727,23 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
     if (tool.priceSource) return tool.priceSource;
     if (tool.priceYear) return `Reference year · ${tool.priceYear}`;
     return tool.hasPriceOverride ? 'Manual price reference' : 'Catalog baseline';
+  };
+  const getLifecycleReferenceLabel = tool => {
+    if (tool.lifecycleSource && tool.lifecycleYear) return `${tool.lifecycleSource} Â· ${tool.lifecycleYear}`;
+    if (tool.lifecycleSource) return tool.lifecycleSource;
+    if (tool.lifecycleYear) return `Reference year Â· ${tool.lifecycleYear}`;
+    return tool.hasLifecycleOverride ? 'Manual lifecycle assumption' : 'Derived from current maintenance note';
+  };
+  const getLifecycleSummary = tool => {
+    const typeLabel = LIFECYCLE_TYPES[tool.lifecycleType]?.label || 'Lifecycle assumption';
+    const ratioLabel = `${tool.lifecycleReplacementRatio}% replaced`;
+    if (tool.lifecycleType === 'periodic_replacement' || tool.lifecycleType === 'consumable') {
+      const interval = tool.lifecycleIntervalValue
+        ? `${tool.lifecycleIntervalValue} ${tool.lifecycleIntervalUnit}`
+        : 'interval not set';
+      return `${typeLabel} Â· every ${interval} Â· ${ratioLabel}`;
+    }
+    return `${typeLabel} Â· ${ratioLabel}`;
   };
   const savePriceOverride = () => {
     if (!modalTool || !canSavePriceOverride) return;
@@ -570,6 +759,29 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const resetPriceOverride = () => {
     if (!modalTool) return;
     setPriceOverrides(prev => {
+      const next = { ...prev };
+      delete next[modalTool.uid];
+      return next;
+    });
+  };
+
+  const saveLifecycleOverride = () => {
+    if (!modalTool || !canSaveLifecycleOverride) return;
+    setLifecycleOverrides(prev => ({
+      ...prev,
+      [modalTool.uid]: {
+        type: lifecycleDraft.type,
+        intervalValue: lifecycleNeedsInterval ? String(lifecycleIntervalValue) : '',
+        intervalUnit: lifecycleDraft.intervalUnit,
+        replacementRatio: String(lifecycleReplacementRatio),
+        source: lifecycleDraft.source.trim(),
+        year: lifecycleDraft.year.trim(),
+      },
+    }));
+  };
+  const resetLifecycleOverride = () => {
+    if (!modalTool) return;
+    setLifecycleOverrides(prev => {
       const next = { ...prev };
       delete next[modalTool.uid];
       return next;
@@ -1419,6 +1631,100 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                       </div>
                     </div>
 
+                    <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px 18px 16px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+                      <div style={{ fontSize:11, color:'#1C6090', marginBottom:12, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', display:'flex', alignItems:'center', gap:6 }}>
+                        <Layers size={12}/> LIFECYCLE ASSUMPTIONS
+                      </div>
+                      <div style={{ display:'grid', gap:12 }}>
+                        <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 120px 120px', gap:10 }}>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>LIFECYCLE TYPE</div>
+                            <select
+                              value={lifecycleDraft.type}
+                              onChange={e=>setLifecycleDraft(p=>({ ...p, type:e.target.value }))}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                            >
+                              {Object.entries(LIFECYCLE_TYPES).map(([value, meta])=>(
+                                <option key={value} value={value}>{meta.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>INTERVAL</div>
+                            <input
+                              value={lifecycleDraft.intervalValue}
+                              onChange={e=>setLifecycleDraft(p=>({ ...p, intervalValue:e.target.value }))}
+                              placeholder={lifecycleNeedsInterval?'1':''}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                            />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>UNIT</div>
+                            <select
+                              value={lifecycleDraft.intervalUnit}
+                              onChange={e=>setLifecycleDraft(p=>({ ...p, intervalUnit:e.target.value }))}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                            >
+                              <option value="months">Months</option>
+                              <option value="years">Years</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'120px 1fr 112px', gap:10 }}>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>REPLACED (%)</div>
+                            <input
+                              value={lifecycleDraft.replacementRatio}
+                              onChange={e=>setLifecycleDraft(p=>({ ...p, replacementRatio:e.target.value }))}
+                              placeholder="100"
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                            />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>SOURCE</div>
+                            <input
+                              value={lifecycleDraft.source}
+                              onChange={e=>setLifecycleDraft(p=>({ ...p, source:e.target.value }))}
+                              placeholder="OEM, RAMS assumption, maintenance return..."
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                            />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>YEAR</div>
+                            <input
+                              value={lifecycleDraft.year}
+                              onChange={e=>setLifecycleDraft(p=>({ ...p, year:e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }))}
+                              placeholder={currentYear}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                            />
+                          </div>
+                        </div>
+                        <div style={{ display:'grid', gap:6 }}>
+                          <div style={{ fontSize:12, color:'#667085', lineHeight:1.55 }}>
+                            Current assumption: <strong style={{ color:'#191C1E' }}>{getLifecycleSummary(modal)}</strong>
+                          </div>
+                          <div style={{ fontSize:12, color:'#667085', lineHeight:1.55 }}>
+                            Active reference: <strong style={{ color:'#191C1E' }}>{getLifecycleReferenceLabel(modal)}</strong>
+                          </div>
+                        </div>
+                        <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                          <button
+                            onClick={resetLifecycleOverride}
+                            style={{ background:'#FFFFFF', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', cursor:'pointer', fontSize:12, color:'#475467', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}
+                          >
+                            RESET LIFECYCLE
+                          </button>
+                          <button
+                            onClick={saveLifecycleOverride}
+                            disabled={!canSaveLifecycleOverride}
+                            style={{ background:canSaveLifecycleOverride?'#1F8A84':'#D0D5DD', border:'none', borderRadius:12, padding:'10px 14px', cursor:canSaveLifecycleOverride?'pointer':'not-allowed', fontSize:12, color:'#FFFFFF', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}
+                          >
+                            SAVE LIFECYCLE
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                     {(modal.statut==='OB' || modal.period.toLowerCase().includes('calibration')) && (
                       <div style={{ display:'grid', gap:10 }}>
                         {modal.statut==='OB'&&(
@@ -1596,6 +1902,73 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                         </button>
                         <button onClick={savePriceOverride} disabled={!canSavePriceOverride} style={{ background:canSavePriceOverride?c.color:C.borderL, border:'none', borderRadius:8, padding:'8px 12px', cursor:canSavePriceOverride?'pointer':'not-allowed', fontSize:11, color:'#fff', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
                           SAVE PRICE
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ background:C.bgMid, borderRadius:10, padding:'12px 14px', border:`1px solid ${C.border}` }}>
+                    <div style={{ fontSize:10, color:c.color, marginBottom:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em', display:'flex', alignItems:'center', gap:5 }}>
+                      <Layers size={10}/> LIFECYCLE ASSUMPTIONS
+                    </div>
+                    <div style={{ display:'grid', gap:10 }}>
+                      <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 88px 88px', gap:8 }}>
+                        <select
+                          value={lifecycleDraft.type}
+                          onChange={e=>setLifecycleDraft(p=>({ ...p, type:e.target.value }))}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                        >
+                          {Object.entries(LIFECYCLE_TYPES).map(([value, meta])=>(
+                            <option key={value} value={value}>{meta.label}</option>
+                          ))}
+                        </select>
+                        <input
+                          value={lifecycleDraft.intervalValue}
+                          onChange={e=>setLifecycleDraft(p=>({ ...p, intervalValue:e.target.value }))}
+                          placeholder={lifecycleNeedsInterval?'1':''}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                        />
+                        <select
+                          value={lifecycleDraft.intervalUnit}
+                          onChange={e=>setLifecycleDraft(p=>({ ...p, intervalUnit:e.target.value }))}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                        >
+                          <option value="months">Months</option>
+                          <option value="years">Years</option>
+                        </select>
+                      </div>
+                      <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'88px 1fr 96px', gap:8 }}>
+                        <input
+                          value={lifecycleDraft.replacementRatio}
+                          onChange={e=>setLifecycleDraft(p=>({ ...p, replacementRatio:e.target.value }))}
+                          placeholder="100"
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                        />
+                        <input
+                          value={lifecycleDraft.source}
+                          onChange={e=>setLifecycleDraft(p=>({ ...p, source:e.target.value }))}
+                          placeholder="Source"
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                        />
+                        <input
+                          value={lifecycleDraft.year}
+                          onChange={e=>setLifecycleDraft(p=>({ ...p, year:e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }))}
+                          placeholder={currentYear}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                        />
+                      </div>
+                      <div style={{ fontSize:11, color:C.textSub, lineHeight:1.5 }}>
+                        Current assumption: <span style={{ color:C.text }}>{getLifecycleSummary(modal)}</span>
+                      </div>
+                      <div style={{ fontSize:11, color:C.textSub, lineHeight:1.5 }}>
+                        Active reference: <span style={{ color:C.text }}>{getLifecycleReferenceLabel(modal)}</span>
+                      </div>
+                      <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                        <button onClick={resetLifecycleOverride} style={{ background:'transparent', border:`1px solid ${C.borderL}`, borderRadius:8, padding:'8px 10px', cursor:'pointer', fontSize:11, color:C.textSub, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                          RESET LIFECYCLE
+                        </button>
+                        <button onClick={saveLifecycleOverride} disabled={!canSaveLifecycleOverride} style={{ background:canSaveLifecycleOverride?C.teal:C.borderL, border:'none', borderRadius:8, padding:'8px 12px', cursor:canSaveLifecycleOverride?'pointer':'not-allowed', fontSize:11, color:'#fff', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                          SAVE LIFECYCLE
                         </button>
                       </div>
                     </div>

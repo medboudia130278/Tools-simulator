@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
-import { AlertTriangle, Image, ShieldAlert, Wrench } from "lucide-react";
-import { TOOLING_CATALOG } from "../../railway_tooling.jsx";
+import { AlertTriangle, FolderKanban, Image, ShieldAlert, Wrench } from "lucide-react";
 import { palette } from "../app/theme.js";
+import { useProjects } from "../projects/ProjectStore.jsx";
+import { getProjectReportingMetrics } from "../projects/projectSelectors.js";
 
 const cardStyle = {
   background: palette.surfaceLowest,
@@ -11,42 +12,40 @@ const cardStyle = {
 };
 
 export default function ReportingPage() {
-  const metrics = useMemo(() => {
-    const mandatory = TOOLING_CATALOG.filter((tool) => tool.statut === "OB").length;
-    const calibrations = TOOLING_CATALOG.filter((tool) =>
-      tool.period.toLowerCase().includes("calibration")
-    ).length;
-    const imageCoverage = TOOLING_CATALOG.filter((tool) => Boolean(tool.imgSrc)).length;
-    const fragileLinks = TOOLING_CATALOG.filter((tool) =>
-      tool.productUrl.toLowerCase().endsWith(".pdf")
-    ).length;
-    return { mandatory, calibrations, imageCoverage, fragileLinks };
-  }, []);
+  const { activeProject, projects } = useProjects();
+  const metrics = useMemo(() => getProjectReportingMetrics(activeProject), [activeProject]);
 
   const cards = [
     {
-      label: "Mandatory population",
-      value: `${metrics.mandatory} tools`,
+      label: "Active project",
+      value: activeProject?.name || "—",
+      icon: FolderKanban,
+      accent: palette.primary,
+      tone: palette.primarySoft,
+    },
+    {
+      label: "Mandatory selected",
+      value: `${metrics.selectedMandatoryCount}/${metrics.mandatoryCount}`,
       icon: ShieldAlert,
       accent: palette.safety,
       tone: palette.safetySoft,
     },
     {
-      label: "Calibration-driven assets",
-      value: `${metrics.calibrations} tools`,
+      label: "Calibration assets",
+      value: `${metrics.calibrationCount} tools`,
       icon: Wrench,
-      accent: palette.primary,
-      tone: palette.primarySoft,
-    },
-    {
-      label: "Image coverage",
-      value: `${metrics.imageCoverage}/${TOOLING_CATALOG.length}`,
-      icon: Image,
       accent: palette.teal,
       tone: palette.tealSoft,
     },
     {
-      label: "PDF product links",
+      label: "Image coverage",
+      value: `${metrics.imageCoverage}/${metrics.visibleCatalogCount}`,
+      icon: Image,
+      accent: palette.ink,
+      tone: palette.surfaceHigh,
+    },
+    {
+      label: "Fragile product links",
       value: `${metrics.fragileLinks} refs`,
       icon: AlertTriangle,
       accent: palette.ink,
@@ -54,15 +53,15 @@ export default function ReportingPage() {
     },
   ];
 
-  const priorities = [
-    "Brancher ici les vrais indicateurs de conformité issus de la sélection active.",
-    "Créer un flux d’alertes maintenance/calibration par outil et par équipe.",
-    "Ajouter export PDF / CSV une fois l’état partagé mis en place.",
-  ];
-
   return (
     <div style={{ display: "grid", gap: "20px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "18px" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "18px",
+        }}
+      >
         {cards.map(({ label, value, icon: Icon, accent, tone }) => (
           <div key={label} style={cardStyle}>
             <div
@@ -80,7 +79,9 @@ export default function ReportingPage() {
             >
               <Icon size={20} />
             </div>
-            <div style={{ color: palette.inkMuted, fontSize: "13px", marginBottom: "10px" }}>{label}</div>
+            <div style={{ color: palette.inkMuted, fontSize: "13px", marginBottom: "10px" }}>
+              {label}
+            </div>
             <div
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
@@ -95,7 +96,7 @@ export default function ReportingPage() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "18px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "18px" }}>
         <div style={cardStyle}>
           <div
             style={{
@@ -108,9 +109,16 @@ export default function ReportingPage() {
             Reporting target state
           </div>
           <div style={{ color: palette.inkSoft, lineHeight: 1.68 }}>
-            Cette page prend déjà la place du futur cockpit Stitch. Les premières métriques de santé
-            catalogue sont en place; la prochaine étape sera de les basculer vers des KPIs
-            réellement pilotés par la sélection, la workforce et la couverture obligatoire.
+            Le reporting est maintenant piloté par le projet actif, pas par le catalogue global.
+            Quand tu changes de projet ou de contexte, les compteurs de couverture, de calibration
+            et de visibilité se recalculent sur le périmètre concerné.
+          </div>
+          <div style={{ marginTop: "18px", color: palette.inkMuted, lineHeight: 1.6 }}>
+            Portfolio currently stored in browser: <strong style={{ color: palette.ink }}>{projects.length}</strong> project(s)
+            <br />
+            Visible tools in project context: <strong style={{ color: palette.ink }}>{metrics.visibleCatalogCount}</strong>
+            <br />
+            Selected tools in project: <strong style={{ color: palette.ink }}>{metrics.selectedCount}</strong>
           </div>
         </div>
 
@@ -123,32 +131,32 @@ export default function ReportingPage() {
               marginBottom: "14px",
             }}
           >
-            Migration priorities
+            Active subsystems in selection
           </div>
           <div style={{ display: "grid", gap: "12px" }}>
-            {priorities.map((item, index) => (
+            {metrics.subsystemCoverage.map(({ subsystem, count }) => (
               <div
-                key={item}
+                key={subsystem}
                 style={{
                   background: palette.surfaceLow,
                   borderRadius: "12px",
                   padding: "14px",
                   color: palette.inkSoft,
                   lineHeight: 1.55,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    color: palette.primary,
-                    marginRight: "10px",
-                  }}
-                >
-                  0{index + 1}
-                </span>
-                {item}
+                <span>{subsystem}</span>
+                <strong style={{ color: palette.primary }}>{count}</strong>
               </div>
             ))}
+            {metrics.subsystemCoverage.length === 0 && (
+              <div style={{ color: palette.inkMuted, lineHeight: 1.6 }}>
+                No reporting footprint yet. Select tools in Inventory to build the project record.
+              </div>
+            )}
           </div>
         </div>
       </div>
