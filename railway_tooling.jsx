@@ -208,6 +208,39 @@ const TOOLS = RAW.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,pri
   return {id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc};
 });
 
+const PRIMARY_USE_OVERRIDES = {
+  t01: 'Reference handheld meter for troubleshooting live LV and traction DC circuits. Use it to confirm voltage presence, continuity, resistance, current and unstable electrical behavior during diagnosis, fault localisation and post-repair validation.',
+  t02: 'Front-line screening tool before opening a cabinet or approaching live LV conductors. Use it for fast presence checks on feeders, terminals and auxiliaries when you need a safe first indication before switching to contact measurement.',
+  t03: 'Formal absence-of-voltage verification tool before any lockout, access or contact on LV and traction-related circuits. Use it as the final confirmatory step after isolation to prove the circuit is actually dead.',
+  t12: 'Routine insulation tester for 24 VDC, 48 VDC and 110 VDC auxiliaries, control loops and low-voltage wiring. Use it after cable work, moisture suspicion or fault tracing to detect insulation degradation before re-energisation.',
+  t13: 'Commissioning and compliance tester for low-voltage boards, auxiliaries and socket circuits. Use it before energising a new or modified installation to validate RCD behavior, loop impedance and core IEC 60364 safety checks.',
+  t14: 'Broader installation test platform used when a standard loop or continuity check is not enough. Use it for acceptance testing, fault-loop analysis and higher-voltage insulation campaigns on more complex LV installations.',
+  t15: 'Main current measurement clamp for traction DC and mixed AC/DC maintenance. Use it to quantify feeder load, return current, inrush, imbalance or suspicious current draw without opening the circuit.',
+  t16: 'Quick pre-energisation phase-sequence verifier for motors, auxiliaries and rotating equipment. Use it before startup or after reconnection work to avoid reverse rotation and wrong three-phase wiring.',
+  t17: 'Contact voltage and polarity tester for traction DC circuits and mixed AC/DC environments. Use it when you must identify DC polarity, confirm potential difference or perform a contact check on conductors where non-contact tools are not sufficient.',
+  t18: 'Fast thermal screening tool for hot spots on terminals, fuses, disconnectors, cable lugs and electronic components. Use it during inspections to identify abnormal heating before moving to a deeper electrical diagnosis.',
+  e15: 'Primary medium-voltage presence detector used before earthing, short-circuiting or authorising access on MV switchgear. Use it as the team reference to confirm whether a feeder or cubicle is still energised in the 20-36 kV range.',
+  e16: 'Dedicated catenary voltage detector for 25 kV AC overhead line environments. Use it before railway earthing operations, possession access and worksite release to confirm the contact line is not live.',
+  e17: 'Synchronism and phase-comparison instrument for medium-voltage sources before coupling or transfer operations. Use it when checking whether two MV points belong to the same phase relationship prior to switching actions.',
+  e18: 'Advanced power-quality analyser for disturbances that standard meters cannot explain. Use it on feeders and auxiliaries to record harmonics, dips, flicker, transient events and load profile issues over time.',
+  e19: '5 kV insulation platform for substations, MV cables, motors and transformers. Use it during acceptance testing, periodic insulation trending and after an outage or moisture event to assess dielectric health.',
+  e20: '10 kV insulation tester reserved for heavier MV and HV insulation campaigns. Use it on long cable sections, large machines and transformer windings when the test level required is above routine 5 kV verification.',
+  e21: 'Low-resistance micro-ohmmeter for switchgear primary paths and bolted power connections. Use it to verify contact resistance on breakers, disconnectors and busbars after maintenance, assembly or refurbishment.',
+  e22: 'Protection commissioning platform for relay testing and secondary injection. Use it to validate trip logic, protection curves, IEC 61850 behavior and complete relay schemes before returning a bay to service.',
+  e23: 'Ratio and polarity tester for instrument transformers during commissioning and fault analysis. Use it to verify CT/VT wiring, ratio accuracy and polarity before protection circuits are trusted in operation.',
+  e24: 'Specialised MV cable dielectric test set for in-service cable assessment. Use it after repairs, jointing work or before re-commissioning to stress the cable insulation at very low frequency and confirm serviceability.',
+  e25: 'Clamp earth tester for rapid earthing checks without disconnecting the installation. Use it during inspections or troubleshooting when you need a fast resistance trend on an existing earth network with minimal disruption.',
+  e26: 'Focused test configuration for MV cable screens after jointing or repair work. Use it to confirm screen continuity and insulation quality before the cable is handed back for energisation.',
+  e27: 'Team-level high-current clamp used on traction return circuits, substations and large LV feeders. Use it when current exceeds the range or practicality of a technician handheld clamp and flexible iFlex access is needed.',
+  e28: 'Network and energy analyser for deeper traction DC investigations. Use it to log voltage, current, power and energy behavior over time when diagnosing substations, chargers, converters or abnormal DC load conditions.',
+  e29: 'Battery diagnostic instrument for stationary DC systems such as UPS, charger-backed auxiliaries and substation battery banks. Use it during preventive maintenance to detect weak cells, rising impedance and declining autonomy.',
+  e30: 'Full earth measurement kit for 3-pole, 4-pole and related ground-testing methods. Use it when commissioning or auditing substations, structures and earth loops where a clamp-only method is not enough.',
+  e31: 'Radiometric thermal imaging camera for large-area inspection and condition-based maintenance. Use it to scan cabinets, transformers, switchgear, drives and cable terminations for hidden heating patterns before failure.',
+  e32: 'Portable isolated oscilloscope for waveform-level troubleshooting on converters, drives, relay outputs and control electronics. Use it when a multimeter cannot explain unstable switching, ripple, spikes or timing faults.',
+  e33: 'Time-domain reflectometer for locating cable defects from one accessible end. Use it to estimate the distance to open circuits, short circuits or insulation anomalies before excavation or cable section replacement.',
+  e34: 'Spectrum analyser for electromagnetic compatibility investigations around rail equipment. Use it when chasing radio-frequency noise, interference on signalling-related assets or abnormal emissions from converters and power electronics.',
+};
+
 // ─── SVG CATEGORY ICONS ───────────────────────────────────────────────────────
 const CatSVG = ({ cat, size=72 }) => {
   const s = { strokeLinecap:'round', strokeLinejoin:'round', fill:'none' };
@@ -304,7 +337,7 @@ function CopyBtn({ text, label, accent=C.teal, light=false }) {
 }
 
 function PrimaryUse({ tool }) {
-  return tool.notes;
+  return PRIMARY_USE_OVERRIDES[tool.id] || tool.notes;
 }
 
 function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border, bodyColor=C.text, labelColor=C.textSub }) {
