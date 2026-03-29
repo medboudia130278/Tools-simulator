@@ -319,7 +319,9 @@ function MetaTile({ label, value, accent }) {
 }
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
-export default function App() {
+export const TOOLING_CATALOG = TOOLS;
+
+export default function App({ embedded = false }) {
   const [ctx, setCtx]     = useState('metro');
   const [lvl, setLvl]     = useState('ALL');
   const [cat, setCat]     = useState('ALL');
@@ -384,17 +386,18 @@ export default function App() {
   return (
     <div style={{
       fontFamily:"'Barlow', sans-serif",
-      background:`
+      background:embedded ? 'transparent' : `
         radial-gradient(circle at top right, rgba(0,201,167,0.14), transparent 24%),
         radial-gradient(circle at top left, rgba(78,205,196,0.08), transparent 22%),
         linear-gradient(180deg, #0E2121 0%, ${C.bg} 22%, ${C.bg} 100%)
       `,
-      minHeight:'100vh',
+      minHeight:embedded ? 'auto' : '100vh',
       color:C.text,
     }}>
       <style>{fontStyle}</style>
 
       {/* ── HEADER ── */}
+      {!embedded && (
       <div style={{ background:`linear-gradient(180deg, rgba(13,32,32,0.96) 0%, rgba(10,26,26,0.96) 100%)`, borderBottom:`1px solid ${C.border}` }}>
         {/* Top bar */}
         <div style={{ padding:isMobile?'10px 14px':'0 22px', display:'flex', alignItems:'center', gap:16, minHeight:isMobile?null:54, flexWrap:isTablet?'wrap':'nowrap', borderBottom:`1px solid ${C.border}` }}>
@@ -455,9 +458,10 @@ export default function App() {
           ))}
         </div>
       </div>
+      )}
 
       {/* ── BODY ── */}
-      <div style={{ display:'flex', flexDirection:isTablet?'column':'row', height:isTablet?'auto':'calc(100vh - 118px)', overflow:'hidden' }}>
+      <div style={{ display:'flex', flexDirection:isTablet?'column':'row', height:embedded ? 'auto' : isTablet?'auto':'calc(100vh - 118px)', overflow:'hidden' }}>
 
         {/* ── MAIN PANEL ── */}
         <div style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>
