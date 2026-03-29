@@ -77,7 +77,6 @@ const CONTEXTS = [
   { id:'metro',  label:'Metro',      icon:'🚇', accent:C.teal   },
   { id:'tram',   label:'Tram',       icon:'🚊', accent:C.cyan   },
   { id:'heavy',  label:'Heavy Rail', icon:'🚂', accent:C.amber  },
-  { id:'apm',    label:'APM',        icon:'🚅', accent:C.violet },
 ];
 
 const SUBSYSTEMS = [
@@ -193,6 +192,8 @@ const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,
   import: "default",
 });
 
+const DEFAULT_CONTEXT_IDS = CONTEXTS.map(context => context.id);
+
 const TOOL_IMAGE_URLS = Object.fromEntries(
   Object.entries(TOOL_IMAGE_MODULES).map(([path, url]) => [
     path.split("/").pop().toLowerCase(),
@@ -217,7 +218,7 @@ const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =
     const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
     const imgFile = matchedImgFile;
     const uid = `${subsystem}:${id}`;
-    return {id,uid,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc,subsystem};
+    return {id,uid,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc,subsystem,contexts:DEFAULT_CONTEXT_IDS};
   })
 );
 
@@ -371,12 +372,15 @@ function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border,
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export const TOOLING_CATALOG = TOOLS;
 export const TOOLING_SUBSYSTEMS = SUBSYSTEMS;
+export const TOOLING_CONTEXTS = CONTEXTS;
 
-export default function App({ embedded = false, subsystem: controlledSubsystem, onSubsystemChange }) {
+export default function App({ embedded = false, subsystem: controlledSubsystem, onSubsystemChange, context: controlledContext, onContextChange }) {
   const [localSubsystem, setLocalSubsystem] = useState(controlledSubsystem || 'POS');
   const subsystem = controlledSubsystem ?? localSubsystem;
   const setSubsystem = onSubsystemChange ?? setLocalSubsystem;
-  const [ctx, setCtx]     = useState('metro');
+  const [localContext, setLocalContext] = useState(controlledContext || 'metro');
+  const ctx = controlledContext ?? localContext;
+  const setCtx = onContextChange ?? setLocalContext;
   const [lvl, setLvl]     = useState('ALL');
   const [cat, setCat]     = useState('ALL');
   const [stat, setStat]   = useState('ALL');
@@ -404,7 +408,10 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const isTablet = vw < 1120;
   const isMobile = vw < 760;
   const subsystemMeta = SUBSYSTEMS.find(s=>s.id===subsystem);
-  const activeTools = useMemo(() => TOOLS.filter(t=>t.subsystem===subsystem), [subsystem]);
+  const activeTools = useMemo(
+    () => TOOLS.filter(t=>t.subsystem===subsystem && (t.contexts || DEFAULT_CONTEXT_IDS).includes(ctx)),
+    [ctx, subsystem]
+  );
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth);
@@ -776,7 +783,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
               <div style={{ marginTop:18, background:embedded?'#FFFFFF':C.card, border:embedded?'1px solid rgba(71,84,103,0.12)':`1px solid ${C.border}`, borderRadius:18, padding:'26px 22px', textAlign:'center', color:embedded?'#667085':C.textSub }}>
                 <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:14, fontWeight:700, letterSpacing:'0.08em', color:embedded?'#1C6090':acc, marginBottom:8 }}>{subsystem} CATALOG NOT DEFINED YET</div>
                 <div style={{ fontSize:13, lineHeight:1.6 }}>
-                  No tools are loaded for {subsystemMeta?.full || subsystem} yet. Add them later in `RAW_BY_SUBSYSTEM.{subsystem}` and they will appear automatically in the merged display.
+                  No tools are currently visible for {subsystemMeta?.full || subsystem} in the {context.label} context. Add them later in `RAW_BY_SUBSYSTEM.{subsystem}` or refine their context visibility and they will appear automatically in the merged display.
                 </div>
               </div>
             )}

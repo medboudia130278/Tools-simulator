@@ -8,7 +8,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import { shellFontStyle, shellStyles, palette } from "./theme.js";
-import { TOOLING_CATALOG, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
+import { TOOLING_CATALOG, TOOLING_CONTEXTS, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import InventoryPage from "../views/InventoryPage.jsx";
 import BudgetPage from "../views/BudgetPage.jsx";
 import ReportingPage from "../views/ReportingPage.jsx";
@@ -63,6 +63,7 @@ const badgeStyle = (tone, color) => ({
 
 export default function App() {
   const [activePage, setActivePage] = useState("inventory");
+  const [activeContext, setActiveContext] = useState("metro");
   const [activeSubsystem, setActiveSubsystem] = useState("POS");
 
   const current = useMemo(
@@ -72,10 +73,16 @@ export default function App() {
   const subsystemTabs = useMemo(
     () =>
       TOOLING_SUBSYSTEMS.map((subsystem) => {
-        const count = TOOLING_CATALOG.filter((tool) => tool.subsystem === subsystem.id).length;
+        const count = TOOLING_CATALOG.filter(
+          (tool) => tool.subsystem === subsystem.id && (tool.contexts || []).includes(activeContext)
+        ).length;
         return { ...subsystem, count, ready: count > 0 };
       }),
-    []
+    [activeContext]
+  );
+  const activeContextMeta = useMemo(
+    () => TOOLING_CONTEXTS.find((context) => context.id === activeContext) ?? TOOLING_CONTEXTS[0],
+    [activeContext]
   );
 
   const CurrentPage = current.component;
@@ -203,6 +210,51 @@ export default function App() {
                 {current.description}
               </div>
 
+              <div style={{ marginTop: "20px", marginBottom: "12px" }}>
+                <div
+                  style={{
+                    fontSize: "11px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.12em",
+                    color: activeContextMeta.accent,
+                    fontWeight: 700,
+                    marginBottom: "10px",
+                  }}
+                >
+                  Operating context
+                </div>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                  {TOOLING_CONTEXTS.map((context) => {
+                    const active = context.id === activeContext;
+                    return (
+                      <button
+                        key={context.id}
+                        onClick={() => setActiveContext(context.id)}
+                        style={{
+                          border: `1px solid ${active ? context.accent : "rgba(71, 84, 103, 0.14)"}`,
+                          cursor: "pointer",
+                          padding: "10px 14px",
+                          borderRadius: "999px",
+                          background: active ? `${context.accent}16` : palette.surfaceLow,
+                          color: active ? context.accent : palette.inkSoft,
+                          fontSize: "13px",
+                          fontWeight: 700,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <span>{context.icon}</span>
+                        <span>{context.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div style={{ marginTop: "10px", color: palette.inkMuted, fontSize: "13px", lineHeight: 1.55 }}>
+                  For now, the `POS` catalog stays identical across `Metro`, `Tram` and `Heavy Rail`. Context-specific additions and removals will come later.
+                </div>
+              </div>
+
               <div
                 style={{
                   marginTop: "20px",
@@ -284,7 +336,12 @@ export default function App() {
           </header>
 
           <main style={shellStyles.panel}>
-            <CurrentPage subsystem={activeSubsystem} onSubsystemChange={setActiveSubsystem} />
+            <CurrentPage
+              subsystem={activeSubsystem}
+              onSubsystemChange={setActiveSubsystem}
+              context={activeContext}
+              onContextChange={setActiveContext}
+            />
           </main>
         </div>
       </div>
