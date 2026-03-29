@@ -1033,8 +1033,8 @@ export default function App({ embedded = false }) {
 
                 <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'280px minmax(0, 1fr)', gap:0 }}>
                   <div style={{ background:'#F2F4F7', padding:isMobile?'18px':'22px', display:'grid', gap:14 }}>
-                    <div style={{ background:'#FFFFFF', borderRadius:22, minHeight:210, display:'flex', alignItems:'center', justifyContent:'center', padding:18, boxShadow:'0 18px 36px rgba(17,24,39,0.06)' }}>
-                      <ToolVisual tool={modal} size={128} radius={18}/>
+                    <div style={{ background:'#FFFFFF', borderRadius:22, minHeight:228, display:'flex', alignItems:'center', justifyContent:'center', padding:18, boxShadow:'0 18px 36px rgba(17,24,39,0.06)' }}>
+                      <ToolVisual tool={modal} size={168} radius={20}/>
                     </div>
 
                     <div style={{ background:`linear-gradient(135deg, ${c.color} 0%, ${c.color}CC 100%)`, color:'#FFFFFF', borderRadius:22, padding:'18px 18px 16px', boxShadow:'0 18px 36px rgba(17,24,39,0.08)' }}>
@@ -1185,8 +1185,8 @@ export default function App({ embedded = false }) {
               <div style={{ display:'flex', flexDirection:isMobile?'column':'row' }}>
                 {/* Left */}
                 <div style={{ width:isMobile?'100%':228, flexShrink:0, background:C.bgMid, display:'flex', flexDirection:'column', alignItems:'center', gap:14, padding:'22px 18px', borderRight:isMobile?'none':`1px solid ${C.border}`, borderBottom:isMobile?`1px solid ${C.border}`:'none' }}>
-                  <div style={{ width:'100%', height:170, background:C.bg, borderRadius:16, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center', padding:16, animation:'imageBreath 4.2s ease-in-out infinite' }}>
-                    <ToolVisual tool={modal} size={122} radius={14}/>
+                  <div style={{ width:'100%', height:182, background:C.bg, borderRadius:16, border:`1px solid ${C.border}`, display:'flex', alignItems:'center', justifyContent:'center', padding:16, animation:'imageBreath 4.2s ease-in-out infinite' }}>
+                    <ToolVisual tool={modal} size={146} radius={16}/>
                   </div>
 
                   {/* Price */}
