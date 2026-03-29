@@ -81,17 +81,18 @@ const CONTEXTS = [
 ];
 
 const SUBSYSTEMS = [
-  { id:'POS',   label:'POS',     full:'Energy',         active:true  },
-  { id:'PSD',   label:'PSD',     full:'Platform Doors', active:false },
-  { id:'CAT',   label:'CAT',     full:'Catenary',       active:false },
-  { id:'TRACK', label:'TRACK',   full:'Track',            active:false },
-  { id:'3RD',   label:'3rd Rail',full:'Conductor Rail', active:false },
-  { id:'AFC',   label:'AFC',     full:'Ticketing',      active:false },
-  { id:'DEQ',   label:'DEQ',     full:'Depot Equipment',active:false },
+  { id:'POS',   label:'POS',     full:'Energy' },
+  { id:'PSD',   label:'PSD',     full:'Platform Doors' },
+  { id:'CAT',   label:'CAT',     full:'Catenary' },
+  { id:'TRACK', label:'TRACK',   full:'Track' },
+  { id:'3RD',   label:'3rd Rail',full:'Conductor Rail' },
+  { id:'AFC',   label:'AFC',     full:'Ticketing' },
+  { id:'DEQ',   label:'DEQ',     full:'Depot Equipment' },
 ];
 
 // ─── TOOL DATA ────────────────────────────────────────────────────────────────
-const RAW = [
+const RAW_BY_SUBSYSTEM = {
+  POS: [
   // Unit prices refreshed on 2026-03-29 from current public shop / price-comparison pages when available.
   // Unchanged entries remain planning estimates for budgeting, not contractual purchase prices.
   ['t01','T','SAFETY','TRMS Multimeter CAT IV 1000V','Fluke','289/EUR','LV / DC Traction','CAT IV 1000V – IEC 61010','OB',1,1006,'Annual (calibration)','Integrated data logger. AC/DC measurements: voltage, current, resistance, continuity. Absolute field reference.','https://www.fluke.com/fr-fr/produit/multimetres/multimetres-numeriques/fluke-289'],
@@ -178,7 +179,14 @@ const RAW = [
   ['e46','E','COLLECTIF','Professional First Aid Case DIN 13169','SÖHNGEN','DYNAMIC-GLOW L 0301401','All domains','DIN 13169','OB',1,339,'6 months (expiry check)','Official SÖHNGEN first aid case page with DIN 13169 filling, wall holder and splash-protected case for vehicles and workshops.','https://shop.aluderm.de/erste-hilfe-koffer-orange-dynamic-glow-l-ind-norm-plus-din-13169'],
   ['e47','E','COLLECTIF','CO2 Extinguisher 5kg – class B electrical cabinets','GLORIA','KS 5 ST','All domains','EN 3','OB',1,140,'Annual (pressure check)','Official GLORIA CO2 extinguisher page listing 5 kg models suitable for electrical equipment and residue-free firefighting.','https://www.gloria.de/de/produkt/feuerloescher/co2-handhebel/'],
   ['e48','E','COLLECTIF','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','All domains – Diagnostics','IP53 – MIL-STD-810H','RC',2,2595,'5-year replacement','Current official Panasonic Connect page for the Toughbook 55 platform used for IEC 61850 relay connection, SCADA and drive diagnostics. Entry aligned to a current base mk3 market configuration.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
-];
+  ],
+  PSD: [],
+  CAT: [],
+  TRACK: [],
+  '3RD': [],
+  AFC: [],
+  DEQ: [],
+};
 
 const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,gif}", {
   eager: true,
@@ -199,16 +207,19 @@ const TOOL_IMAGE_FILES_BY_BASE = Object.fromEntries(
   ])
 );
 
-const TOOLS = RAW.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) => {
-  // derive imgFile from id + brand slug
-  const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
-  const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
-  const imgBase = `${id}_${brandSlug}_${modelSlug}`.toLowerCase();
-  const matchedImgFile = TOOL_IMAGE_FILES_BY_BASE[imgBase] || `${imgBase}.jpg`;
-  const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
-  const imgFile = matchedImgFile;
-  return {id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc};
-});
+const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =>
+  rawTools.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) => {
+    // derive imgFile from id + brand slug
+    const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
+    const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
+    const imgBase = `${id}_${brandSlug}_${modelSlug}`.toLowerCase();
+    const matchedImgFile = TOOL_IMAGE_FILES_BY_BASE[imgBase] || `${imgBase}.jpg`;
+    const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
+    const imgFile = matchedImgFile;
+    const uid = `${subsystem}:${id}`;
+    return {id,uid,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc,subsystem};
+  })
+);
 
 const PRIMARY_USE_OVERRIDES = {
   t01: 'Reference handheld meter for troubleshooting live LV and traction DC circuits. Use it to confirm voltage presence, continuity, resistance, current and unstable electrical behavior during diagnosis, fault localisation and post-repair validation.',
@@ -361,6 +372,7 @@ function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border,
 export const TOOLING_CATALOG = TOOLS;
 
 export default function App({ embedded = false }) {
+  const [subsystem, setSubsystem] = useState('POS');
   const [ctx, setCtx]     = useState('metro');
   const [lvl, setLvl]     = useState('ALL');
   const [cat, setCat]     = useState('ALL');
@@ -379,15 +391,17 @@ export default function App({ embedded = false }) {
     AFC:   { tech:2, equipe:1 },
     DEQ:   { tech:2, equipe:1 },
   });
-  const nbTech  = workforce['POS'].tech;
-  const nbEquipe = workforce['POS'].equipe;
-  const setNbTech  = v => setWorkforce(p=>({...p, POS:{...p.POS, tech:Math.max(1,v)}}));
-  const setNbEquipe = v => setWorkforce(p=>({...p, POS:{...p.POS, equipe:Math.max(1,v)}}));
+  const nbTech  = workforce[subsystem].tech;
+  const nbEquipe = workforce[subsystem].equipe;
+  const setNbTech  = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], tech:Math.max(1,v)}}));
+  const setNbEquipe = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], equipe:Math.max(1,v)}}));
 
   const context = CONTEXTS.find(c=>c.id===ctx);
   const acc = context.accent;
   const isTablet = vw < 1120;
   const isMobile = vw < 760;
+  const subsystemMeta = SUBSYSTEMS.find(s=>s.id===subsystem);
+  const activeTools = useMemo(() => TOOLS.filter(t=>t.subsystem===subsystem), [subsystem]);
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth);
@@ -395,21 +409,21 @@ export default function App({ embedded = false }) {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  const filtered = useMemo(()=>TOOLS.filter(t=>{
+  const filtered = useMemo(()=>activeTools.filter(t=>{
     if(lvl!=='ALL'&&t.level!==lvl) return false;
     if(cat!=='ALL'&&t.cat!==cat) return false;
     if(stat!=='ALL'&&t.statut!==stat) return false;
     if(q){ const s=q.toLowerCase(); return t.name.toLowerCase().includes(s)||t.brand.toLowerCase().includes(s)||t.model.toLowerCase().includes(s); }
     return true;
-  }),[lvl,cat,stat,q]);
+  }),[activeTools,lvl,cat,stat,q]);
 
-  const toggle = id => setSel(p=>{const n=new Set(p);n.has(id)?n.delete(id):n.add(id);return n;});
-  const selT   = TOOLS.filter(t=>sel.has(t.id));
+  const toggle = uid => setSel(p=>{const n=new Set(p);n.has(uid)?n.delete(uid):n.add(uid);return n;});
+  const selT   = activeTools.filter(t=>sel.has(t.uid));
   const total  = selT.reduce((s,t)=>s+t.qty*t.price,0);
   const tTotal = selT.filter(t=>t.level==='T').reduce((s,t)=>s+t.qty*t.price,0);
   const eTotal = selT.filter(t=>t.level==='E').reduce((s,t)=>s+t.qty*t.price,0);
   const mandatorySelected = selT.filter(t=>t.statut==='OB').length;
-  const mandatoryTotal = TOOLS.filter(t=>t.statut==='OB').length;
+  const mandatoryTotal = activeTools.filter(t=>t.statut==='OB').length;
   const coveragePct = mandatoryTotal ? Math.round((mandatorySelected / mandatoryTotal) * 100) : 0;
   const byCat  = Object.entries(CATS).map(([k,v])=>({key:k,...v,total:selT.filter(t=>t.cat===k).reduce((s,t)=>s+t.qty*t.price,0)})).filter(c=>c.total>0);
   const fmt    = n => new Intl.NumberFormat('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0}).format(n);
@@ -475,7 +489,7 @@ export default function App({ embedded = false }) {
                 RAIL MAINTENANCE
               </div>
               <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:10, fontWeight:500, color:C.textSub, letterSpacing:'0.06em', marginTop:-2 }}>
-                ENERGY TOOLING MANAGER · POS v4.0
+                ENERGY TOOLING MANAGER · {subsystem} v4.0
               </div>
             </div>
           </div>
@@ -511,12 +525,12 @@ export default function App({ embedded = false }) {
         <div style={{ display:'flex', padding:isMobile?'0 14px':'0 22px', overflowX:'auto' }}>
           {SUBSYSTEMS.map(s=>(
             <div key={s.id} style={{
-              padding:'10px 18px', cursor:s.active?'pointer':'default',
-              borderBottom:`2px solid ${s.id==='POS'?acc:'transparent'}`,
-              opacity:s.active?1:0.35, transition:'all 0.15s',
+              padding:'10px 18px', cursor:'pointer',
+              borderBottom:`2px solid ${s.id===subsystem?acc:'transparent'}`,
+              opacity:s.id===subsystem?1:0.55, transition:'all 0.15s',
             }}>
-              <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:13, fontWeight:700, letterSpacing:'0.07em', color:s.id==='POS'?acc:C.textSub }}>{s.label}</div>
-              <div style={{ fontFamily:"'Barlow', sans-serif", fontSize:9, color:C.textMuted, marginTop:1 }}>{s.full}{!s.active&&' · soon'}</div>
+              <div onClick={()=>setSubsystem(s.id)} style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:13, fontWeight:700, letterSpacing:'0.07em', color:s.id===subsystem?acc:C.textSub }}>{s.label}</div>
+              <div style={{ fontFamily:"'Barlow', sans-serif", fontSize:9, color:C.textMuted, marginTop:1 }}>{s.full}{RAW_BY_SUBSYSTEM[s.id]?.length===0&&' · soon'}</div>
             </div>
           ))}
         </div>
@@ -564,11 +578,11 @@ export default function App({ embedded = false }) {
 
             <div style={{ marginLeft:isMobile?0:'auto', display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', width:isMobile?'100%':'auto' }}>
               <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:C.textSub }}>{filtered.length} tools</span>
-              <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.add(t.id));return n;})}
+              <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.add(t.uid));return n;})}
                 style={{ background:embedded?'#FFFFFF':C.bg, border:embedded?'1px solid rgba(71,84,103,0.14)':`1px solid ${C.border}`, color:embedded?'#475467':C.textSub, padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
                 Select visible
               </button>
-              <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.delete(t.id));return n;})}
+              <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.delete(t.uid));return n;})}
                 style={{ background:embedded?'#FFFFFF':C.bg, border:embedded?'1px solid rgba(71,84,103,0.14)':`1px solid ${C.border}`, color:embedded?'#475467':C.textSub, padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
                 Clear visible
               </button>
@@ -579,11 +593,11 @@ export default function App({ embedded = false }) {
           <div style={{ flex:1, overflowY:'auto', padding:isMobile?'12px 12px 16px':embedded?'20px':'14px 18px' }}>
             <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':embedded?'repeat(auto-fill, minmax(290px, 1fr))':'repeat(auto-fill, minmax(325px, 1fr))', gap:embedded?18:12 }}>
               {filtered.map((t,i)=>{
-                const isSel=sel.has(t.id), c=CATS[t.cat], s=STATUTS[t.statut];
+                const isSel=sel.has(t.uid), c=CATS[t.cat], s=STATUTS[t.statut];
                 if (embedded) {
                   return (
                     <div
-                      key={t.id}
+                      key={t.uid}
                       onClick={()=>setModal(t)}
                       style={{
                         background:'#FFFFFF',
@@ -621,7 +635,7 @@ export default function App({ embedded = false }) {
                               <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:'#475467', background:'#EFF2F5', padding:'4px 8px', borderRadius:8 }}>{t.model}</span>
                             </div>
                           </div>
-                          <div onClick={e=>{e.stopPropagation();toggle(t.id);}} style={{
+                          <div onClick={e=>{e.stopPropagation();toggle(t.uid);}} style={{
                             width:28, height:28, borderRadius:10,
                             border:`1.5px solid ${isSel?c.color:'rgba(71,84,103,0.18)'}`,
                             background:isSel?c.color:'#FFFFFF',
@@ -665,7 +679,7 @@ export default function App({ embedded = false }) {
                   );
                 }
                 return (
-                  <div key={t.id} style={{
+                  <div key={t.uid} style={{
                     background:isSel?`${c.color}0D`:C.card,
                     border:`1px solid ${isSel?c.color+'50':C.border}`,
                     borderRadius:14, overflow:'hidden', cursor:'pointer',
@@ -702,7 +716,7 @@ export default function App({ embedded = false }) {
                           </span>
                         </div>
                         {/* Checkbox */}
-                        <div onClick={e=>{e.stopPropagation();toggle(t.id);}} style={{
+                        <div onClick={e=>{e.stopPropagation();toggle(t.uid);}} style={{
                           width:23, height:23, borderRadius:7,
                           border:`1.5px solid ${isSel?c.color:C.borderL}`,
                           background:isSel?c.color:'transparent',
@@ -755,6 +769,14 @@ export default function App({ embedded = false }) {
                 );
               })}
             </div>
+            {activeTools.length===0&&(
+              <div style={{ marginTop:18, background:embedded?'#FFFFFF':C.card, border:embedded?'1px solid rgba(71,84,103,0.12)':`1px solid ${C.border}`, borderRadius:18, padding:'26px 22px', textAlign:'center', color:embedded?'#667085':C.textSub }}>
+                <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:14, fontWeight:700, letterSpacing:'0.08em', color:embedded?'#1C6090':acc, marginBottom:8 }}>{subsystem} CATALOG NOT DEFINED YET</div>
+                <div style={{ fontSize:13, lineHeight:1.6 }}>
+                  No tools are loaded for {subsystemMeta?.full || subsystem} yet. Add them later in `RAW_BY_SUBSYSTEM.{subsystem}` and they will appear automatically in the merged display.
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -830,7 +852,7 @@ export default function App({ embedded = false }) {
           <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
             <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
               <Users size={14} color="#1C6090"/>
-              <span style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090' }}>WORKFORCE — POS</span>
+              <span style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090' }}>WORKFORCE — {subsystem}</span>
             </div>
             <div style={{ display:'grid', gap:12 }}>
               {[
@@ -869,11 +891,11 @@ export default function App({ embedded = false }) {
           </div>
 
           <div style={{ marginTop:'auto', background:'#FFFFFF', borderRadius:22, padding:'18px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
-            <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090', marginBottom:12 }}>POS DATABASE — {TOOLS.length} TOOLS</div>
+            <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090', marginBottom:12 }}>{subsystem} DATABASE — {activeTools.length} TOOLS</div>
             {[
-              ['Technician', TOOLS.filter(t=>t.level==='T').length, '#1C6090'],
-              ['Team', TOOLS.filter(t=>t.level==='E').length, '#1F8A84'],
-              ['Mandatory', TOOLS.filter(t=>t.statut==='OB').length, '#9F4200'],
+              ['Technician', activeTools.filter(t=>t.level==='T').length, '#1C6090'],
+              ['Team', activeTools.filter(t=>t.level==='E').length, '#1F8A84'],
+              ['Mandatory', activeTools.filter(t=>t.statut==='OB').length, '#9F4200'],
             ].map(([l,v,col])=>(
               <div key={l} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'5px 0' }}>
                 <span style={{ fontSize:11, color:'#667085' }}>{l}</span>
@@ -976,7 +998,7 @@ export default function App({ embedded = false }) {
             <div style={{ background:C.bg, borderRadius:10, border:`1px solid ${C.border}`, overflow:'hidden' }}>
               <div style={{ padding:'10px 14px', borderBottom:`1px solid ${C.border}`, display:'flex', alignItems:'center', gap:6 }}>
                 <Users size={12} color={acc}/>
-                <span style={{ fontSize:10, fontWeight:700, color:acc, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>WORKFORCE — POS</span>
+                <span style={{ fontSize:10, fontWeight:700, color:acc, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>WORKFORCE — {subsystem}</span>
               </div>
               <div style={{ padding:'12px 14px', display:'flex', flexDirection:'column', gap:10 }}>
                 {[
@@ -1037,11 +1059,11 @@ export default function App({ embedded = false }) {
 
             {/* Database stats */}
             <div style={{ marginTop:'auto', paddingTop:12, borderTop:`1px solid ${C.border}` }}>
-              <div style={{ fontSize:9, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', marginBottom:8 }}>POS DATABASE — {TOOLS.length} TOOLS</div>
+              <div style={{ fontSize:9, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', marginBottom:8 }}>{subsystem} DATABASE — {activeTools.length} TOOLS</div>
               {[
-                ['Technician', TOOLS.filter(t=>t.level==='T').length, C.teal],
-                ['Team', TOOLS.filter(t=>t.level==='E').length, C.blue],
-                ['Mandatory', TOOLS.filter(t=>t.statut==='OB').length, C.orange],
+                ['Technician', activeTools.filter(t=>t.level==='T').length, C.teal],
+                ['Team', activeTools.filter(t=>t.level==='E').length, C.blue],
+                ['Mandatory', activeTools.filter(t=>t.statut==='OB').length, C.orange],
               ].map(([l,v,col])=>(
                 <div key={l} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'3px 0' }}>
                   <span style={{ fontSize:10, color:C.textSub }}>{l}</span>
@@ -1056,7 +1078,7 @@ export default function App({ embedded = false }) {
 
       {/* ── MODAL ── */}
       {modal&&(()=>{
-        const c=CATS[modal.cat], s=STATUTS[modal.statut], isSel=sel.has(modal.id);
+        const c=CATS[modal.cat], s=STATUTS[modal.statut], isSel=sel.has(modal.uid);
         const unitLabel = `${modal.qty} ${modal.level==='T'?'per technician':'per team'}`;
         if (embedded) {
           return (
@@ -1117,7 +1139,7 @@ export default function App({ embedded = false }) {
                     </div>
 
                     <button
-                      onClick={()=>toggle(modal.id)}
+                      onClick={()=>toggle(modal.uid)}
                       style={{
                         background:isSel?`linear-gradient(135deg, ${c.color} 0%, ${c.color}CC 100%)`:'#FFFFFF',
                         border:`1px solid ${isSel?c.color:'rgba(71,84,103,0.14)'}`,
@@ -1269,7 +1291,7 @@ export default function App({ embedded = false }) {
                     <MetaTile label="Quantity baseline" value={`${modal.qty} ${modal.level==='T'?'per technician':'per team'}`} accent={modal.level==='T'?C.teal:C.blue}/>
                   </div>
 
-                  <button onClick={()=>toggle(modal.id)} style={{
+                  <button onClick={()=>toggle(modal.uid)} style={{
                     background:isSel?c.color:'transparent',
                     border:`1.5px solid ${isSel?c.color:C.borderL}`,
                     borderRadius:8, padding:'9px 0', width:'100%', cursor:'pointer',
