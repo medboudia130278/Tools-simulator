@@ -193,6 +193,19 @@ const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,
 });
 
 const DEFAULT_CONTEXT_IDS = CONTEXTS.map(context => context.id);
+const PRICE_OVERRIDE_STORAGE_KEY = 'railway-tooling-price-overrides-v1';
+
+function loadStoredPriceOverrides() {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(PRICE_OVERRIDE_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
 
 const TOOL_IMAGE_URLS = Object.fromEntries(
   Object.entries(TOOL_IMAGE_MODULES).map(([path, url]) => [
@@ -387,6 +400,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const [q, setQ]         = useState('');
   const [sel, setSel]     = useState(new Set());
   const [modal, setModal] = useState(null);
+  const [priceOverrides, setPriceOverrides] = useState(loadStoredPriceOverrides);
+  const [priceDraft, setPriceDraft] = useState({ price:'', source:'', year:'' });
   const [vw, setVw]       = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
   // ── Workforce config per subsystem ──
   const [workforce, setWorkforce] = useState({
@@ -409,15 +424,44 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const isMobile = vw < 760;
   const subsystemMeta = SUBSYSTEMS.find(s=>s.id===subsystem);
   const activeTools = useMemo(
-    () => TOOLS.filter(t=>t.subsystem===subsystem && (t.contexts || DEFAULT_CONTEXT_IDS).includes(ctx)),
-    [ctx, subsystem]
+    () => TOOLS
+      .filter(t=>t.subsystem===subsystem && (t.contexts || DEFAULT_CONTEXT_IDS).includes(ctx))
+      .map(tool => {
+        const override = priceOverrides[tool.uid];
+        const currentPrice = typeof override?.price === 'number' ? override.price : tool.price;
+        const priceSource = typeof override?.source === 'string' ? override.source.trim() : '';
+        const priceYear = typeof override?.year === 'string' ? override.year.trim() : '';
+        return {
+          ...tool,
+          currentPrice,
+          priceSource,
+          priceYear,
+          hasPriceOverride: Boolean(override),
+        };
+      }),
+    [ctx, subsystem, priceOverrides]
   );
+  const modalTool = modal ? activeTools.find(t=>t.uid===modal.uid) || TOOLS.find(t=>t.uid===modal.uid) || modal : null;
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(PRICE_OVERRIDE_STORAGE_KEY, JSON.stringify(priceOverrides));
+  }, [priceOverrides]);
+
+  useEffect(() => {
+    if (!modalTool) return;
+    setPriceDraft({
+      price: String(modalTool.currentPrice ?? modalTool.price ?? ''),
+      source: modalTool.priceSource || '',
+      year: modalTool.priceYear || '',
+    });
+  }, [modalTool]);
 
   const filtered = useMemo(()=>activeTools.filter(t=>{
     if(lvl!=='ALL'&&t.level!==lvl) return false;
@@ -429,14 +473,42 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
 
   const toggle = uid => setSel(p=>{const n=new Set(p);n.has(uid)?n.delete(uid):n.add(uid);return n;});
   const selT   = activeTools.filter(t=>sel.has(t.uid));
-  const total  = selT.reduce((s,t)=>s+t.qty*t.price,0);
-  const tTotal = selT.filter(t=>t.level==='T').reduce((s,t)=>s+t.qty*t.price,0);
-  const eTotal = selT.filter(t=>t.level==='E').reduce((s,t)=>s+t.qty*t.price,0);
+  const total  = selT.reduce((s,t)=>s+t.qty*t.currentPrice,0);
+  const tTotal = selT.filter(t=>t.level==='T').reduce((s,t)=>s+t.qty*t.currentPrice,0);
+  const eTotal = selT.filter(t=>t.level==='E').reduce((s,t)=>s+t.qty*t.currentPrice,0);
   const mandatorySelected = selT.filter(t=>t.statut==='OB').length;
   const mandatoryTotal = activeTools.filter(t=>t.statut==='OB').length;
   const coveragePct = mandatoryTotal ? Math.round((mandatorySelected / mandatoryTotal) * 100) : 0;
-  const byCat  = Object.entries(CATS).map(([k,v])=>({key:k,...v,total:selT.filter(t=>t.cat===k).reduce((s,t)=>s+t.qty*t.price,0)})).filter(c=>c.total>0);
+  const byCat  = Object.entries(CATS).map(([k,v])=>({key:k,...v,total:selT.filter(t=>t.cat===k).reduce((s,t)=>s+t.qty*t.currentPrice,0)})).filter(c=>c.total>0);
   const fmt    = n => new Intl.NumberFormat('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0}).format(n);
+  const currentYear = String(new Date().getFullYear());
+  const priceDraftValue = Number.parseFloat(String(priceDraft.price).replace(',', '.'));
+  const canSavePriceOverride = Number.isFinite(priceDraftValue) && priceDraftValue >= 0;
+  const getPriceReferenceLabel = tool => {
+    if (tool.priceSource && tool.priceYear) return `${tool.priceSource} · ${tool.priceYear}`;
+    if (tool.priceSource) return tool.priceSource;
+    if (tool.priceYear) return `Reference year · ${tool.priceYear}`;
+    return tool.hasPriceOverride ? 'Manual price reference' : 'Catalog baseline';
+  };
+  const savePriceOverride = () => {
+    if (!modalTool || !canSavePriceOverride) return;
+    setPriceOverrides(prev => ({
+      ...prev,
+      [modalTool.uid]: {
+        price: priceDraftValue,
+        source: priceDraft.source.trim(),
+        year: priceDraft.year.trim(),
+      },
+    }));
+  };
+  const resetPriceOverride = () => {
+    if (!modalTool) return;
+    setPriceOverrides(prev => {
+      const next = { ...prev };
+      delete next[modalTool.uid];
+      return next;
+    });
+  };
 
   const pill = (active, color, label, fn) => (
     <button onClick={fn} style={{
@@ -671,15 +743,18 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', paddingTop:12, marginTop:'auto', borderTop:'1px solid rgba(71,84,103,0.10)' }}>
                           <div>
                             <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:18, fontWeight:700, color:isSel?c.color:'#191C1E' }}>
-                              {fmt(t.price)} €
+                              {fmt(t.currentPrice)} €
                             </div>
                             <div style={{ fontSize:11, color:'#667085', marginTop:4 }}>
                               {t.qty} {t.level==='T'?'per technician':'per team'}
                             </div>
+                            <div style={{ fontSize:10, color:t.hasPriceOverride?c.color:'#98A2B3', marginTop:5 }}>
+                              {getPriceReferenceLabel(t)}
+                            </div>
                           </div>
                           <div style={{ textAlign:'right' }}>
                             <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:12, color:isSel?c.color:'#475467', fontWeight:600 }}>
-                              {fmt(t.qty*t.price)} €
+                              {fmt(t.qty*t.currentPrice)} €
                             </div>
                             <div style={{ fontSize:10, color:'#98A2B3', marginTop:3 }}>estimated block</div>
                           </div>
@@ -761,15 +836,18 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', paddingTop:8, borderTop:`1px solid ${C.border}`, marginTop:'auto' }}>
                         <div>
                           <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700, color:isSel?c.color:C.text }}>
-                            {fmt(t.price)} €
+                            {fmt(t.currentPrice)} €
                           </div>
                           <div style={{ fontSize:10, color:C.textSub, marginTop:3 }}>
                             {t.qty} {t.level==='T'?'per technician':'per team'}
                           </div>
+                          <div style={{ fontSize:9, color:t.hasPriceOverride?c.color:C.textMuted, marginTop:4 }}>
+                            {getPriceReferenceLabel(t)}
+                          </div>
                         </div>
                         <div style={{ textAlign:'right' }}>
                           <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:isSel?c.color:C.textSub, fontWeight:600 }}>
-                            {fmt(t.qty*t.price)} €
+                            {fmt(t.qty*t.currentPrice)} €
                           </div>
                           <div style={{ fontSize:9, color:C.textMuted, marginTop:2 }}>estimated block</div>
                         </div>
@@ -1087,7 +1165,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
       </div>
 
       {/* ── MODAL ── */}
-      {modal&&(()=>{
+      {modalTool&&(()=>{
+        const modal = modalTool;
         const c=CATS[modal.cat], s=STATUTS[modal.statut], isSel=sel.has(modal.uid);
         const unitLabel = `${modal.qty} ${modal.level==='T'?'per technician':'per team'}`;
         if (embedded) {
@@ -1134,11 +1213,12 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
 
                     <div style={{ background:`linear-gradient(135deg, ${c.color} 0%, ${c.color}CC 100%)`, color:'#FFFFFF', borderRadius:22, padding:'18px 18px 16px', boxShadow:'0 18px 36px rgba(17,24,39,0.08)' }}>
                       <div style={{ fontSize:10, opacity:0.82, marginBottom:8, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em' }}>COST SNAPSHOT</div>
-                      <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:28, fontWeight:700, lineHeight:1 }}>{fmt(modal.price)} €</div>
+                      <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:28, fontWeight:700, lineHeight:1 }}>{fmt(modal.currentPrice)} €</div>
                       <div style={{ fontSize:12, opacity:0.86, marginTop:8 }}>{unitLabel}</div>
+                      <div style={{ fontSize:11, opacity:0.86, marginTop:6 }}>{getPriceReferenceLabel(modal)}</div>
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:14, paddingTop:12, borderTop:'1px solid rgba(255,255,255,0.22)' }}>
                         <span style={{ fontSize:11, opacity:0.82 }}>Selection block</span>
-                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700 }}>{fmt(modal.qty*modal.price)} €</span>
+                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700 }}>{fmt(modal.qty*modal.currentPrice)} €</span>
                       </div>
                     </div>
 
@@ -1204,6 +1284,63 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                                 <div style={{ fontSize:12, color:'#191C1E', lineHeight:1.5 }}>{value}</div>
                               </div>
                             ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px 18px 16px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+                      <div style={{ fontSize:11, color:'#1C6090', marginBottom:12, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', display:'flex', alignItems:'center', gap:6 }}>
+                        <BarChart2 size={12}/> PRICE REFERENCE
+                      </div>
+                      <div style={{ display:'grid', gap:12 }}>
+                        <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr 112px', gap:10 }}>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>UNIT PRICE (€)</div>
+                            <input
+                              value={priceDraft.price}
+                              onChange={e=>setPriceDraft(p=>({ ...p, price:e.target.value }))}
+                              placeholder={String(modal.price)}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                            />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>SOURCE</div>
+                            <input
+                              value={priceDraft.source}
+                              onChange={e=>setPriceDraft(p=>({ ...p, source:e.target.value }))}
+                              placeholder="Supplier, quotation, framework..."
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                            />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>YEAR</div>
+                            <input
+                              value={priceDraft.year}
+                              onChange={e=>setPriceDraft(p=>({ ...p, year:e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }))}
+                              placeholder={currentYear}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                            />
+                          </div>
+                        </div>
+                        <div style={{ display:'flex', justifyContent:'space-between', alignItems:isMobile?'flex-start':'center', gap:10, flexDirection:isMobile?'column':'row' }}>
+                          <div style={{ fontSize:12, color:'#667085', lineHeight:1.55 }}>
+                            Active reference: <strong style={{ color:'#191C1E' }}>{getPriceReferenceLabel(modal)}</strong>
+                          </div>
+                          <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                            <button
+                              onClick={resetPriceOverride}
+                              style={{ background:'#FFFFFF', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', cursor:'pointer', fontSize:12, color:'#475467', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}
+                            >
+                              RESET PRICE
+                            </button>
+                            <button
+                              onClick={savePriceOverride}
+                              disabled={!canSavePriceOverride}
+                              style={{ background:canSavePriceOverride?'#1C6090':'#D0D5DD', border:'none', borderRadius:12, padding:'10px 14px', cursor:canSavePriceOverride?'pointer':'not-allowed', fontSize:12, color:'#FFFFFF', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}
+                            >
+                              SAVE PRICE
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -1287,11 +1424,12 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                   {/* Price */}
                   <div style={{ background:C.bg, borderRadius:12, padding:'14px 16px', textAlign:'left', width:'100%', border:`1px solid ${c.color}30` }}>
                     <div style={{ fontSize:9, color:C.textSub, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>COST SNAPSHOT</div>
-                    <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:24, fontWeight:700, color:c.color }}>{fmt(modal.price)} €</div>
+                    <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:24, fontWeight:700, color:c.color }}>{fmt(modal.currentPrice)} €</div>
                     <div style={{ fontSize:11, color:C.textSub, marginTop:4 }}>{modal.qty} {modal.level==='E'?'per team':'per technician'}</div>
+                    <div style={{ fontSize:10, color:C.textSub, marginTop:5 }}>{getPriceReferenceLabel(modal)}</div>
                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:10, paddingTop:10, borderTop:`1px solid ${C.border}` }}>
                       <span style={{ fontSize:10, color:C.textSub }}>Selection block</span>
-                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:13, fontWeight:700, color:C.text }}>{fmt(modal.qty*modal.price)} €</span>
+                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:13, fontWeight:700, color:C.text }}>{fmt(modal.qty*modal.currentPrice)} €</span>
                     </div>
                   </div>
 
@@ -1347,6 +1485,45 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                             </div>
                           ))}
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ background:C.bgMid, borderRadius:10, padding:'12px 14px', border:`1px solid ${C.border}` }}>
+                    <div style={{ fontSize:10, color:c.color, marginBottom:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em', display:'flex', alignItems:'center', gap:5 }}>
+                      <BarChart2 size={10}/> PRICE REFERENCE
+                    </div>
+                    <div style={{ display:'grid', gap:10 }}>
+                      <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr 96px', gap:8 }}>
+                        <input
+                          value={priceDraft.price}
+                          onChange={e=>setPriceDraft(p=>({ ...p, price:e.target.value }))}
+                          placeholder={String(modal.price)}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                        />
+                        <input
+                          value={priceDraft.source}
+                          onChange={e=>setPriceDraft(p=>({ ...p, source:e.target.value }))}
+                          placeholder="Source"
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                        />
+                        <input
+                          value={priceDraft.year}
+                          onChange={e=>setPriceDraft(p=>({ ...p, year:e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }))}
+                          placeholder={currentYear}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                        />
+                      </div>
+                      <div style={{ fontSize:11, color:C.textSub, lineHeight:1.5 }}>
+                        Active reference: <span style={{ color:C.text }}>{getPriceReferenceLabel(modal)}</span>
+                      </div>
+                      <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                        <button onClick={resetPriceOverride} style={{ background:'transparent', border:`1px solid ${C.borderL}`, borderRadius:8, padding:'8px 10px', cursor:'pointer', fontSize:11, color:C.textSub, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                          RESET PRICE
+                        </button>
+                        <button onClick={savePriceOverride} disabled={!canSavePriceOverride} style={{ background:canSavePriceOverride?c.color:C.borderL, border:'none', borderRadius:8, padding:'8px 12px', cursor:canSavePriceOverride?'pointer':'not-allowed', fontSize:11, color:'#fff', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                          SAVE PRICE
+                        </button>
                       </div>
                     </div>
                   </div>
