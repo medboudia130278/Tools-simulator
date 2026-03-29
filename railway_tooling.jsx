@@ -73,6 +73,42 @@ const STATUTS = {
   OP:{ label:'Optional',   color:C.teal,   bg:C.tealDim   },
 };
 
+const LEVELS = {
+  T: {
+    label: 'Technician',
+    short: 'TECH',
+    emoji: '👤',
+    multiplierLabel: 'Technicians',
+    unit: 'per technician',
+    color: '#1C6090',
+    bgLight: '#DCEAF5',
+    bgDark: C.tealDim,
+    colorDark: C.teal,
+  },
+  E: {
+    label: 'Team',
+    short: 'TEAM',
+    emoji: '👥',
+    multiplierLabel: 'Teams',
+    unit: 'per team',
+    color: '#1F8A84',
+    bgLight: '#D9EFED',
+    bgDark: C.blueDim,
+    colorDark: C.blue,
+  },
+  P: {
+    label: 'Project / Depot',
+    short: 'PROJECT',
+    emoji: '🏗️',
+    multiplierLabel: 'Projects / Depots',
+    unit: 'per project / depot',
+    color: '#7C3AED',
+    bgLight: '#EEE7FF',
+    bgDark: C.violetDim,
+    colorDark: C.violet,
+  },
+};
+
 const CONTEXTS = [
   { id:'metro',  label:'Metro',      icon:'🚇', accent:C.teal   },
   { id:'tram',   label:'Tram',       icon:'🚊', accent:C.cyan   },
@@ -108,8 +144,8 @@ const RAW_BY_SUBSYSTEM = {
   ['t10','T','SAFETY','VDE 1000V Insulated Tool Set – 5 pcs','Knipex','00 20 13','LV','DIN EN/IEC 60900 – 1000V AC','OB',1,109,'Annual (visual inspection)','Official KNIPEX 5-piece VDE set combining insulated pliers and screwdrivers for standard low-voltage work.','https://www.knipex.com/products/tool-kits/tool-kits/tool-kits/002013'],
   ['t11','T','SAFETY','VDE Torque Wrench 1/2" 10-50 Nm','Gedore','VDE 4508-05','LV','DIN EN ISO 6789-2 / IEC 60900','RC',1,395,'Annual (calibration)','Official GEDORE insulated torque wrench page for controlled tightening on live components up to 1000 V.','https://www.gedore.com/en-at/products/torque-tools/torque-wrenches--accessories/torque-wrenches%2C-releasing-for-sockets/vde-4508-vde-torque-wrench/vde-4508-05---3079066'],
   ['t12','T','MBTDC','Portable Insulation Tester 500V/1000V','Fluke','1507 Insulation Tester','DC Auxiliaries 24-110V / LV','IEC 61557-2 – CAT IV 600V','OB',1,630,'Annual (calibration)','Daily use: insulation testing of 24VDC control circuits. Lighter than team MIT525.','https://www.fluke.com/fr-fr/produit/testeurs-isolement/fluke-1507'],
-  ['t13','T','MBTDC','RCD Tester + Fault Loop Impedance','Fluke','1664 FC Multifunction','LV / Auxiliaries 400V','IEC 61557 – IEC 60364','OB',1,1998,'Annual (calibration)','RCD test 10-500mA, fault loop impedance. Mandatory before 400V commissioning.','https://www.fluke.com/fr-fr/produit/testeurs-installation-electrique/fluke-1664-fc'],
-  ['t14','T','MBTDC','Loop Impedance / Installation Tester NF C 15-100','Metrel','MI 3102H BT EurotestXE 2.5 kV','LV / Auxiliaries 400V','IEC 61557 – NF C 15-100','RC',1,1353,'Annual (calibration)','Current official Metrel page for a Eurotest platform still suited to installation testing, loop impedance and higher-voltage insulation checks.','https://www.metrel.si/en/shop/EIS/multifunctional-testers/mi-3102h-bt.html'],
+  ['t13','E','MBTDC','RCD Tester + Fault Loop Impedance','Fluke','1664 FC Multifunction','LV / Auxiliaries 400V','IEC 61557 – IEC 60364','OB',1,1998,'Annual (calibration)','RCD test 10-500mA, fault loop impedance. Mandatory before 400V commissioning.','https://www.fluke.com/fr-fr/produit/testeurs-installation-electrique/fluke-1664-fc'],
+  ['t14','E','MBTDC','Loop Impedance / Installation Tester NF C 15-100','Metrel','MI 3102H BT EurotestXE 2.5 kV','LV / Auxiliaries 400V','IEC 61557 – NF C 15-100','RC',1,1353,'Annual (calibration)','Current official Metrel page for a Eurotest platform still suited to installation testing, loop impedance and higher-voltage insulation checks.','https://www.metrel.si/en/shop/EIS/multifunctional-testers/mi-3102h-bt.html'],
   ['t15','T','MBTDC','TRMS AC/DC Clamp Meter 1000A WiFi','Fluke','376 FC','LV / DC Traction 750-1500V','CAT IV 600V – CAT III 1000V','OB',1,767,'Annual (calibration)','DC measurement up to 2500A with iFlex. Fluke Connect wireless.','https://www.fluke.com/fr-fr/produit/mesure-courant/pinces-amperemetriques/fluke-376-fc'],
   ['t16','T','MBTDC','Three-phase Rotation Tester 40-700V AC','Fluke','9040','LV / Auxiliaries 400V','EN 61010 – EN 61557-7','OB',1,316,'Annual','Clear official product page for phase-sequence verification before energisation. Replaces the incorrect CA 6412 reference.','https://www.fluke.com/en/product/electrical-testing/basic-testers/fluke-9040'],
   ['t17','T','MBTDC','Traction DC Bipolar Voltage and Polarity Tester 24-1500V','Gossen Metrawatt','METRAVOLT 12D+L','DC Traction 750-1500V / LV','DIN EN 61243-3 – CAT IV 600V / CAT III 1000V','RC',1,435,'Annual','Two-pole contact tester used mainly for traction DC polarity identification, AC/DC voltage confirmation and diagnostic checks where the safety VAT alone is not sufficient. Distinct from the mandatory absence-of-voltage tool.','https://www.gossenmetrawatt.de/produkte/mess-und-prueftechnik/prueftechnik/pruefung-elektrischer-installationen-und-anlagen/spannung-phase-drehfeld-durchgang-polaritaet/metravolt-12d-plusl/'],
@@ -124,7 +160,7 @@ const RAW_BY_SUBSYSTEM = {
   ['t26','T','OUTILS','Permanent Industrial Markers oil/heat resistant – pack 3','Edding','8300 Industry Permanent Marker','All domains','–','OB',3,5.5,'Consumable','Black, red, blue. Industrial marker for oily/dusty surfaces, heat resistant up to 300°C.','https://www.edding.com/en-us/products/edding-8300-industry-permanent-marker/'],
   ['t27','T','OUTILS','Rechargeable Work Light 500 lm magnet IP65','Scangrip','UNIFORM 03.6208','All domains','IP65 – EN 13032-1','OB',1,89,'Annual (battery)','Portable inspection/work light with integrated magnet, hook and adjustable output up to 500 lm. Replaces the obsolete FLEX WEAR link.','https://www.scangrip.com/fr-fr/boutique/lampes-de-travail/03-6208-uniform'],
   ['t28','T','OUTILS','Technician Drill/Driver 18V for routine fastening','Bosch','GSR 18V-55 Professional','All domains – routine fixing and assembly','–','OB',1,317,'Replace if defective','Technician-level cordless drill/driver intended as the personal daily-use machine: cabinet covers, terminal blocks, light brackets, trunking accessories and routine assembly work. One unit per technician.','https://www.bosch-professional.com/fr/fr/products/gsr-18v-55-06019H5200'],
-  ['t29','T','CABLE','Hand-operated Hydraulic Crimping Tool 10-240mm²','Klauke','HK 60 VP','LV / DC Traction','EN 61238-1','OB',1,895,'2 years','Official Klauke hydraulic crimping tool page for cable lugs and connectors up to 240 mm² without interchangeable dies.','https://www.klauke.com/bh/en/ek-60-ft-hand-operated-hydraulic-crimping-tool-10-240-mm'],
+  ['t29','E','CABLE','Hand-operated Hydraulic Crimping Tool 10-240mm²','Klauke','HK 60 VP','LV / DC Traction','EN 61238-1','OB',1,895,'2 years','Official Klauke hydraulic crimping tool page for cable lugs and connectors up to 240 mm² without interchangeable dies.','https://www.klauke.com/bh/en/ek-60-ft-hand-operated-hydraulic-crimping-tool-10-240-mm'],
   ['t30','T','CABLE','Automatic Wire Stripper 0.2-6mm²','Jokari','SECURA 2K 20100','LV / DC','–','OB',1,42,'Replace when worn','Current official JOKARI automatic stripper page for 0.2 to 6.0 mm² conductors. More reliable than the old T-Stripper Vario link.','https://jokari.de/en/SECURA-2K-2.htm'],
   ['t31','T','CABLE','Cable Jacket Knife for round cables 8-28 mm','Jokari','Cable Knife No. 28G Standard','BT / HTA','–','OB',1,32,'Replace when worn','Current official JOKARI cable knife page for round cable sheaths and longitudinal cuts without damaging inner conductors.','https://jokari.de/en/products/detail/cable-knife-no-28g-standard'],
   ['t32','T','CABLE','Portable Cable Label Printer P-touch Bluetooth','Brother','PT-E310BTVP','All domains','–','RC',1,227,'Battery replacement','Official current Brother product page for the portable industrial Bluetooth labeller used for cable and terminal marking.','https://store.brother.fr/appareils/imprimantes-d-etiquettes/p-touch/pt/pte310btvp'],
@@ -155,19 +191,18 @@ const RAW_BY_SUBSYSTEM = {
   ['e19','E','MHTA','Digital Insulation Resistance Meter 5kV DC','Megger','MIT525','LV / MV / Cables','IEC 61557-2','OB',1,4149,'Annual (calibration)','PI, DAR, DD measurement. MV cables and substation transformers.','https://www.megger.com/fr/products/test-equipment/insulation-resistance-testers/mit525'],
   ['e20','E','MHTA','Digital Insulation Resistance Meter 10kV DC','Megger','MIT1025/2','MV 10-36kV / HV 25kV','IEC 61557-2','RC',1,4422,'Annual (calibration)','Insulation testing of MV cables and 25kV transformer windings.','https://www.megger.com/fr/products/test-equipment/insulation-resistance-testers/mit1025'],
   ['e21','E','MHTA','Micro-ohmmeter Contact Resistance 10-200A DC','Megger','DLRO10X','MV / Switchgear','IEC 62271 / IEC 60044','OB',1,4615,'Annual (calibration)','Contact resistance of circuit breakers, disconnectors, busbars.','https://www.megger.com/fr/products/test-equipment/low-resistance-ohmmeters/dlro10x'],
-  ['e22','E','MHTA','Three-phase Protection Relay Test Set','Omicron','CMC 353','MV / Protection','IEC 60255 – IEC 61850','OB',1,16500,'Annual (calibration)','Three-phase current/voltage injection. Tests differential, overcurrent, distance relays. Official OMICRON page notes the CMC 353 remains available until 31/12/2026.','https://www.omicronenergy.com/fr/produits/cmc-353/'],
-  ['e23','E','MHTA','CT/VT Transformer Turns Ratio + Polarity Tester','Megger','MRCT / TTR300','MV / CT-VT','IEC 60044-1 / IEC 61869','RC',1,3200,'Annual (calibration)','Turns ratio, excitation current, CT and VT polarity.','https://www.megger.com/fr/products/test-equipment/transformer-test/mrct'],
-  ['e24','E','MHTA','VLF Cable Insulation Tester MV 34kV','Baur','PHG TD/VLF 34 kV','MV 10-36kV','IEC 60060-3 / NF C 33-052','RC',1,8500,'Every 2 years','In-service dielectric testing of MV cables. 0.1 Hz frequency.','https://www.baur.eu/products/vlf-testing/phg-td'],
+  ['e22','P','MHTA','Three-phase Protection Relay Test Set','Omicron','CMC 353','MV / Protection','IEC 60255 – IEC 61850','OB',1,16500,'Annual (calibration)','Three-phase current/voltage injection. Tests differential, overcurrent, distance relays. Official OMICRON page notes the CMC 353 remains available until 31/12/2026.','https://www.omicronenergy.com/fr/produits/cmc-353/'],
+  ['e23','P','MHTA','CT/VT Transformer Turns Ratio + Polarity Tester','Megger','MRCT / TTR300','MV / CT-VT','IEC 60044-1 / IEC 61869','RC',1,3200,'Annual (calibration)','Turns ratio, excitation current, CT and VT polarity.','https://www.megger.com/fr/products/test-equipment/transformer-test/mrct'],
+  ['e24','P','MHTA','VLF Cable Insulation Tester MV 34kV','Baur','PHG TD/VLF 34 kV','MV 10-36kV','IEC 60060-3 / NF C 33-052','RC',1,8500,'Every 2 years','In-service dielectric testing of MV cables. 0.1 Hz frequency.','https://www.baur.eu/products/vlf-testing/phg-td'],
   ['e25','E','MHTA','Clamp-on Earth Tester – Rt measurement without disconnection','Fluke','1630-2 FC','All domains – Earth network','IEC 61557-5','OB',1,1861,'Annual (calibration)','Earth resistance measurement without disconnecting electrodes. Fluke Connect WiFi.','https://www.fluke.com/fr-fr/produit/mesure-resistance-terre/fluke-1630-2-fc'],
-  ['e26','E','MHTA','MV Cable Screen Continuity/Insulation Test','Megger','MIT525 + screen accessories','MV 10-36kV','IEC 60502-4','OB',1,185,'Annual (calibration)','Cu/Al screen continuity and insulation after MV cable jointing.','https://www.megger.com/fr/products/test-equipment/insulation-resistance-testers/mit525'],
   ['e27','E','MBTDC','AC/DC Clamp Meter 2500A + iFlex flexible probe','Fluke','376 FC + iFlex Kit','DC Traction 750-1500V / LV','CAT III 1000V / CAT IV 600V','OB',2,570,'Annual (calibration)','Traction return current measurement up to 2500A DC.','https://www.fluke.com/fr-fr/produit/mesure-courant/pinces-amperemetriques/fluke-376-fc'],
   ['e28','E','MBTDC','Network Analyser – voltage, power, energy','Metrel','MI 2892 Power Master','DC Traction 750-1500V','IEC 61000-4-30','OB',1,2100,'Annual (calibration)','Current official Metrel product page for the MI 2892 platform, replacing the obsolete PowerQ4 Plus reference.','https://www.metrel.si/en/shop/PQA/class-a-power-quality-analysers/mi-2892.html'],
   ['e29','E','MBTDC','Stationary Battery Tester – internal impedance','Fluke','BT521 Battery Analyzer','DC Auxiliaries 24-110V','IEEE 1188 / IEC 60896','OB',1,6308,'Annual (calibration)','UPS, 24VDC, 110VDC battery diagnostics at substations.','https://www.fluke.com/fr-fr/produit/testeurs-batteries/fluke-bt521'],
   ['e30','E','MBTDC','Earth Resistance Tester 3 and 4-pole – GEO Kit','Fluke','1625-2 GEO Kit','All domains – Earthing','IEC 61557-5','OB',1,3746,'Annual (calibration)','3- and 4-probe method. Essential for substations and earth loops.','https://www.fluke.com/fr-fr/produit/mesure-resistance-terre/fluke-1625-2-geo'],
   ['e31','E','DIAG','Radiometric Thermal Camera 320×240 – MSX WiFi','Fluke','Ti480 PRO','All domains','EN 13187 / IEC 60068-2','OB',1,7861,'Annual (COFRAC calibration)','Preventive inspection HV/LV/DC. Hot spots on breakers, cables, connections.','https://www.fluke.com/fr-fr/produit/cameras-thermiques/fluke-ti480-pro'],
-  ['e32','E','DIAG','Portable Oscilloscope 4-ch 200MHz CAT III','Fluke','190-204/S ScopeMeter','LV / DC Traction','CAT III 1000V – IP51','RC',1,2400,'Annual','Waveform analysis for drives, converters, relays.','https://www.fluke.com/fr-fr/produit/oscilloscopes/fluke-190-204-s'],
-  ['e33','E','DIAG','Portable Cable Fault Locator / TDR for LV-MV diagnostics','Megger','Teleflex SX-1','LV / MV / DC Traction','TDR fault pre-location platform','RC',1,4200,'Annual','Portable two-channel TDR used to pre-locate cable faults safely and accurately before repair campaigns. Current official Megger reference, clearer and easier to find than the older PFL40B entry.','https://www.megger.com/en-us/products/teleflex-sx-1'],
-  ['e34','E','DIAG','Portable EMC/HF Spectrum Analyser','Anritsu','MS2711E','All domains – EMC','IEC 61000-4 series','OP',1,3800,'Every 2 years','Harmonic disturbances, EMC, track signalling interference.','https://www.anritsu.com/fr-FR/test-measurement/products/ms2711e'],
+  ['e32','P','DIAG','Portable Oscilloscope 4-ch 200MHz CAT III','Fluke','190-204/S ScopeMeter','LV / DC Traction','CAT III 1000V – IP51','RC',1,2400,'Annual','Waveform analysis for drives, converters, relays.','https://www.fluke.com/fr-fr/produit/oscilloscopes/fluke-190-204-s'],
+  ['e33','P','DIAG','Portable Cable Fault Locator / TDR for LV-MV diagnostics','Megger','Teleflex SX-1','LV / MV / DC Traction','TDR fault pre-location platform','RC',1,4200,'Annual','Portable two-channel TDR used to pre-locate cable faults safely and accurately before repair campaigns. Current official Megger reference, clearer and easier to find than the older PFL40B entry.','https://www.megger.com/en-us/products/teleflex-sx-1'],
+  ['e34','P','DIAG','Portable EMC/HF Spectrum Analyser','Anritsu','MS2711E','All domains – EMC','IEC 61000-4 series','OP',1,3800,'Every 2 years','Harmonic disturbances, EMC, track signalling interference.','https://www.anritsu.com/fr-FR/test-measurement/products/ms2711e'],
   ['e35','E','LOTO','Portable Earthing Stick for Switchgear Installations','DEHN','ES SK 1000 / earthing stick range','MV 10-36kV','EN/IEC 61230 (DIN VDE 0683-100)','OB',2,850,'Annual (dielectric test)','Official DEHN earthing stick page for fitting portable earthing and short-circuiting devices on switchgear installations. Safer maintained alternative to the obsolete CATU earthing rod page.','https://www.dehn-international.com/store/p/en-DE/F49866/earthing-sticks-for-switchgear-installations'],
   ['e36','E','LOTO','Railway Earthing and Short-Circuiting Device 750-1500V DC','DEHN','EKV K 50 8500','DC Traction 750-1500V','EN/IEC 61230 / IEC 61138','OB',2,620,'Annual (dielectric test)','Official DEHN railway earthing and short-circuiting device page with overhead contact-line clamp and rail clamp for electrified railway work.','https://www.dehn-international.com/store/p/en-DE/F78297/earthing-and-short-circuiting-devices-for-railway-applications'],
   ['e37','E','LOTO','Portable Metal Group Lock Box – up to 13 padlocks','Brady','51171','All domains','ISO 3864 / EN 1037','OB',2,121,'Annual','Portable metal group lock box for multi-technician interventions. The previous Brady references did not match the displayed equipment type.','https://www.bradyid.com/lockout-tagout/extra-large-portable-metal-group-lock-box-pid-51171'],
@@ -177,12 +212,14 @@ const RAW_BY_SUBSYSTEM = {
   ['e41','E','CABLE','Ratchet Crimping Tool small sections 0.5-16mm²','Weidmuller','PZ 6 Roto','LV / DC – Control circuits 24-110V','EN 60947-7 / DIN 46228','OB',2,155,'Replace when worn','Crimping ferrules and lugs for control circuits. Anti-return ratchet.','https://www.weidmueller.com/fr/products/tools/crimping-tools/pz-6-roto'],
   ['e42','E','CABLE','Fibreglass Fish Tape 20m – cable pulling needle','Greenlee','540','All domains – Cable pulling','–','OB',1,85,'Replace if broken','Pulling LV, DC, control cables in conduits. Non-conductive fibreglass.','https://www.greenlee.com/fish-tapes/540'],
   ['e43','E','CABLE','MV Cable Joint / Sealing Kit – heat-shrink type up to 36 kV','Raychem RPG','Heat Shrink Medium Voltage Joints','MV 10-36kV / DC Traction','IEC 60502-4 / HD 620','OB',1,220,'Consumable','Heat-shrink medium-voltage jointing and sealing kit used after cable repair, jointing or termination work to restore insulation, screen continuity and moisture protection. Replaces the inaccessible generic nVent category link with a directly accessible official product page.','https://www.raychemrpg.com/reliable-connections/power-cable-accessories/medium-voltage-joints-terminations/heat-shrink-medium-voltage-joints/heat-shrink-medium-voltage-joints'],
+  ['e50','E','CABLE','LV Cable Joint / Sealing Kit – heat-shrink type up to 1.1 kV','Raychem RPG','Heat Shrink Low Voltage Joints','LV power / auxiliaries / control cables','EN 50393 / IS 13573-1','OB',2,65,'Consumable','Heat-shrink low-voltage jointing and sealing kit for straight or branch cable repairs up to 1.1 kV. Suitable for PVC, rubber and XLPE cables where insulation restoration and moisture sealing are required after damage or modification work.','https://www.raychemrpg.com/reliable-connections/power-cable-accessories/low-voltage-joints-terminations/heat-shrink-low-voltage-joints/heat-shrink-low-voltage-joints'],
   ['e44','E','COLLECTIF','Portable Inverter Generator 3.2 kW – 230V silent','Honda','EU32i','LV Auxiliaries','EN 12601','RC',1,4169,'Annual (oil change + service)','Current official Honda portable inverter generator page. Compact, quiet and easier to source than the discontinued EU30i reference.','https://shop.honda.fr/p/groupe-eu-32-ik-3200w/15323020/'],
   ['e45','E','COLLECTIF','Site Barrier + Red/White Delimitation Kit','Novap','1320147 + 3055009','All domains – Track safety','NF EN ISO 7010','OB',2,280,'Annual (inspection)','Directly sourceable Novap combination for local worksite delimitation: telescopic red/white barrier with matching red/white site tape.','https://www.novap.fr/poteaux-barrieres/barrieres/barrieres-telescopiques/barriere-telescopique-de-1-a-1-80-m-blanche-rouge-blanc-hachure-type-k2.html'],
   ['e46','E','COLLECTIF','Professional First Aid Case DIN 13169','SÖHNGEN','DYNAMIC-GLOW L 0301401','All domains','DIN 13169','OB',1,339,'6 months (expiry check)','Official SÖHNGEN first aid case page with DIN 13169 filling, wall holder and splash-protected case for vehicles and workshops.','https://shop.aluderm.de/erste-hilfe-koffer-orange-dynamic-glow-l-ind-norm-plus-din-13169'],
   ['e47','E','COLLECTIF','CO2 Extinguisher 5kg – class B electrical cabinets','GLORIA','KS 5 ST','All domains','EN 3','OB',1,140,'Annual (pressure check)','Official GLORIA CO2 extinguisher page listing 5 kg models suitable for electrical equipment and residue-free firefighting.','https://www.gloria.de/de/produkt/feuerloescher/co2-handhebel/'],
-  ['e48','E','COLLECTIF','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','All domains – Diagnostics','IP53 – MIL-STD-810H','RC',2,2595,'5-year replacement','Current official Panasonic Connect page for the Toughbook 55 platform used for IEC 61850 relay connection, SCADA and drive diagnostics. Entry aligned to a current base mk3 market configuration.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
+  ['e48','E','COLLECTIF','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','All domains – Diagnostics','IP53 – MIL-STD-810H','RC',1,2595,'5-year replacement','Current official Panasonic Connect page for the Toughbook 55 platform used for IEC 61850 relay connection, SCADA and drive diagnostics. Entry aligned to a current base mk3 market configuration.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
   ['e49','E','OUTILS','Open-end / Ring Wrench Set 6-34 mm – 25 pcs','Facom','440.JE25','All domains – heavy bolting','NF ISO 1711-1 / NF ISO 691 / NF ISO 7738','RC',1,520,'Replace when worn','Current official FACOM large-range set covering the heavier fastening sizes that are not practical to carry at technician level. Suitable as the team-level wrench base for cabinets, supports and heavier mechanical interfaces.','https://www.facom.com/product/440je25/6mm-34mm-combination-wrench-set-25-pc'],
+  ['e51','E','OUTILS','Maintenance Pliers Set – cutting, combination, long-nose, multigrip','Facom','CPE.A4','All domains – team hand tools','ISO 5746 / ISO 5748 / ISO 8976','OB',1,145,'Replace when worn','Official FACOM 4-piece maintenance plier set including combination pliers, diagonal cutters, half-round long-nose pliers and locking multigrip pliers. Good team-level complement to the insulated technician kit when broader mechanical handling and gripping are needed.','https://www.facom.com/product/cpea4/maintenance-plier-set-4-pc'],
   ],
   PSD: [],
   CAT: [],
@@ -199,6 +236,16 @@ const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,
 });
 
 const DEFAULT_CONTEXT_IDS = CONTEXTS.map(context => context.id);
+const TOOL_CONTEXT_OVERRIDES = {
+  'POS:e01': ['heavy'],
+  'POS:e03': ['heavy'],
+  'POS:e04': ['heavy'],
+  'POS:e15': ['heavy'],
+  'POS:e16': ['heavy'],
+  'POS:e17': ['heavy'],
+  'POS:e20': ['heavy'],
+  'POS:e24': ['heavy'],
+};
 const PRICE_OVERRIDE_STORAGE_KEY = 'railway-tooling-price-overrides-v1';
 
 function loadStoredPriceOverrides() {
@@ -237,7 +284,7 @@ const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =
     const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
     const imgFile = matchedImgFile;
     const uid = `${subsystem}:${id}`;
-    return {id,uid,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc,subsystem,contexts:DEFAULT_CONTEXT_IDS};
+    return {id,uid,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc,subsystem,contexts:TOOL_CONTEXT_OVERRIDES[uid] || DEFAULT_CONTEXT_IDS};
   })
 );
 
@@ -264,7 +311,6 @@ const PRIMARY_USE_OVERRIDES = {
   e23: 'Ratio and polarity tester for instrument transformers during commissioning and fault analysis. Use it to verify CT/VT wiring, ratio accuracy and polarity before protection circuits are trusted in operation.',
   e24: 'Specialised MV cable dielectric test set for in-service cable assessment. Use it after repairs, jointing work or before re-commissioning to stress the cable insulation at very low frequency and confirm serviceability.',
   e25: 'Clamp earth tester for rapid earthing checks without disconnecting the installation. Use it during inspections or troubleshooting when you need a fast resistance trend on an existing earth network with minimal disruption.',
-  e26: 'Focused test configuration for MV cable screens after jointing or repair work. Use it to confirm screen continuity and insulation quality before the cable is handed back for energisation.',
   e27: 'Team-level high-current clamp used on traction return circuits, substations and large LV feeders. Use it when current exceeds the range or practicality of a technician handheld clamp and flexible iFlex access is needed.',
   e28: 'Network and energy analyser for deeper traction DC investigations. Use it to log voltage, current, power and energy behavior over time when diagnosing substations, chargers, converters or abnormal DC load conditions.',
   e29: 'Battery diagnostic instrument for stationary DC systems such as UPS, charger-backed auxiliaries and substation battery banks. Use it during preventive maintenance to detect weak cells, rising impedance and declining autonomy.',
@@ -274,9 +320,11 @@ const PRIMARY_USE_OVERRIDES = {
   e38: 'Team baseline ratchet cutter for standard copper and aluminium power cables. Use it for routine cable preparation and replacement work when the conductor is conventional and still within normal manual cutting capacity.',
   e39: 'High-capacity hydraulic cutter reserved for larger diameters and heavier cable sections. Use it when a standard ratchet cutter becomes too limited because of cable size, section or required cutting force.',
   e40: 'Specialised cutter for armoured or steel-reinforced cable construction. Use it when the difficulty comes from armour or steel core reinforcement rather than from diameter alone, and a normal Cu/Al cable cutter is not appropriate.',
+  e50: 'Heat-shrink low-voltage jointing kit kept at team level for damaged or modified LV cable sections. Use it after cable repair, extension or rerouting work to rebuild insulation, sealing and mechanical protection on auxiliaries or power circuits up to 1.1 kV.',
   e32: 'Portable isolated oscilloscope for waveform-level troubleshooting on converters, drives, relay outputs and control electronics. Use it when a multimeter cannot explain unstable switching, ripple, spikes or timing faults.',
   e33: 'Time-domain reflectometer for locating cable defects from one accessible end. Use it to estimate the distance to open circuits, short circuits or insulation anomalies before excavation or cable section replacement.',
   e34: 'Spectrum analyser for electromagnetic compatibility investigations around rail equipment. Use it when chasing radio-frequency noise, interference on signalling-related assets or abnormal emissions from converters and power electronics.',
+  e51: 'Shared team plier assortment for gripping, cutting, clamping and awkward mechanical handling tasks. Use it when the technician-level insulated pliers are too limited and the intervention needs a broader set including diagonal cutters, long-nose pliers and multigrip capability.',
 };
 
 // ─── SVG CATEGORY ICONS ───────────────────────────────────────────────────────
@@ -417,19 +465,21 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const [vw, setVw]       = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
   // ── Workforce config per subsystem ──
   const [workforce, setWorkforce] = useState({
-    POS:   { tech:4, equipe:1 },
-    PSD:   { tech:3, equipe:1 },
-    CAT:   { tech:4, equipe:1 },
-    TRACK: { tech:5, equipe:2 },
-    '3RD': { tech:3, equipe:1 },
-    AFC:   { tech:2, equipe:1 },
-    DEQ:   { tech:2, equipe:1 },
-    MEP:   { tech:3, equipe:1 },
+    POS:   { tech:4, equipe:1, project:1 },
+    PSD:   { tech:3, equipe:1, project:1 },
+    CAT:   { tech:4, equipe:1, project:1 },
+    TRACK: { tech:5, equipe:2, project:1 },
+    '3RD': { tech:3, equipe:1, project:1 },
+    AFC:   { tech:2, equipe:1, project:1 },
+    DEQ:   { tech:2, equipe:1, project:1 },
+    MEP:   { tech:3, equipe:1, project:1 },
   });
   const nbTech  = workforce[subsystem].tech;
   const nbEquipe = workforce[subsystem].equipe;
+  const nbProject = workforce[subsystem].project;
   const setNbTech  = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], tech:Math.max(1,v)}}));
   const setNbEquipe = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], equipe:Math.max(1,v)}}));
+  const setNbProject = v => setWorkforce(p=>({...p, [subsystem]:{...p[subsystem], project:Math.max(1,v)}}));
 
   const context = CONTEXTS.find(c=>c.id===ctx);
   const acc = context.accent;
@@ -489,6 +539,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const total  = selT.reduce((s,t)=>s+t.qty*t.currentPrice,0);
   const tTotal = selT.filter(t=>t.level==='T').reduce((s,t)=>s+t.qty*t.currentPrice,0);
   const eTotal = selT.filter(t=>t.level==='E').reduce((s,t)=>s+t.qty*t.currentPrice,0);
+  const pTotal = selT.filter(t=>t.level==='P').reduce((s,t)=>s+t.qty*t.currentPrice,0);
   const mandatorySelected = selT.filter(t=>t.statut==='OB').length;
   const mandatoryTotal = activeTools.filter(t=>t.statut==='OB').length;
   const coveragePct = mandatoryTotal ? Math.round((mandatorySelected / mandatoryTotal) * 100) : 0;
@@ -497,6 +548,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
   const currentYear = String(new Date().getFullYear());
   const priceDraftValue = Number.parseFloat(String(priceDraft.price).replace(',', '.'));
   const canSavePriceOverride = Number.isFinite(priceDraftValue) && priceDraftValue >= 0;
+  const getLevelMeta = level => LEVELS[level] || LEVELS.T;
+  const getUnitLabel = tool => `${tool.qty} ${getLevelMeta(tool.level).unit}`;
   const getPriceReferenceLabel = tool => {
     if (tool.priceSource && tool.priceYear) return `${tool.priceSource} · ${tool.priceYear}`;
     if (tool.priceSource) return tool.priceSource;
@@ -652,7 +705,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
 
             {/* Level */}
             <div style={{ display:'flex', gap:5 }}>
-              {[['ALL','All'],['T','Technician'],['E','Team']].map(([v,l])=>pill(lvl===v,acc,l,()=>setLvl(v)))}
+              {[['ALL','All'],['T','Technician'],['E','Team'],['P','Project / Depot']].map(([v,l])=>pill(lvl===v, LEVELS[v]?.color||acc, l, ()=>setLvl(v)))}
             </div>
 
             {/* Statut */}
@@ -688,7 +741,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
           <div style={{ flex:1, overflowY:'auto', padding:isMobile?'12px 12px 16px':embedded?'20px':'14px 18px' }}>
             <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':embedded?'repeat(auto-fill, minmax(290px, 1fr))':'repeat(auto-fill, minmax(325px, 1fr))', gap:embedded?18:12 }}>
               {filtered.map((t,i)=>{
-                const isSel=sel.has(t.uid), c=CATS[t.cat], s=STATUTS[t.statut];
+                const isSel=sel.has(t.uid), c=CATS[t.cat], s=STATUTS[t.statut], levelMeta=getLevelMeta(t.level);
                 if (embedded) {
                   return (
                     <div
@@ -713,7 +766,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                       <div style={{ position:'relative', background:`linear-gradient(180deg, ${c.color}14 0%, rgba(255,255,255,0.96) 100%)`, minHeight:194, display:'flex', alignItems:'center', justifyContent:'center', padding:'22px 18px 14px' }}>
                         <div style={{ position:'absolute', inset:'14px 14px auto auto', display:'flex', gap:6, flexWrap:'wrap', justifyContent:'flex-end' }}>
                           <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{s.label}</span>
-                          <span style={{ background:t.level==='T'?'#DCEAF5':'#D9EFED', color:t.level==='T'?'#1C6090':'#1F8A84', borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{t.level==='T'?'TECH':'TEAM'}</span>
+                          <span style={{ background:levelMeta.bgLight, color:levelMeta.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{levelMeta.short}</span>
                         </div>
                         <ToolVisual tool={t} size={116} radius={18}/>
                       </div>
@@ -759,7 +812,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                               {fmt(t.currentPrice)} €
                             </div>
                             <div style={{ fontSize:11, color:'#667085', marginTop:4 }}>
-                              {t.qty} {t.level==='T'?'per technician':'per team'}
+                              {getUnitLabel(t)}
                             </div>
                             <div style={{ fontSize:10, color:t.hasPriceOverride?c.color:'#98A2B3', marginTop:5 }}>
                               {getPriceReferenceLabel(t)}
@@ -808,9 +861,9 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                             {s.label}
                           </span>
                           <span style={{ fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em',
-                            color:t.level==='T'?C.teal:C.blue, background:t.level==='T'?C.tealDim:C.blueDim,
+                            color:levelMeta.colorDark, background:levelMeta.bgDark,
                             padding:'3px 8px', borderRadius:999 }}>
-                            {t.level==='T'?'TECH':'TEAM'}
+                            {levelMeta.short}
                           </span>
                         </div>
                         {/* Checkbox */}
@@ -852,7 +905,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                             {fmt(t.currentPrice)} €
                           </div>
                           <div style={{ fontSize:10, color:C.textSub, marginTop:3 }}>
-                            {t.qty} {t.level==='T'?'per technician':'per team'}
+                            {getUnitLabel(t)}
                           </div>
                           <div style={{ fontSize:9, color:t.hasPriceOverride?c.color:C.textMuted, marginTop:4 }}>
                             {getPriceReferenceLabel(t)}
@@ -919,8 +972,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                 </div>
               </div>
             </div>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
-              {[['T','Technician','#1C6090',tTotal],['E','Team','#1F8A84',eTotal]].map(([lv,label,color,budget])=>(
+            <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(3, 1fr)', gap:10 }}>
+              {[['T','Technician','#1C6090',tTotal],['E','Team','#1F8A84',eTotal],['P','Project / Depot','#7C3AED',pTotal]].map(([lv,label,color,budget])=>(
                 <div key={lv} style={{ background:'#F2F4F7', borderRadius:16, padding:'12px 13px' }}>
                   <div style={{ fontSize:10, color, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>{label.toUpperCase()}</div>
                   <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700, color:'#191C1E', marginTop:4 }}>{fmt(budget)} €</div>
@@ -959,6 +1012,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
               {[
                 ['No. of technicians', nbTech, setNbTech, '#1C6090'],
                 ['No. of teams', nbEquipe, setNbEquipe, '#1F8A84'],
+                ['No. of projects / depots', nbProject, setNbProject, '#7C3AED'],
               ].map(([label, val, setter, col])=>(
                 <div key={label}>
                   <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{label.toUpperCase()}</div>
@@ -979,9 +1033,10 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
             </div>
             <div style={{ display:'grid', gap:10 }}>
               {[
-                [`${nbTech} tech · ${nbEquipe} team${nbEquipe>1?'s':''}`, nbTech*tTotal + nbEquipe*eTotal, '#191C1E', true],
+                [`${nbTech} tech · ${nbEquipe} team${nbEquipe>1?'s':''} · ${nbProject} project/depot`, nbTech*tTotal + nbEquipe*eTotal + nbProject*pTotal, '#191C1E', true],
                 [`Technicians (×${nbTech})`, nbTech*tTotal, '#1C6090', false],
                 [`Teams (×${nbEquipe})`, nbEquipe*eTotal, '#1F8A84', false],
+                [`Projects / Depots (×${nbProject})`, nbProject*pTotal, '#7C3AED', false],
               ].map(([label, val, col, bold])=>(
                 <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', borderBottom:'1px solid rgba(71,84,103,0.10)' }}>
                   <span style={{ fontSize:bold?12:11, color:bold?'#191C1E':'#667085', fontWeight:bold?700:500 }}>{label}</span>
@@ -996,6 +1051,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
             {[
               ['Technician', activeTools.filter(t=>t.level==='T').length, '#1C6090'],
               ['Team', activeTools.filter(t=>t.level==='E').length, '#1F8A84'],
+              ['Project / Depot', activeTools.filter(t=>t.level==='P').length, '#7C3AED'],
               ['Mandatory', activeTools.filter(t=>t.statut==='OB').length, '#9F4200'],
             ].map(([l,v,col])=>(
               <div key={l} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'5px 0' }}>
@@ -1064,8 +1120,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
             </div>
 
             {/* By level */}
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
-              {[['T','Technician',C.teal,tTotal],['E','Team',C.blue,eTotal]].map(([lv,label,color,budget])=>(
+            <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr 1fr':'repeat(3, 1fr)', gap:8 }}>
+              {[['T','Technician',C.teal,tTotal],['E','Team',C.blue,eTotal],['P','Project / Depot',C.violet,pTotal]].map(([lv,label,color,budget])=>(
                 <div key={lv} style={{ background:`linear-gradient(180deg, ${color}10 0%, ${C.bg} 100%)`, borderRadius:10, padding:'10px 11px', border:`1px solid ${color}25` }}>
                   <div style={{ fontSize:9, color, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>{label.toUpperCase()}</div>
                   <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:14, fontWeight:700, color, marginTop:4 }}>{fmt(budget)} €</div>
@@ -1105,6 +1161,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                 {[
                   ['No. of technicians', nbTech, setNbTech, C.teal],
                   ['No. of teams', nbEquipe, setNbEquipe, C.blue],
+                  ['No. of projects / depots', nbProject, setNbProject, C.violet],
                 ].map(([label, val, setter, col])=>(
                   <div key={label}>
                     <div style={{ fontSize:10, color:C.textSub, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{label.toUpperCase()}</div>
@@ -1129,9 +1186,10 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                 </div>
                 <div style={{ padding:'12px 14px', display:'flex', flexDirection:'column', gap:0 }}>
                   {[
-                    [`${nbTech} tech · ${nbEquipe} team${nbEquipe>1?'s':''}`, nbTech*tTotal + nbEquipe*eTotal, acc, true],
+                    [`${nbTech} tech · ${nbEquipe} team${nbEquipe>1?'s':''} · ${nbProject} project/depot`, nbTech*tTotal + nbEquipe*eTotal + nbProject*pTotal, acc, true],
                     [`Technicians (×${nbTech})`, nbTech*tTotal, C.teal, false],
                     [`Teams (×${nbEquipe})`, nbEquipe*eTotal, C.blue, false],
+                    [`Projects / Depots (×${nbProject})`, nbProject*pTotal, C.violet, false],
                   ].map(([label, val, col, bold], idx)=>(
                     <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'7px 0', borderBottom: idx<2?`1px solid ${C.border}`:'none', opacity: idx>0&&val===0?0.4:1 }}>
                       <span style={{ fontSize: bold?12:10, color: bold?C.text:C.textSub, fontWeight: bold?600:400 }}>{label}</span>
@@ -1140,8 +1198,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                   ))}
                 </div>
                 {/* Budget per tech / per equipe */}
-                <div style={{ padding:'10px 14px', borderTop:`1px solid ${C.border}`, background:C.bgMid, display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
-                  {[['/ technician', tTotal, C.teal], ['/ team', eTotal, C.blue]].map(([l,v,col])=>(
+                <div style={{ padding:'10px 14px', borderTop:`1px solid ${C.border}`, background:C.bgMid, display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(3, 1fr)', gap:8 }}>
+                  {[['/ technician', tTotal, C.teal], ['/ team', eTotal, C.blue], ['/ project / depot', pTotal, C.violet]].map(([l,v,col])=>(
                     <div key={l} style={{ textAlign:'center' }}>
                       <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:13, fontWeight:700, color:col }}>{fmt(v)} €</div>
                       <div style={{ fontSize:9, color:C.textSub, marginTop:2, fontFamily:"'Barlow Condensed', sans-serif" }}>{l}</div>
@@ -1164,6 +1222,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
               {[
                 ['Technician', activeTools.filter(t=>t.level==='T').length, C.teal],
                 ['Team', activeTools.filter(t=>t.level==='E').length, C.blue],
+                ['Project / Depot', activeTools.filter(t=>t.level==='P').length, C.violet],
                 ['Mandatory', activeTools.filter(t=>t.statut==='OB').length, C.orange],
               ].map(([l,v,col])=>(
                 <div key={l} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'3px 0' }}>
@@ -1181,7 +1240,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
       {modalTool&&(()=>{
         const modal = modalTool;
         const c=CATS[modal.cat], s=STATUTS[modal.statut], isSel=sel.has(modal.uid);
-        const unitLabel = `${modal.qty} ${modal.level==='T'?'per technician':'per team'}`;
+        const levelMeta = getLevelMeta(modal.level);
+        const unitLabel = getUnitLabel(modal);
         if (embedded) {
           return (
             <div
@@ -1198,8 +1258,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                       <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', marginBottom:12 }}>
                         <span style={{ background:`${c.color}15`, color:c.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{c.icon} {c.label}</span>
                         <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{s.label}</span>
-                        <span style={{ background:modal.level==='T'?'#DCEAF5':'#D9EFED', color:modal.level==='T'?'#1C6090':'#1F8A84', borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>
-                          {modal.level==='T'?'Technician':'Team'}
+                        <span style={{ background:levelMeta.bgLight, color:levelMeta.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>
+                          {levelMeta.label}
                         </span>
                       </div>
                       <div style={{ fontFamily:"'Space Grotesk', sans-serif", fontSize:isMobile?25:31, fontWeight:700, lineHeight:1.08, color:'#191C1E', marginBottom:10 }}>
@@ -1238,7 +1298,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                     <div style={{ display:'grid', gap:8 }}>
                       <MetaTile label="Voltage domain" value={modal.domain} accent={c.color} surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
                       <MetaTile label="Maintenance" value={modal.period} accent="#1C6090" surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
-                      <MetaTile label="Quantity baseline" value={unitLabel} accent={modal.level==='T'?'#1C6090':'#1F8A84'} surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
+                      <MetaTile label="Quantity baseline" value={unitLabel} accent={levelMeta.color} surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
                     </div>
 
                     <button
@@ -1414,8 +1474,8 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                   <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', marginBottom:10 }}>
                     <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}35`, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{c.icon} {c.label}</span>
                     <span style={{ background:`${s.color}15`, color:s.color, border:`1px solid ${s.color}30`, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>{s.label}</span>
-                    <span style={{ background:modal.level==='T'?C.tealDim:C.blueDim, color:modal.level==='T'?C.teal:C.blue, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
-                      {modal.level==='T'?'👤 Technician':'👥 Team'}
+                    <span style={{ background:levelMeta.bgDark, color:levelMeta.colorDark, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
+                      {levelMeta.emoji} {levelMeta.label}
                     </span>
                   </div>
                   <div style={{ fontSize:20, fontWeight:700, lineHeight:1.25, color:C.text, marginBottom:8 }}>{modal.name}</div>
@@ -1438,7 +1498,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                   <div style={{ background:C.bg, borderRadius:12, padding:'14px 16px', textAlign:'left', width:'100%', border:`1px solid ${c.color}30` }}>
                     <div style={{ fontSize:9, color:C.textSub, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>COST SNAPSHOT</div>
                     <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:24, fontWeight:700, color:c.color }}>{fmt(modal.currentPrice)} €</div>
-                    <div style={{ fontSize:11, color:C.textSub, marginTop:4 }}>{modal.qty} {modal.level==='E'?'per team':'per technician'}</div>
+                    <div style={{ fontSize:11, color:C.textSub, marginTop:4 }}>{unitLabel}</div>
                     <div style={{ fontSize:10, color:C.textSub, marginTop:5 }}>{getPriceReferenceLabel(modal)}</div>
                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:10, paddingTop:10, borderTop:`1px solid ${C.border}` }}>
                       <span style={{ fontSize:10, color:C.textSub }}>Selection block</span>
@@ -1449,7 +1509,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                   <div style={{ width:'100%', display:'grid', gridTemplateColumns:'1fr', gap:8 }}>
                     <MetaTile label="Voltage domain" value={modal.domain} accent={c.color}/>
                     <MetaTile label="Maintenance" value={modal.period} accent={C.violet}/>
-                    <MetaTile label="Quantity baseline" value={`${modal.qty} ${modal.level==='T'?'per technician':'per team'}`} accent={modal.level==='T'?C.teal:C.blue}/>
+                    <MetaTile label="Quantity baseline" value={unitLabel} accent={levelMeta.colorDark}/>
                   </div>
 
                   <button onClick={()=>toggle(modal.uid)} style={{
@@ -1490,7 +1550,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
                             ['Voltage domain', modal.domain],
                             ['Standard / insulation', modal.norm],
                             ['Verification / calibration', modal.period],
-                            ['Quantity baseline', `${modal.qty} ${modal.level==='T'?'per technician':'per team'}`],
+                            ['Quantity baseline', unitLabel],
                           ].map(([label, value])=>(
                             <div key={label} style={{ display:'grid', gridTemplateColumns:'140px 1fr', gap:10, alignItems:'start', paddingBottom:7, borderBottom:`1px solid ${C.border}` }}>
                               <div style={{ fontSize:10, color:C.textSub }}>{label}</div>
