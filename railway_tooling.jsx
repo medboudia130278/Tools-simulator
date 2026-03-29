@@ -533,17 +533,17 @@ export default function App({ embedded = false }) {
                         boxShadow:isSel?`0 22px 42px ${c.color}22`:'0 18px 36px rgba(17,24,39,0.06)',
                         display:'flex',
                         flexDirection:'column',
-                        minHeight:360,
+                        minHeight:374,
                       }}
                       onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow=isSel?`0 26px 48px ${c.color}24`:'0 22px 44px rgba(17,24,39,0.09)';}}
                       onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=isSel?`0 22px 42px ${c.color}22`:'0 18px 36px rgba(17,24,39,0.06)';}}
                     >
-                      <div style={{ position:'relative', background:`linear-gradient(180deg, ${c.color}14 0%, rgba(255,255,255,0.96) 100%)`, minHeight:174, display:'flex', alignItems:'center', justifyContent:'center', padding:'20px 18px 12px' }}>
+                      <div style={{ position:'relative', background:`linear-gradient(180deg, ${c.color}14 0%, rgba(255,255,255,0.96) 100%)`, minHeight:194, display:'flex', alignItems:'center', justifyContent:'center', padding:'22px 18px 14px' }}>
                         <div style={{ position:'absolute', inset:'14px 14px auto auto', display:'flex', gap:6, flexWrap:'wrap', justifyContent:'flex-end' }}>
                           <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{s.label}</span>
                           <span style={{ background:t.level==='T'?'#DCEAF5':'#D9EFED', color:t.level==='T'?'#1C6090':'#1F8A84', borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{t.level==='T'?'TECH':'TEAM'}</span>
                         </div>
-                        <ToolVisual tool={t} size={96} radius={18}/>
+                        <ToolVisual tool={t} size={116} radius={18}/>
                       </div>
 
                       <div style={{ padding:'16px 18px 18px', display:'flex', flexDirection:'column', gap:12, flex:1 }}>
