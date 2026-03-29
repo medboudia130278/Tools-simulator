@@ -464,16 +464,16 @@ export default function App({ embedded = false }) {
       <div style={{ display:'flex', flexDirection:isTablet?'column':'row', height:embedded ? 'auto' : isTablet?'auto':'calc(100vh - 118px)', overflow:'hidden' }}>
 
         {/* ── MAIN PANEL ── */}
-        <div style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+        <div style={{ flex:1, overflow:'hidden', display:'flex', flexDirection:'column', background:embedded?'#F7F9FC':'transparent', borderRadius:embedded?22:0 }}>
 
           {/* Filter bar */}
-          <div style={{ padding:'10px 18px', borderBottom:`1px solid ${C.border}`, display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', background:C.bgMid }}>
+          <div style={{ padding:embedded?'16px 18px':'10px 18px', borderBottom:embedded?'1px solid rgba(71,84,103,0.10)':`1px solid ${C.border}`, display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', background:embedded?'#FFFFFF':C.bgMid, borderTopLeftRadius:embedded?22:0 }}>
             {/* Search */}
             <div style={{ position:'relative', flex:isMobile?'1 1 100%':'1 1 240px', minWidth:isMobile?'100%':210 }}>
               <Search size={13} color={C.textSub} style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)' }}/>
               <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search tool, brand..." style={{
-                width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8,
-                padding:'7px 10px 7px 30px', color:C.text, fontSize:12, outline:'none',
+                width:'100%', background:embedded?'#F2F4F7':C.bg, border:embedded?'1px solid rgba(71,84,103,0.14)':`1px solid ${C.border}`, borderRadius:10,
+                padding:'9px 12px 9px 32px', color:embedded?'#191C1E':C.text, fontSize:12, outline:'none',
                 fontFamily:"'Barlow', sans-serif",
               }}/>
             </div>
@@ -492,8 +492,8 @@ export default function App({ embedded = false }) {
 
             {/* Category */}
             <select value={cat} onChange={e=>setCat(e.target.value)} style={{
-              background:C.bg, border:`1px solid ${C.border}`, color:C.text, padding:'6px 10px',
-              borderRadius:8, fontSize:11, outline:'none', cursor:'pointer', fontFamily:"'Barlow', sans-serif",
+              background:embedded?'#F2F4F7':C.bg, border:embedded?'1px solid rgba(71,84,103,0.14)':`1px solid ${C.border}`, color:embedded?'#191C1E':C.text, padding:'8px 10px',
+              borderRadius:10, fontSize:11, outline:'none', cursor:'pointer', fontFamily:"'Barlow', sans-serif",
             }}>
               <option value="ALL">All categories</option>
               {Object.entries(CATS).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
@@ -502,21 +502,105 @@ export default function App({ embedded = false }) {
             <div style={{ marginLeft:isMobile?0:'auto', display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', width:isMobile?'100%':'auto' }}>
               <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:C.textSub }}>{filtered.length} tools</span>
               <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.add(t.id));return n;})}
-                style={{ background:C.bg, border:`1px solid ${C.border}`, color:C.textSub, padding:'5px 11px', borderRadius:6, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
+                style={{ background:embedded?'#FFFFFF':C.bg, border:embedded?'1px solid rgba(71,84,103,0.14)':`1px solid ${C.border}`, color:embedded?'#475467':C.textSub, padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
                 Select visible
               </button>
               <button onClick={()=>setSel(p=>{const n=new Set(p);filtered.forEach(t=>n.delete(t.id));return n;})}
-                style={{ background:C.bg, border:`1px solid ${C.border}`, color:C.textSub, padding:'5px 11px', borderRadius:6, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
+                style={{ background:embedded?'#FFFFFF':C.bg, border:embedded?'1px solid rgba(71,84,103,0.14)':`1px solid ${C.border}`, color:embedded?'#475467':C.textSub, padding:'7px 12px', borderRadius:10, cursor:'pointer', fontSize:11, fontFamily:"'Barlow', sans-serif" }}>
                 Clear visible
               </button>
             </div>
           </div>
 
           {/* Tool cards */}
-          <div style={{ flex:1, overflowY:'auto', padding:isMobile?'12px 12px 16px':'14px 18px' }}>
-            <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'repeat(auto-fill, minmax(325px, 1fr))', gap:12 }}>
+          <div style={{ flex:1, overflowY:'auto', padding:isMobile?'12px 12px 16px':embedded?'20px':'14px 18px' }}>
+            <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':embedded?'repeat(auto-fill, minmax(290px, 1fr))':'repeat(auto-fill, minmax(325px, 1fr))', gap:embedded?18:12 }}>
               {filtered.map((t,i)=>{
                 const isSel=sel.has(t.id), c=CATS[t.cat], s=STATUTS[t.statut];
+                if (embedded) {
+                  return (
+                    <div
+                      key={t.id}
+                      onClick={()=>setModal(t)}
+                      style={{
+                        background:'#FFFFFF',
+                        border:`1px solid ${isSel?c.color:'rgba(71,84,103,0.12)'}`,
+                        borderRadius:24,
+                        overflow:'hidden',
+                        cursor:'pointer',
+                        transition:'transform 250ms cubic-bezier(0.4,0,0.2,1), box-shadow 250ms cubic-bezier(0.4,0,0.2,1), border-color 250ms cubic-bezier(0.4,0,0.2,1)',
+                        animation:`fadeIn 0.18s ease ${i*0.012}s both`,
+                        boxShadow:isSel?`0 22px 42px ${c.color}22`:'0 18px 36px rgba(17,24,39,0.06)',
+                        display:'flex',
+                        flexDirection:'column',
+                        minHeight:360,
+                      }}
+                      onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow=isSel?`0 26px 48px ${c.color}24`:'0 22px 44px rgba(17,24,39,0.09)';}}
+                      onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=isSel?`0 22px 42px ${c.color}22`:'0 18px 36px rgba(17,24,39,0.06)';}}
+                    >
+                      <div style={{ position:'relative', background:`linear-gradient(180deg, ${c.color}14 0%, rgba(255,255,255,0.96) 100%)`, minHeight:174, display:'flex', alignItems:'center', justifyContent:'center', padding:'20px 18px 12px' }}>
+                        <div style={{ position:'absolute', inset:'14px 14px auto auto', display:'flex', gap:6, flexWrap:'wrap', justifyContent:'flex-end' }}>
+                          <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{s.label}</span>
+                          <span style={{ background:t.level==='T'?'#DCEAF5':'#D9EFED', color:t.level==='T'?'#1C6090':'#1F8A84', borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{t.level==='T'?'TECH':'TEAM'}</span>
+                        </div>
+                        <ToolVisual tool={t} size={96} radius={18}/>
+                      </div>
+
+                      <div style={{ padding:'16px 18px 18px', display:'flex', flexDirection:'column', gap:12, flex:1 }}>
+                        <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10 }}>
+                          <div style={{ display:'grid', gap:8, minWidth:0 }}>
+                            <span style={{ alignSelf:'flex-start', background:`${c.color}14`, color:c.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                              {c.icon} {c.label}
+                            </span>
+                            <div style={{ fontFamily:"'Space Grotesk', sans-serif", fontSize:17, fontWeight:700, lineHeight:1.25, color:'#191C1E' }}>{t.name}</div>
+                            <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
+                              <span style={{ fontSize:12, color:'#1C6090', fontWeight:700 }}>{t.brand}</span>
+                              <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:'#475467', background:'#EFF2F5', padding:'4px 8px', borderRadius:8 }}>{t.model}</span>
+                            </div>
+                          </div>
+                          <div onClick={e=>{e.stopPropagation();toggle(t.id);}} style={{
+                            width:28, height:28, borderRadius:10,
+                            border:`1.5px solid ${isSel?c.color:'rgba(71,84,103,0.18)'}`,
+                            background:isSel?c.color:'#FFFFFF',
+                            display:'flex', alignItems:'center', justifyContent:'center',
+                            flexShrink:0, cursor:'pointer',
+                            boxShadow:isSel?`0 10px 20px ${c.color}22`:'none',
+                          }}>
+                            {isSel&&<Check size={14} color="#fff" strokeWidth={3}/>}
+                          </div>
+                        </div>
+
+                        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                          <div style={{ background:'#F2F4F7', borderRadius:14, padding:'10px 12px' }}>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>USE AREA</div>
+                            <div style={{ fontSize:11.5, color:'#191C1E', lineHeight:1.45 }}>{t.domain}</div>
+                          </div>
+                          <div style={{ background:'#F2F4F7', borderRadius:14, padding:'10px 12px' }}>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>MAINTENANCE</div>
+                            <div style={{ fontSize:11.5, color:'#191C1E', lineHeight:1.45 }}>{t.period}</div>
+                          </div>
+                        </div>
+
+                        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', paddingTop:12, marginTop:'auto', borderTop:'1px solid rgba(71,84,103,0.10)' }}>
+                          <div>
+                            <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:18, fontWeight:700, color:isSel?c.color:'#191C1E' }}>
+                              {fmt(t.price)} €
+                            </div>
+                            <div style={{ fontSize:11, color:'#667085', marginTop:4 }}>
+                              {t.qty} {t.level==='T'?'per technician':'per team'}
+                            </div>
+                          </div>
+                          <div style={{ textAlign:'right' }}>
+                            <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:12, color:isSel?c.color:'#475467', fontWeight:600 }}>
+                              {fmt(t.qty*t.price)} €
+                            </div>
+                            <div style={{ fontSize:10, color:'#98A2B3', marginTop:3 }}>estimated block</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
                 return (
                   <div key={t.id} style={{
                     background:isSel?`${c.color}0D`:C.card,
@@ -612,6 +696,130 @@ export default function App({ embedded = false }) {
         </div>
 
         {/* ── SYNTHESIS PANEL ── */}
+        {embedded ? (
+        <div style={{
+          width:isTablet?'100%':328,
+          background:'#F2F4F7',
+          borderLeft:isTablet?'none':'1px solid rgba(71,84,103,0.10)',
+          borderTop:isTablet?'1px solid rgba(71,84,103,0.10)':'none',
+          overflowY:'auto',
+          display:'flex',
+          flexDirection:'column',
+          maxHeight:isTablet?520:'none',
+          padding:'20px',
+          gap:16,
+        }}>
+          <div style={{ background:'#FFFFFF', borderRadius:22, padding:'20px', boxShadow:'0 18px 36px rgba(17,24,39,0.06)' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:10, marginBottom:14 }}>
+              <div>
+                <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.10em', color:'#1C6090' }}>SUMMARY</div>
+                <div style={{ fontSize:12, color:'#667085', marginTop:4 }}>Allocation snapshot for {context.label}</div>
+              </div>
+              <div style={{ background:'#DCEAF5', color:'#1C6090', borderRadius:999, padding:'6px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                {coveragePct}% covered
+              </div>
+            </div>
+            <div style={{ background:`linear-gradient(135deg, ${acc} 0%, ${acc}CC 100%)`, color:'#FFFFFF', borderRadius:20, padding:'18px 18px 16px', marginBottom:14 }}>
+              <div style={{ fontSize:10, opacity:0.82, marginBottom:7, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em' }}>TOTAL SELECTED BUDGET</div>
+              <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:30, fontWeight:700 }}>{fmt(total)} €</div>
+              <div style={{ fontSize:12, opacity:0.88, marginTop:6 }}>{sel.size} selected tools</div>
+              <div style={{ marginTop:12 }}>
+                <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
+                  <span style={{ fontSize:10, opacity:0.82 }}>Mandatory coverage</span>
+                  <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10 }}>{mandatorySelected}/{mandatoryTotal}</span>
+                </div>
+                <div style={{ height:6, background:'rgba(255,255,255,0.20)', borderRadius:999, overflow:'hidden' }}>
+                  <div style={{ height:'100%', width:`${coveragePct}%`, background:'#FFFFFF', borderRadius:999 }} />
+                </div>
+              </div>
+            </div>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+              {[['T','Technician','#1C6090',tTotal],['E','Team','#1F8A84',eTotal]].map(([lv,label,color,budget])=>(
+                <div key={lv} style={{ background:'#F2F4F7', borderRadius:16, padding:'12px 13px' }}>
+                  <div style={{ fontSize:10, color, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.06em' }}>{label.toUpperCase()}</div>
+                  <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700, color:'#191C1E', marginTop:4 }}>{fmt(budget)} €</div>
+                  <div style={{ fontSize:10, color:'#667085', marginTop:3 }}>{selT.filter(t=>t.level===lv).length} tools</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {byCat.length>0&&(
+            <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px 18px 14px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+              <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090', marginBottom:12 }}>BREAKDOWN BY CATEGORY</div>
+              {byCat.map(c=>{
+                const pct=total>0?(c.total/total)*100:0;
+                return (
+                  <div key={c.key} style={{ marginBottom:11 }}>
+                    <div style={{ display:'flex', justifyContent:'space-between', marginBottom:5 }}>
+                      <span style={{ fontSize:11, color:'#191C1E', fontWeight:600 }}>{c.icon} {c.label}</span>
+                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:c.color }}>{fmt(c.total)} €</span>
+                    </div>
+                    <div style={{ height:6, background:'#EFF2F5', borderRadius:999, overflow:'hidden' }}>
+                      <div style={{ height:'100%', width:`${pct}%`, background:`linear-gradient(90deg, ${c.color}99, ${c.color})`, borderRadius:999 }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
+              <Users size={14} color="#1C6090"/>
+              <span style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090' }}>WORKFORCE — POS</span>
+            </div>
+            <div style={{ display:'grid', gap:12 }}>
+              {[
+                ['No. of technicians', nbTech, setNbTech, '#1C6090'],
+                ['No. of teams', nbEquipe, setNbEquipe, '#1F8A84'],
+              ].map(([label, val, setter, col])=>(
+                <div key={label}>
+                  <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{label.toUpperCase()}</div>
+                  <div style={{ display:'flex', alignItems:'center', background:'#F2F4F7', borderRadius:14, overflow:'hidden' }}>
+                    <button onClick={()=>setter(val-1)} style={{ width:38, height:38, background:'transparent', border:'none', cursor:'pointer', color:'#667085', fontSize:18, fontWeight:700 }}>-</button>
+                    <div style={{ flex:1, textAlign:'center', fontFamily:"'JetBrains Mono', monospace", fontSize:16, fontWeight:700, color:col }}>{val}</div>
+                    <button onClick={()=>setter(val+1)} style={{ width:38, height:38, background:'transparent', border:'none', cursor:'pointer', color:'#667085', fontSize:18, fontWeight:700 }}>+</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:12 }}>
+              <Layers size={14} color="#1C6090"/>
+              <span style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090' }}>BUDGET BREAKDOWN</span>
+            </div>
+            <div style={{ display:'grid', gap:10 }}>
+              {[
+                [`${nbTech} tech · ${nbEquipe} team${nbEquipe>1?'s':''}`, nbTech*tTotal + nbEquipe*eTotal, '#191C1E', true],
+                [`Technicians (×${nbTech})`, nbTech*tTotal, '#1C6090', false],
+                [`Teams (×${nbEquipe})`, nbEquipe*eTotal, '#1F8A84', false],
+              ].map(([label, val, col, bold])=>(
+                <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', borderBottom:'1px solid rgba(71,84,103,0.10)' }}>
+                  <span style={{ fontSize:bold?12:11, color:bold?'#191C1E':'#667085', fontWeight:bold?700:500 }}>{label}</span>
+                  <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:bold?14:12, fontWeight:700, color:col }}>{fmt(val)} €</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginTop:'auto', background:'#FFFFFF', borderRadius:22, padding:'18px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+            <div style={{ fontFamily:"'Barlow Condensed', sans-serif", fontSize:12, fontWeight:700, letterSpacing:'0.08em', color:'#1C6090', marginBottom:12 }}>POS DATABASE — {TOOLS.length} TOOLS</div>
+            {[
+              ['Technician', TOOLS.filter(t=>t.level==='T').length, '#1C6090'],
+              ['Team', TOOLS.filter(t=>t.level==='E').length, '#1F8A84'],
+              ['Mandatory', TOOLS.filter(t=>t.statut==='OB').length, '#9F4200'],
+            ].map(([l,v,col])=>(
+              <div key={l} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'5px 0' }}>
+                <span style={{ fontSize:11, color:'#667085' }}>{l}</span>
+                <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:12, fontWeight:700, color:col }}>{v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        ) : (
         <div style={{
           width:isTablet?'100%':292,
           background:`linear-gradient(180deg, rgba(13,32,32,0.98) 0%, rgba(10,26,26,0.98) 100%)`,
@@ -780,6 +988,7 @@ export default function App({ embedded = false }) {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* ── MODAL ── */}
