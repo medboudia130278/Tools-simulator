@@ -8,6 +8,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import { shellFontStyle, shellStyles, palette } from "./theme.js";
+import { TOOLING_CATALOG, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import InventoryPage from "../views/InventoryPage.jsx";
 import BudgetPage from "../views/BudgetPage.jsx";
 import ReportingPage from "../views/ReportingPage.jsx";
@@ -62,10 +63,19 @@ const badgeStyle = (tone, color) => ({
 
 export default function App() {
   const [activePage, setActivePage] = useState("inventory");
+  const [activeSubsystem, setActiveSubsystem] = useState("POS");
 
   const current = useMemo(
     () => pages.find((page) => page.id === activePage) ?? pages[0],
     [activePage]
+  );
+  const subsystemTabs = useMemo(
+    () =>
+      TOOLING_SUBSYSTEMS.map((subsystem) => {
+        const count = TOOLING_CATALOG.filter((tool) => tool.subsystem === subsystem.id).length;
+        return { ...subsystem, count, ready: count > 0 };
+      }),
+    []
   );
 
   const CurrentPage = current.component;
@@ -192,6 +202,76 @@ export default function App() {
               <div style={{ color: palette.inkSoft, lineHeight: 1.65, maxWidth: "820px" }}>
                 {current.description}
               </div>
+
+              <div
+                style={{
+                  marginTop: "20px",
+                  display: "flex",
+                  gap: "10px",
+                  overflowX: "auto",
+                  paddingBottom: "4px",
+                }}
+              >
+                {subsystemTabs.map((subsystem) => {
+                  const active = subsystem.id === activeSubsystem;
+                  return (
+                    <button
+                      key={subsystem.id}
+                      onClick={() => setActiveSubsystem(subsystem.id)}
+                      style={{
+                        border: `1px solid ${active ? palette.primary : "rgba(71, 84, 103, 0.14)"}`,
+                        cursor: "pointer",
+                        textAlign: "left",
+                        minWidth: "150px",
+                        padding: "14px 16px",
+                        borderRadius: "18px",
+                        background: active ? palette.surfaceLowest : palette.surfaceLow,
+                        boxShadow: active ? "0 18px 38px rgba(28, 96, 144, 0.12)" : "none",
+                        color: palette.ink,
+                        flex: "0 0 auto",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "10px",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontFamily: "'Barlow Condensed', sans-serif",
+                            fontSize: "15px",
+                            fontWeight: 700,
+                            letterSpacing: "0.08em",
+                            color: active ? palette.primary : palette.inkSoft,
+                          }}
+                        >
+                          {subsystem.label}
+                        </div>
+                        <div
+                          style={{
+                            padding: "4px 8px",
+                            borderRadius: "999px",
+                            background: active ? palette.primarySoft : palette.surfaceHighest,
+                            color: active ? palette.primary : palette.inkMuted,
+                            fontSize: "11px",
+                            fontWeight: 700,
+                          }}
+                        >
+                          {subsystem.count}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: "12px", color: palette.inkMuted, lineHeight: 1.45 }}>
+                        {subsystem.full}
+                        {!subsystem.ready ? " · soon" : ""}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div style={{ display: "grid", gap: "10px", flexShrink: 0 }}>
@@ -204,7 +284,7 @@ export default function App() {
           </header>
 
           <main style={shellStyles.panel}>
-            <CurrentPage />
+            <CurrentPage subsystem={activeSubsystem} onSubsystemChange={setActiveSubsystem} />
           </main>
         </div>
       </div>

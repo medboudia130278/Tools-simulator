@@ -370,9 +370,12 @@ function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border,
 
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export const TOOLING_CATALOG = TOOLS;
+export const TOOLING_SUBSYSTEMS = SUBSYSTEMS;
 
-export default function App({ embedded = false }) {
-  const [subsystem, setSubsystem] = useState('POS');
+export default function App({ embedded = false, subsystem: controlledSubsystem, onSubsystemChange }) {
+  const [localSubsystem, setLocalSubsystem] = useState(controlledSubsystem || 'POS');
+  const subsystem = controlledSubsystem ?? localSubsystem;
+  const setSubsystem = onSubsystemChange ?? setLocalSubsystem;
   const [ctx, setCtx]     = useState('metro');
   const [lvl, setLvl]     = useState('ALL');
   const [cat, setCat]     = useState('ALL');
