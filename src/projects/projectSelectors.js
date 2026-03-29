@@ -1,4 +1,4 @@
-import { TOOLING_CATALOG } from "../../railway_tooling.jsx";
+import { TOOLING_CATALOG, TOOLING_CATEGORIES } from "../../railway_tooling.jsx";
 import { createDefaultWorkforce } from "./projectDefaults.js";
 
 export function getProjectSubsystemIds(project) {
@@ -28,6 +28,15 @@ function getToolLifecycleOverride(project, uid) {
 function getCurrentPrice(tool, project) {
   const override = getToolPriceOverride(project, tool.uid);
   return typeof override?.price === "number" ? override.price : tool.price;
+}
+
+function getPriceReference(tool, project) {
+  const override = getToolPriceOverride(project, tool.uid);
+  return {
+    source: typeof override?.source === "string" ? override.source.trim() : "",
+    year: typeof override?.year === "string" ? override.year.trim() : "",
+    hasOverride: Boolean(override),
+  };
 }
 
 function getMultiplierForTool(project, tool) {
@@ -135,8 +144,27 @@ function annualizeCost(value, contractDurationMonths) {
   return value / (contractDurationMonths / 12);
 }
 
+function createCostBucket(id, label) {
+  return {
+    id,
+    label,
+    mobilization: 0,
+    renewals: 0,
+    annualRenewals: 0,
+    total: 0,
+  };
+}
+
+function applyToolCost(bucket, tool) {
+  bucket.mobilization += tool.mobilizationCost;
+  bucket.renewals += tool.renewalCost;
+  bucket.total += tool.contractCost;
+  return bucket;
+}
+
 function getResolvedProjectTool(tool, project, contractDurationMonths) {
   const currentPrice = getCurrentPrice(tool, project);
+  const priceReference = getPriceReference(tool, project);
   const lifecycle = normalizeLifecycle(tool, project);
   const multiplier = getMultiplierForTool(project, tool);
   const mobilizationCost = tool.qty * currentPrice * multiplier;
@@ -146,6 +174,9 @@ function getResolvedProjectTool(tool, project, contractDurationMonths) {
   return {
     ...tool,
     currentPrice,
+    priceSource: priceReference.source,
+    priceYear: priceReference.year,
+    hasPriceOverride: priceReference.hasOverride,
     lifecycle,
     multiplier,
     mobilizationCost,
@@ -255,24 +286,224 @@ export function getProjectBudgetMetrics(project) {
 export function getProjectReportingMetrics(project) {
   const catalog = getProjectCatalog(project);
   const selectedTools = getSelectedProjectTools(project);
+  const subsystemIds = getProjectSubsystemIds(project);
+  const contractDurationMonths = getContractDurationMonths(project);
+  const mandatoryTools = catalog.filter((tool) => tool.statut === "OB");
+  const selectedMandatoryTools = selectedTools.filter((tool) => tool.statut === "OB");
+  const missingMandatoryTools = mandatoryTools.filter(
+    (tool) => !selectedTools.some((selectedTool) => selectedTool.uid === tool.uid)
+  );
+  const calibrationTools = selectedTools.filter((tool) =>
+    tool.period.toLowerCase().includes("calibration")
+  );
+  const catalogWithImages = catalog.filter((tool) => Boolean(tool.imgSrc));
+  const selectedWithoutImages = selectedTools.filter((tool) => !tool.imgSrc);
+  const fragileLinkTools = selectedTools.filter((tool) =>
+    String(tool.productUrl || "").toLowerCase().endsWith(".pdf")
+  );
+  const renewalSensitiveTools = selectedTools
+    .filter((tool) => tool.renewalCount > 0)
+    .sort((left, right) => right.renewalCost - left.renewalCost);
+  const selectedWithoutPriceReference = selectedTools.filter(
+    (tool) => !tool.priceSource && !tool.priceYear
+  );
+  const selectedWithoutLifecycleReference = selectedTools.filter(
+    (tool) => !tool.lifecycle.source && !tool.lifecycle.year
+  );
+  const selectedWithManualPrice = selectedTools.filter((tool) => tool.hasPriceOverride);
+  const selectedWithManualLifecycle = selectedTools.filter((tool) => tool.lifecycle.hasOverride);
+  const levelSelection = {
+    T: selectedTools.filter((tool) => tool.level === "T").length,
+    E: selectedTools.filter((tool) => tool.level === "E").length,
+    P: selectedTools.filter((tool) => tool.level === "P").length,
+  };
+
+  const categoryCostRows = Array.from(
+    selectedTools.reduce((map, tool) => {
+      const categoryMeta = TOOLING_CATEGORIES[tool.cat] || { label: tool.cat };
+      const current = map.get(tool.cat) || createCostBucket(tool.cat, categoryMeta.label || tool.cat);
+      applyToolCost(current, tool);
+      map.set(tool.cat, current);
+      return map;
+    }, new Map())
+  )
+    .map(([, value]) => ({
+      ...value,
+      annualRenewals: annualizeCost(value.renewals, contractDurationMonths),
+    }))
+    .sort((left, right) => right.total - left.total);
+
+  const subsystemCostRows = subsystemIds.map((subsystemId) => {
+    const current = createCostBucket(subsystemId, subsystemId);
+    selectedTools
+      .filter((tool) => tool.subsystem === subsystemId)
+      .forEach((tool) => applyToolCost(current, tool));
+    return {
+      ...current,
+      annualRenewals: annualizeCost(current.renewals, contractDurationMonths),
+    };
+  });
+
+  const subsystemLevelRows = subsystemIds.map((subsystemId) => {
+    const tools = selectedTools.filter((tool) => tool.subsystem === subsystemId);
+    const techMob = tools.filter((tool) => tool.level === "T").reduce((sum, tool) => sum + tool.mobilizationCost, 0);
+    const teamMob = tools.filter((tool) => tool.level === "E").reduce((sum, tool) => sum + tool.mobilizationCost, 0);
+    const projectMob = tools.filter((tool) => tool.level === "P").reduce((sum, tool) => sum + tool.mobilizationCost, 0);
+    const techRenewals = tools.filter((tool) => tool.level === "T").reduce((sum, tool) => sum + tool.renewalCost, 0);
+    const teamRenewals = tools.filter((tool) => tool.level === "E").reduce((sum, tool) => sum + tool.renewalCost, 0);
+    const projectRenewals = tools.filter((tool) => tool.level === "P").reduce((sum, tool) => sum + tool.renewalCost, 0);
+
+    return {
+      subsystem: subsystemId,
+      techMob,
+      teamMob,
+      projectMob,
+      techRenewals,
+      teamRenewals,
+      projectRenewals,
+      techAnnualRenewals: annualizeCost(techRenewals, contractDurationMonths),
+      teamAnnualRenewals: annualizeCost(teamRenewals, contractDurationMonths),
+      projectAnnualRenewals: annualizeCost(projectRenewals, contractDurationMonths),
+      total: techMob + teamMob + projectMob + techRenewals + teamRenewals + projectRenewals,
+    };
+  });
+
+  const subsystemCategoryRows = Object.fromEntries(
+    subsystemIds.map((subsystemId) => {
+      const rows = Array.from(
+        selectedTools
+          .filter((tool) => tool.subsystem === subsystemId)
+          .reduce((map, tool) => {
+            const categoryMeta = TOOLING_CATEGORIES[tool.cat] || { label: tool.cat };
+            const current = map.get(tool.cat) || {
+              id: tool.cat,
+              label: categoryMeta.label || tool.cat,
+              techMob: 0,
+              teamMob: 0,
+              projectMob: 0,
+              techRenewals: 0,
+              teamRenewals: 0,
+              projectRenewals: 0,
+              total: 0,
+            };
+
+            if (tool.level === "T") {
+              current.techMob += tool.mobilizationCost;
+              current.techRenewals += tool.renewalCost;
+            } else if (tool.level === "E") {
+              current.teamMob += tool.mobilizationCost;
+              current.teamRenewals += tool.renewalCost;
+            } else if (tool.level === "P") {
+              current.projectMob += tool.mobilizationCost;
+              current.projectRenewals += tool.renewalCost;
+            }
+
+            current.total += tool.contractCost;
+            map.set(tool.cat, current);
+            return map;
+          }, new Map())
+      )
+        .map(([, value]) => ({
+          ...value,
+          techAnnualRenewals: annualizeCost(value.techRenewals, contractDurationMonths),
+          teamAnnualRenewals: annualizeCost(value.teamRenewals, contractDurationMonths),
+          projectAnnualRenewals: annualizeCost(value.projectRenewals, contractDurationMonths),
+          mobilization: value.techMob + value.teamMob + value.projectMob,
+          renewals: value.techRenewals + value.teamRenewals + value.projectRenewals,
+          annualRenewals: annualizeCost(
+            value.techRenewals + value.teamRenewals + value.projectRenewals,
+            contractDurationMonths
+          ),
+        }))
+        .sort((left, right) => right.total - left.total);
+
+      return [subsystemId, rows];
+    })
+  );
+
+  const subsystemCoverage = subsystemIds.map((subsystemId) => {
+    const visibleTools = catalog.filter((tool) => tool.subsystem === subsystemId);
+    const visibleMandatory = visibleTools.filter((tool) => tool.statut === "OB");
+    const selectedInSubsystem = selectedTools.filter((tool) => tool.subsystem === subsystemId);
+    const selectedMandatory = selectedInSubsystem.filter((tool) => tool.statut === "OB");
+    const renewalSensitive = selectedInSubsystem.filter((tool) => tool.renewalCount > 0);
+
+    return {
+      subsystem: subsystemId,
+      visibleCount: visibleTools.length,
+      selectedCount: selectedInSubsystem.length,
+      mandatoryCount: visibleMandatory.length,
+      selectedMandatoryCount: selectedMandatory.length,
+      coveragePct: visibleMandatory.length
+        ? Math.round((selectedMandatory.length / visibleMandatory.length) * 100)
+        : 100,
+      renewalSensitiveCount: renewalSensitive.length,
+      renewalBudget: renewalSensitive.reduce((sum, tool) => sum + tool.renewalCost, 0),
+      missingMandatoryCount: Math.max(0, visibleMandatory.length - selectedMandatory.length),
+    };
+  });
+
+  const alerts = [];
+  if (missingMandatoryTools.length > 0) {
+    alerts.push({
+      severity: "high",
+      title: "Mandatory tooling gap",
+      detail: `${missingMandatoryTools.length} mandatory reference(s) are still missing from the active project selection.`,
+    });
+  }
+  if (selectedWithoutPriceReference.length > 0) {
+    alerts.push({
+      severity: "medium",
+      title: "Undocumented price references",
+      detail: `${selectedWithoutPriceReference.length} selected tool(s) have no explicit price source or year.`,
+    });
+  }
+  if (selectedWithoutLifecycleReference.length > 0) {
+    alerts.push({
+      severity: "medium",
+      title: "Undocumented lifecycle assumptions",
+      detail: `${selectedWithoutLifecycleReference.length} selected tool(s) still rely on undocumented lifecycle assumptions.`,
+    });
+  }
+  if (fragileLinkTools.length > 0) {
+    alerts.push({
+      severity: "low",
+      title: "Fragile product links",
+      detail: `${fragileLinkTools.length} selected reference(s) point to PDF or less stable product pages.`,
+    });
+  }
+
   return {
     visibleCatalogCount: catalog.length,
     selectedCount: selectedTools.length,
-    mandatoryCount: catalog.filter((tool) => tool.statut === "OB").length,
-    selectedMandatoryCount: selectedTools.filter((tool) => tool.statut === "OB").length,
-    calibrationCount: selectedTools.filter((tool) =>
-      tool.period.toLowerCase().includes("calibration")
-    ).length,
-    imageCoverage: catalog.filter((tool) => Boolean(tool.imgSrc)).length,
-    fragileLinks: selectedTools.filter((tool) =>
-      tool.productUrl.toLowerCase().endsWith(".pdf")
-    ).length,
-    subsystemCoverage: Array.from(
-      selectedTools.reduce((map, tool) => {
-        map.set(tool.subsystem, (map.get(tool.subsystem) || 0) + 1);
-        return map;
-      }, new Map())
-    ).map(([subsystem, count]) => ({ subsystem, count })),
-    renewalExposure: selectedTools.filter((tool) => tool.renewalCount > 0).length,
+    mandatoryCount: mandatoryTools.length,
+    selectedMandatoryCount: selectedMandatoryTools.length,
+    missingMandatoryCount: missingMandatoryTools.length,
+    missingMandatoryTools: missingMandatoryTools.slice(0, 10),
+    coveragePct: mandatoryTools.length
+      ? Math.round((selectedMandatoryTools.length / mandatoryTools.length) * 100)
+      : 100,
+    calibrationCount: calibrationTools.length,
+    calibrationTools: calibrationTools.slice(0, 8),
+    imageCoverage: catalogWithImages.length,
+    imageCoveragePct: catalog.length ? Math.round((catalogWithImages.length / catalog.length) * 100) : 100,
+    selectedWithoutImagesCount: selectedWithoutImages.length,
+    fragileLinks: fragileLinkTools.length,
+    fragileLinkTools: fragileLinkTools.slice(0, 8),
+    subsystemCoverage,
+    renewalExposure: renewalSensitiveTools.length,
+    renewalSensitiveTools: renewalSensitiveTools.slice(0, 10),
+    selectedWithoutPriceReferenceCount: selectedWithoutPriceReference.length,
+    selectedWithoutPriceReference: selectedWithoutPriceReference.slice(0, 8),
+    selectedWithoutLifecycleReferenceCount: selectedWithoutLifecycleReference.length,
+    selectedWithoutLifecycleReference: selectedWithoutLifecycleReference.slice(0, 8),
+    selectedWithManualPriceCount: selectedWithManualPrice.length,
+    selectedWithManualLifecycleCount: selectedWithManualLifecycle.length,
+    levelSelection,
+    categoryCostRows,
+    subsystemCostRows,
+    subsystemLevelRows,
+    subsystemCategoryRows,
+    alerts,
   };
 }
