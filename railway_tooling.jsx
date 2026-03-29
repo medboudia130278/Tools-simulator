@@ -77,6 +77,7 @@ const CONTEXTS = [
   { id:'metro',  label:'Metro',      icon:'🚇', accent:C.teal   },
   { id:'tram',   label:'Tram',       icon:'🚊', accent:C.cyan   },
   { id:'heavy',  label:'Heavy Rail', icon:'🚂', accent:C.amber  },
+  { id:'apm',    label:'APM',        icon:'🚝', accent:C.violet },
 ];
 
 const SUBSYSTEMS = [
@@ -87,6 +88,7 @@ const SUBSYSTEMS = [
   { id:'3RD',   label:'3rd Rail',full:'Conductor Rail' },
   { id:'AFC',   label:'AFC',     full:'Ticketing' },
   { id:'DEQ',   label:'DEQ',     full:'Depot Equipment' },
+  { id:'MEP',   label:'MEP',     full:'Mechanical Electrical Plumbing' },
 ];
 
 // ─── TOOL DATA ────────────────────────────────────────────────────────────────
@@ -130,6 +132,8 @@ const RAW_BY_SUBSYSTEM = {
   ['t34','T','LOTO','Personal LOTO Kit – electrical','Brady','120886','All domains','OSHA / Lockout Tagout','OB',1,109,'Annual (inspection)','Current official Brady personal electrical lockout kit page with pouch, padlock, hasps, breaker lockouts and tags.','https://www.bradyid.com/products/personal-lockout-kit-electrical-pid-120886'],
   ['t35','T','LOTO','Lockout Padlock thermoplastic – 1 unique key','Master Lock','410RED Zenex','All domains','Lockout Tagout','OB',2,20,'5 years or replacement','Current official Master Lock product page for the keyed-different thermoplastic safety padlock.','https://fr.masterlock.com/products/product/410RED'],
   ['t36','T','LOTO','Danger Lockout Tags – pack 25','Brady','48797','All domains','Lockout Tagout','OB',1,18,'Consumable','Current official Brady pack of 25 durable danger lockout tags with brass grommet and write-on area.','https://www.bradyid.com/products/bilingual-danger-this-tag-lock-to-be-removed-only-by-person-shown-on-back-tags-pid-48797'],
+  ['t37','T','OUTILS','Portable Tool Container with shoulder strap','Wera','Wera 2go 2 Tool Container','All domains – mobile maintenance','–','RC',1,115,'Replace when worn','Current official Wera mobile container system with shoulder strap and detachable quiver. Good fit for a technician who must keep essential hand tools on him while moving between rooms, cabinets and platforms.','https://www.wera.de/en/tools/wera-2go-2-tool-container'],
+  ['t38','T','OUTILS','Open-end / Ring Wrench Set 8-19 mm in roll-up pouch','Stahlwille','96401007','All domains – daily fastening','DIN 3113 Form B / ISO 7738 Form B','OB',1,185,'Replace when worn','Current official STAHLWILLE set covering the most common small and medium metric sizes for day-to-day fastening. It gives the technician both open-end and ring ends in one compact pouch.','https://stahlwille.com/fr_fr/products/detail/26151321'],
   ['e01','E','PPE','Insulating Gloves Class 4 (36kV)','Honeywell / Salisbury','NG418RB/11 Electriflex','MV 10-36kV','Class 4 – IEC EN 60903 / ASTM D120','OB',4,1101,'6 months (dielectric test)','Official Salisbury Electriflex class 4 glove page for high-voltage live work. Use with matching leather protectors sized for class 4 gloves.','https://www.salisburyshop.com/buy/product/salisbury-electriflex-class-4-rubber-insulating-gloves-ng418rb-11/211574'],
   ['e02','E','PPE','Insulating Gloves Class 2 (17kV) + leather protectors','Honeywell / Salisbury','GK218B/10H glove kit','DC Traction 1500V / BT 1000V','Class 2 – IEC EN 60903 / ASTM D120','OB',4,464,'6 months (dielectric test)','Official Salisbury glove kit page including class 2 gloves, leather protectors and storage bag for 1500 V DC traction or reinforced LV applications.','https://www.salisburyshop.com/buy/product/salisbury-size-10-1-2-class-2-black-insulating-rubber-gloves-kit-gk218b-10h/209680'],
   ['e03','E','PPE','Arc-flash Suit Class 3 (25 cal/cm²) – full coverall','Oberon','TCG25-XXL','MV/HV 25kV','IEC 61482-2 Class 3','OB',2,680,'3 years or after incident','Mandatory for work near 25kV live systems.','https://www.oberoncompany.com/arc-flash-clothing/arc-flash-suits'],
@@ -178,6 +182,7 @@ const RAW_BY_SUBSYSTEM = {
   ['e46','E','COLLECTIF','Professional First Aid Case DIN 13169','SÖHNGEN','DYNAMIC-GLOW L 0301401','All domains','DIN 13169','OB',1,339,'6 months (expiry check)','Official SÖHNGEN first aid case page with DIN 13169 filling, wall holder and splash-protected case for vehicles and workshops.','https://shop.aluderm.de/erste-hilfe-koffer-orange-dynamic-glow-l-ind-norm-plus-din-13169'],
   ['e47','E','COLLECTIF','CO2 Extinguisher 5kg – class B electrical cabinets','GLORIA','KS 5 ST','All domains','EN 3','OB',1,140,'Annual (pressure check)','Official GLORIA CO2 extinguisher page listing 5 kg models suitable for electrical equipment and residue-free firefighting.','https://www.gloria.de/de/produkt/feuerloescher/co2-handhebel/'],
   ['e48','E','COLLECTIF','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','All domains – Diagnostics','IP53 – MIL-STD-810H','RC',2,2595,'5-year replacement','Current official Panasonic Connect page for the Toughbook 55 platform used for IEC 61850 relay connection, SCADA and drive diagnostics. Entry aligned to a current base mk3 market configuration.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
+  ['e49','E','OUTILS','Open-end / Ring Wrench Set 6-34 mm – 25 pcs','Facom','440.JE25','All domains – heavy bolting','NF ISO 1711-1 / NF ISO 691 / NF ISO 7738','RC',1,520,'Replace when worn','Current official FACOM large-range set covering the heavier fastening sizes that are not practical to carry at technician level. Suitable as the team-level wrench base for cabinets, supports and heavier mechanical interfaces.','https://www.facom.com/product/440je25/6mm-34mm-combination-wrench-set-25-pc'],
   ],
   PSD: [],
   CAT: [],
@@ -185,6 +190,7 @@ const RAW_BY_SUBSYSTEM = {
   '3RD': [],
   AFC: [],
   DEQ: [],
+  MEP: [],
 };
 
 const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,gif}", {
@@ -412,6 +418,7 @@ export default function App({ embedded = false, subsystem: controlledSubsystem, 
     '3RD': { tech:3, equipe:1 },
     AFC:   { tech:2, equipe:1 },
     DEQ:   { tech:2, equipe:1 },
+    MEP:   { tech:3, equipe:1 },
   });
   const nbTech  = workforce[subsystem].tech;
   const nbEquipe = workforce[subsystem].equipe;

@@ -251,7 +251,7 @@ export default function App() {
                   })}
                 </div>
                 <div style={{ marginTop: "10px", color: palette.inkMuted, fontSize: "13px", lineHeight: 1.55 }}>
-                  For now, the `POS` catalog stays identical across `Metro`, `Tram` and `Heavy Rail`. Context-specific additions and removals will come later.
+                  For now, the `POS` catalog stays identical across `Metro`, `Tram`, `Heavy Rail` and `APM`. Context-specific additions and removals will come later.
                 </div>
               </div>
 
