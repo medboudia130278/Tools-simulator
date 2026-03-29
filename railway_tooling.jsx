@@ -288,13 +288,13 @@ function ToolVisual({ tool, size=72, radius=14 }) {
 }
 
 // ─── COPY BUTTON ─────────────────────────────────────────────────────────────
-function CopyBtn({ text, label, accent=C.teal }) {
+function CopyBtn({ text, label, accent=C.teal, light=false }) {
   const [ok, setOk] = useState(false);
   const go = () => { navigator.clipboard?.writeText(text).then(()=>{ setOk(true); setTimeout(()=>setOk(false),2000); }); };
   return (
     <button onClick={go} style={{
-      background:ok?accent+'22':C.bgMid, border:`1px solid ${ok?accent:C.borderL}`,
-      color:ok?accent:C.textSub, borderRadius:6, padding:'5px 11px', cursor:'pointer',
+      background:ok?accent+'18':light?'#FFFFFF':C.bgMid, border:`1px solid ${ok?accent:(light?'rgba(71,84,103,0.16)':C.borderL)}`,
+      color:ok?accent:(light?'#475467':C.textSub), borderRadius:6, padding:'5px 11px', cursor:'pointer',
       fontSize:11, fontWeight:600, display:'flex', alignItems:'center', gap:5,
       fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.03em', transition:'all 0.15s',
     }}>
@@ -307,13 +307,13 @@ function PrimaryUse({ tool }) {
   return tool.notes;
 }
 
-function MetaTile({ label, value, accent }) {
+function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border, bodyColor=C.text, labelColor=C.textSub }) {
   return (
-    <div style={{ background:C.bgMid, borderRadius:10, padding:'11px 12px', border:`1px solid ${C.border}` }}>
-      <div style={{ fontSize:9, color:accent||C.textSub, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>
+    <div style={{ background:surface, borderRadius:10, padding:'11px 12px', border:`1px solid ${borderColor}` }}>
+      <div style={{ fontSize:9, color:accent||labelColor, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>
         {label.toUpperCase()}
       </div>
-      <div style={{ fontSize:12, color:C.text, fontWeight:500, lineHeight:1.45 }}>{value}</div>
+      <div style={{ fontSize:12, color:bodyColor, fontWeight:500, lineHeight:1.45 }}>{value}</div>
     </div>
   );
 }
@@ -785,6 +785,169 @@ export default function App({ embedded = false }) {
       {/* ── MODAL ── */}
       {modal&&(()=>{
         const c=CATS[modal.cat], s=STATUTS[modal.statut], isSel=sel.has(modal.id);
+        const unitLabel = `${modal.qty} ${modal.level==='T'?'per technician':'per team'}`;
+        if (embedded) {
+          return (
+            <div
+              style={{ position:'fixed', inset:0, background:'rgba(15,23,42,0.28)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:isMobile?10:28, backdropFilter:'blur(18px)' }}
+              onClick={()=>setModal(null)}
+            >
+              <div
+                style={{ background:'#F7F9FC', borderRadius:28, width:'100%', maxWidth:980, maxHeight:'92vh', overflow:'auto', boxShadow:'0 32px 90px rgba(15,23,42,0.18)', border:'1px solid rgba(71,84,103,0.12)' }}
+                onClick={e=>e.stopPropagation()}
+              >
+                <div style={{ padding:isMobile?'18px 18px 14px':'24px 28px 18px', background:'#FFFFFF', borderBottom:'1px solid rgba(71,84,103,0.10)' }}>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:16 }}>
+                    <div style={{ minWidth:0 }}>
+                      <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', marginBottom:12 }}>
+                        <span style={{ background:`${c.color}15`, color:c.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{c.icon} {c.label}</span>
+                        <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{s.label}</span>
+                        <span style={{ background:modal.level==='T'?'#DCEAF5':'#D9EFED', color:modal.level==='T'?'#1C6090':'#1F8A84', borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>
+                          {modal.level==='T'?'Technician':'Team'}
+                        </span>
+                      </div>
+                      <div style={{ fontFamily:"'Space Grotesk', sans-serif", fontSize:isMobile?25:31, fontWeight:700, lineHeight:1.08, color:'#191C1E', marginBottom:10 }}>
+                        {modal.name}
+                      </div>
+                      <div style={{ display:'flex', alignItems:'center', gap:10, flexWrap:'wrap' }}>
+                        <span style={{ fontSize:14, fontWeight:700, color:'#1C6090' }}>{modal.brand}</span>
+                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:'#475467', background:'#EFF2F5', padding:'6px 10px', borderRadius:8 }}>
+                          {modal.model}
+                        </span>
+                      </div>
+                    </div>
+                    <button onClick={()=>setModal(null)} style={{ background:'#EFF2F5', border:'none', cursor:'pointer', color:'#667085', width:36, height:36, borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                      <X size={18}/>
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'280px minmax(0, 1fr)', gap:0 }}>
+                  <div style={{ background:'#F2F4F7', padding:isMobile?'18px':'22px', display:'grid', gap:14 }}>
+                    <div style={{ background:'#FFFFFF', borderRadius:22, minHeight:210, display:'flex', alignItems:'center', justifyContent:'center', padding:18, boxShadow:'0 18px 36px rgba(17,24,39,0.06)' }}>
+                      <ToolVisual tool={modal} size={128} radius={18}/>
+                    </div>
+
+                    <div style={{ background:`linear-gradient(135deg, ${c.color} 0%, ${c.color}CC 100%)`, color:'#FFFFFF', borderRadius:22, padding:'18px 18px 16px', boxShadow:'0 18px 36px rgba(17,24,39,0.08)' }}>
+                      <div style={{ fontSize:10, opacity:0.82, marginBottom:8, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em' }}>COST SNAPSHOT</div>
+                      <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:28, fontWeight:700, lineHeight:1 }}>{fmt(modal.price)} €</div>
+                      <div style={{ fontSize:12, opacity:0.86, marginTop:8 }}>{unitLabel}</div>
+                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:14, paddingTop:12, borderTop:'1px solid rgba(255,255,255,0.22)' }}>
+                        <span style={{ fontSize:11, opacity:0.82 }}>Selection block</span>
+                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700 }}>{fmt(modal.qty*modal.price)} €</span>
+                      </div>
+                    </div>
+
+                    <div style={{ display:'grid', gap:8 }}>
+                      <MetaTile label="Voltage domain" value={modal.domain} accent={c.color} surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
+                      <MetaTile label="Maintenance" value={modal.period} accent="#1C6090" surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
+                      <MetaTile label="Quantity baseline" value={unitLabel} accent={modal.level==='T'?'#1C6090':'#1F8A84'} surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
+                    </div>
+
+                    <button
+                      onClick={()=>toggle(modal.id)}
+                      style={{
+                        background:isSel?`linear-gradient(135deg, ${c.color} 0%, ${c.color}CC 100%)`:'#FFFFFF',
+                        border:`1px solid ${isSel?c.color:'rgba(71,84,103,0.14)'}`,
+                        borderRadius:14,
+                        padding:'13px 16px',
+                        width:'100%',
+                        cursor:'pointer',
+                        fontWeight:700,
+                        fontSize:13,
+                        fontFamily:"'Barlow Condensed', sans-serif",
+                        letterSpacing:'0.05em',
+                        display:'flex',
+                        alignItems:'center',
+                        justifyContent:'center',
+                        gap:7,
+                        color:isSel?'#FFFFFF':'#475467',
+                        boxShadow:isSel?'0 16px 30px rgba(17,24,39,0.10)':'none',
+                      }}
+                    >
+                      {isSel?<><Check size={14}/> SELECTED</>:'+ ADD TO SELECTION'}
+                    </button>
+                  </div>
+
+                  <div style={{ padding:isMobile?'18px':'24px 26px 26px', display:'grid', gap:16, background:'#F7F9FC' }}>
+                    <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:10 }}>
+                      <MetaTile label="Standard / insulation" value={modal.norm} accent="#1C6090" surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
+                      <MetaTile label="Selection status" value={s.label} accent={s.color} surface="#FFFFFF" borderColor="rgba(71,84,103,0.12)" bodyColor="#191C1E" labelColor="#667085"/>
+                    </div>
+
+                    <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px 18px 16px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+                      <div style={{ fontSize:11, color:'#1C6090', marginBottom:12, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', display:'flex', alignItems:'center', gap:6 }}>
+                        <Info size={12}/> TECHNICAL NOTES
+                      </div>
+                      <div style={{ display:'grid', gap:12 }}>
+                        <div style={{ background:'#F2F4F7', borderRadius:16, padding:'14px 14px 12px' }}>
+                          <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>PRIMARY USE</div>
+                          <div style={{ fontSize:13, color:'#191C1E', lineHeight:1.7 }}>
+                            <PrimaryUse tool={modal}/>
+                          </div>
+                        </div>
+                        <div style={{ background:'#F2F4F7', borderRadius:16, padding:'14px 14px 12px' }}>
+                          <div style={{ fontSize:10, color:'#667085', marginBottom:8, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>ESSENTIAL SPECIFICATIONS</div>
+                          <div style={{ display:'grid', gap:8 }}>
+                            {[
+                              ['Voltage domain', modal.domain],
+                              ['Standard / insulation', modal.norm],
+                              ['Verification / calibration', modal.period],
+                              ['Quantity baseline', unitLabel],
+                            ].map(([label, value])=>(
+                              <div key={label} style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'160px 1fr', gap:8, alignItems:'start', padding:'0 0 8px', borderBottom:'1px solid rgba(71,84,103,0.10)' }}>
+                                <div style={{ fontSize:11, color:'#667085' }}>{label}</div>
+                                <div style={{ fontSize:12, color:'#191C1E', lineHeight:1.5 }}>{value}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {(modal.statut==='OB' || modal.period.toLowerCase().includes('calibration')) && (
+                      <div style={{ display:'grid', gap:10 }}>
+                        {modal.statut==='OB'&&(
+                          <div style={{ background:'#FCE8D9', borderRadius:16, padding:'14px 16px', display:'flex', gap:10, alignItems:'flex-start', color:'#9F4200' }}>
+                            <AlertTriangle size={14} style={{ flexShrink:0, marginTop:1 }}/>
+                            <div style={{ fontSize:12, lineHeight:1.55 }}>
+                              This tool is <strong>mandatory</strong> and should stay covered in every compliant allocation baseline.
+                            </div>
+                          </div>
+                        )}
+                        {modal.period.toLowerCase().includes('calibration')&&(
+                          <div style={{ background:'#DCEAF5', borderRadius:16, padding:'14px 16px', display:'flex', gap:10, alignItems:'flex-start', color:'#1C6090' }}>
+                            <Info size={14} style={{ flexShrink:0, marginTop:1 }}/>
+                            <div style={{ fontSize:12, lineHeight:1.55 }}>
+                              <strong>Calibration-driven asset.</strong> Keep this tool inside the metrology and maintenance planning cycle.
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 1fr', gap:12 }}>
+                      <div style={{ background:'#FFFFFF', borderRadius:18, padding:'16px', boxShadow:'0 14px 30px rgba(17,24,39,0.05)' }}>
+                        <div style={{ fontSize:10, color:'#667085', marginBottom:8, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>OFFICIAL PRODUCT PAGE</div>
+                        <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10.5, color:'#1C6090', wordBreak:'break-all', marginBottom:11, lineHeight:1.6 }}>{modal.productUrl}</div>
+                        <CopyBtn text={modal.productUrl} label="Copy product link" accent="#1C6090" light />
+                      </div>
+
+                      <div style={{ background:'#FFFFFF', borderRadius:18, padding:'16px', boxShadow:'0 14px 30px rgba(17,24,39,0.05)' }}>
+                        <div style={{ fontSize:10, color:'#667085', marginBottom:8, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>LOCAL IMAGE FILE</div>
+                        <div style={{ display:'flex', alignItems:'center', gap:8, background:'#EFF2F5', borderRadius:10, padding:'8px 10px', marginBottom:11 }}>
+                          <span style={{ fontSize:9, color:'#667085', flexShrink:0 }}>./images/</span>
+                          <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10.5, color:'#475467', flex:1, wordBreak:'break-all' }}>{modal.imgFile}</span>
+                        </div>
+                        <CopyBtn text={modal.imgFile} label="Copy filename" accent={c.color} light />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
         return (
           <div style={{ position:'fixed', inset:0, background:'rgba(0,10,10,0.88)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:isMobile?10:20, backdropFilter:'blur(6px)' }}
             onClick={()=>setModal(null)}>
