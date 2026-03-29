@@ -87,6 +87,7 @@ const SUBSYSTEMS = [
   { id:'TRACK', label:'TRACK',   full:'Track',            active:false },
   { id:'3RD',   label:'3rd Rail',full:'Conductor Rail', active:false },
   { id:'AFC',   label:'AFC',     full:'Ticketing',      active:false },
+  { id:'DEQ',   label:'DEQ',     full:'Depot Equipment',active:false },
 ];
 
 // ─── TOOL DATA ────────────────────────────────────────────────────────────────
@@ -376,6 +377,7 @@ export default function App({ embedded = false }) {
     TRACK: { tech:5, equipe:2 },
     '3RD': { tech:3, equipe:1 },
     AFC:   { tech:2, equipe:1 },
+    DEQ:   { tech:2, equipe:1 },
   });
   const nbTech  = workforce['POS'].tech;
   const nbEquipe = workforce['POS'].equipe;
