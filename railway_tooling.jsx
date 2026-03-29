@@ -360,16 +360,21 @@ const TOOL_IMAGE_FILES_BY_BASE = Object.fromEntries(
   ])
 );
 
+const TOOL_IMAGE_OVERRIDES = {
+  'POS:e53': 'e53_k_rcher_nt_30.jpg',
+};
+
 const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =>
   rawTools.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) => {
     // derive imgFile from id + brand slug
     const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
     const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
     const imgBase = `${id}_${brandSlug}_${modelSlug}`.toLowerCase();
-    const matchedImgFile = TOOL_IMAGE_FILES_BY_BASE[imgBase] || `${imgBase}.jpg`;
+    const uid = `${subsystem}:${id}`;
+    const overrideImgFile = TOOL_IMAGE_OVERRIDES[uid];
+    const matchedImgFile = overrideImgFile || TOOL_IMAGE_FILES_BY_BASE[imgBase] || `${imgBase}.jpg`;
     const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
     const imgFile = matchedImgFile;
-    const uid = `${subsystem}:${id}`;
     return {id,uid,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl,imgFile,imgSrc,subsystem,contexts:TOOL_CONTEXT_OVERRIDES[uid] || DEFAULT_CONTEXT_IDS};
   })
 );
