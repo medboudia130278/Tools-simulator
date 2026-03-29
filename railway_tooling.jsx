@@ -376,10 +376,33 @@ export default function App({ embedded = false }) {
 
   const pill = (active, color, label, fn) => (
     <button onClick={fn} style={{
-      background:active?color+'25':C.bgMid, border:`1px solid ${active?color:C.border}`,
-      color:active?color:C.textSub, padding:'5px 12px', borderRadius:20, cursor:'pointer',
-      fontSize:11, fontWeight:600, fontFamily:"'Barlow Condensed', sans-serif",
-      letterSpacing:'0.04em', transition:'all 0.15s', whiteSpace:'nowrap',
+      background: embedded
+        ? active
+          ? `${color}16`
+          : '#FFFFFF'
+        : active
+          ? color+'25'
+          : C.bgMid,
+      border: embedded
+        ? `1px solid ${active ? color : 'rgba(71,84,103,0.14)'}`
+        : `1px solid ${active?color:C.border}`,
+      color: embedded
+        ? active
+          ? color
+          : '#475467'
+        : active
+          ? color
+          : C.textSub,
+      padding: embedded ? '8px 13px' : '5px 12px',
+      borderRadius: embedded ? 12 : 20,
+      cursor:'pointer',
+      fontSize:11,
+      fontWeight:700,
+      fontFamily:"'Barlow Condensed', sans-serif",
+      letterSpacing:'0.05em',
+      transition:'all 0.15s',
+      whiteSpace:'nowrap',
+      boxShadow: embedded && active ? `0 10px 20px ${color}12` : 'none',
     }}>{label}</button>
   );
 
