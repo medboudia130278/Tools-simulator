@@ -258,6 +258,237 @@ const LIFECYCLE_TYPES = {
   consumable: { label: 'Consumable / replenishment' },
 };
 
+const lifecycleDefaultsFor = (uids, config) =>
+  Object.fromEntries(uids.map(uid => [uid, { ...config }]));
+
+export const TOOLING_LIFECYCLE_DEFAULTS = {
+  ...lifecycleDefaultsFor(['POS:t05'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'JSP helmet service-life guidance',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...lifecycleDefaultsFor(['POS:t04', 'POS:e01', 'POS:e02'], {
+    type: 'periodic_replacement',
+    intervalValue: '36',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated insulating glove service life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t06'], {
+    type: 'periodic_replacement',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated safety eyewear replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t07', 'POS:e03', 'POS:e04'], {
+    type: 'periodic_replacement',
+    intervalValue: '36',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated arc-flash PPE budgeting rule',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t08', 'POS:t27'], {
+    type: 'periodic_replacement',
+    intervalValue: '36',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated portable lighting replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t01', 'POS:t02', 'POS:t03', 'POS:t12', 'POS:t15', 'POS:t16', 'POS:t17', 'POS:t18'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated handheld electrical test instrument life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t13', 'POS:t14', 'POS:e15', 'POS:e16', 'POS:e17', 'POS:e18', 'POS:e19', 'POS:e20', 'POS:e21', 'POS:e25', 'POS:e27', 'POS:e28', 'POS:e29', 'POS:e30', 'POS:e31'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated advanced test instrument life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e22', 'POS:e23', 'POS:e24', 'POS:e32', 'POS:e33', 'POS:e34'], {
+    type: 'periodic_replacement',
+    intervalValue: '96',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated project-level diagnostic platform life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t11', 'POS:e11', 'POS:e12', 'POS:e13', 'POS:e14'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated torque tool platform life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t09', 'POS:t10', 'POS:t19', 'POS:t20', 'POS:t21', 'POS:t23', 'POS:t24', 'POS:t25', 'POS:t30', 'POS:t31', 'POS:t37', 'POS:t38', 'POS:e08', 'POS:e41', 'POS:e42', 'POS:e49', 'POS:e51'], {
+    type: 'condition_based',
+    intervalValue: '',
+    intervalUnit: 'years',
+    replacementRatio: '100',
+    source: 'Estimated hand-tool wear rule',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t22', 'POS:t28', 'POS:e09', 'POS:e10'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated cordless power-tool life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t29', 'POS:e39'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated hydraulic cable-tool life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e05', 'POS:e06', 'POS:e35', 'POS:e36'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated dielectric safety asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e07'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated mobile tool chest life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t34', 'POS:t35', 'POS:e37'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated lockout asset replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t26', 'POS:t33', 'POS:t36', 'POS:e43', 'POS:e50'], {
+    type: 'consumable',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated annual consumable replenishment rule',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t32'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated industrial labeller refresh cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e38', 'POS:e40'], {
+    type: 'condition_based',
+    intervalValue: '',
+    intervalUnit: 'years',
+    replacementRatio: '100',
+    source: 'Estimated cable-cutter wear rule',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e44'], {
+    type: 'periodic_replacement',
+    intervalValue: '96',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated portable generator service life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e45'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated site barrier kit life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e46'], {
+    type: 'consumable',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '35',
+    source: 'Estimated first-aid refill budgeting rule',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e47'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated extinguisher asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e48'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated rugged laptop refresh cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e52'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated access platform asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e53'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated industrial vacuum asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+};
+
 function loadStoredPriceOverrides() {
   if (typeof window === 'undefined') return {};
   try {
@@ -282,7 +513,20 @@ function loadStoredLifecycleOverrides() {
   }
 }
 
-function inferLifecycleBaseline(tool) {
+export function inferToolLifecycleBaseline(tool) {
+  const explicit = TOOLING_LIFECYCLE_DEFAULTS[tool.uid];
+  if (explicit) {
+    return {
+      type: explicit.type,
+      intervalValue: explicit.intervalValue ?? '',
+      intervalUnit: explicit.intervalUnit || 'years',
+      replacementRatio: explicit.replacementRatio ?? '100',
+      source: explicit.source || '',
+      year: explicit.year || '',
+      basis: explicit.basis || 'estimated',
+    };
+  }
+
   const period = String(tool.period || '').toLowerCase();
   let type = 'durable';
   let intervalValue = '';
@@ -324,11 +568,12 @@ function inferLifecycleBaseline(tool) {
     replacementRatio,
     source: '',
     year: '',
+    basis: 'derived',
   };
 }
 
 function resolveLifecycle(tool, lifecycleOverrides) {
-  const baseline = inferLifecycleBaseline(tool);
+  const baseline = inferToolLifecycleBaseline(tool);
   const override = lifecycleOverrides?.[tool.uid];
   return {
     lifecycleType: override?.type || baseline.type,
@@ -339,9 +584,14 @@ function resolveLifecycle(tool, lifecycleOverrides) {
     lifecycleReplacementRatio: String(
       override?.replacementRatio ?? baseline.replacementRatio ?? '100'
     ),
-    lifecycleSource: typeof override?.source === 'string' ? override.source.trim() : '',
-    lifecycleYear: typeof override?.year === 'string' ? override.year.trim() : '',
+    lifecycleSource: typeof override?.source === 'string' && override.source.trim()
+      ? override.source.trim()
+      : baseline.source,
+    lifecycleYear: typeof override?.year === 'string' && override.year.trim()
+      ? override.year.trim()
+      : baseline.year,
     hasLifecycleOverride: Boolean(override),
+    lifecycleBasis: override ? 'manual' : baseline.basis,
     lifecycleBaseline: baseline,
   };
 }
@@ -625,7 +875,8 @@ export default function App({
   const [localSel, setLocalSel] = useState(new Set());
   const [modal, setModal] = useState(null);
   const [localPriceOverrides, setLocalPriceOverrides] = useState(loadStoredPriceOverrides);
-  const [priceDraft, setPriceDraft] = useState({ price:'', source:'', year:'' });
+  const currentReferenceYear = String(new Date().getFullYear());
+  const [priceDraft, setPriceDraft] = useState({ price:'', source:'', year:currentReferenceYear });
   const [localLifecycleOverrides, setLocalLifecycleOverrides] = useState(loadStoredLifecycleOverrides);
   const [lifecycleDraft, setLifecycleDraft] = useState({
     type: 'durable',
@@ -739,7 +990,7 @@ export default function App({
     setPriceDraft({
       price: String(modalTool.currentPrice ?? modalTool.price ?? ''),
       source: modalTool.priceSource || '',
-      year: modalTool.priceYear || '',
+      year: modalTool.priceYear || currentReferenceYear,
     });
     setLifecycleDraft({
       type: modalTool.lifecycleType || 'durable',
@@ -791,10 +1042,14 @@ export default function App({
     return tool.hasPriceOverride ? 'Manual price reference' : 'Catalog baseline';
   };
   const getLifecycleReferenceLabel = tool => {
-    if (tool.lifecycleSource && tool.lifecycleYear) return `${tool.lifecycleSource} Â· ${tool.lifecycleYear}`;
+    if (tool.lifecycleSource && tool.lifecycleYear) {
+      const suffix = tool.lifecycleBasis === 'estimated' ? ' · estimated baseline' : tool.lifecycleBasis === 'manual' ? ' · manual override' : '';
+      return `${tool.lifecycleSource} · ${tool.lifecycleYear}${suffix}`;
+    }
     if (tool.lifecycleSource) return tool.lifecycleSource;
     if (tool.lifecycleYear) return `Reference year Â· ${tool.lifecycleYear}`;
-    return tool.hasLifecycleOverride ? 'Manual lifecycle assumption' : 'Derived from current maintenance note';
+    if (tool.hasLifecycleOverride) return 'Manual lifecycle assumption';
+    return tool.lifecycleBasis === 'derived' ? 'Derived from current maintenance note' : 'Default lifecycle baseline';
   };
   const getLifecycleSummary = tool => {
     const typeLabel = LIFECYCLE_TYPES[tool.lifecycleType]?.label || 'Lifecycle assumption';

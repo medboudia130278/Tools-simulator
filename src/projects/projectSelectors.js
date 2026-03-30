@@ -1,4 +1,8 @@
-import { TOOLING_CATALOG, TOOLING_CATEGORIES } from "../../railway_tooling.jsx";
+import {
+  TOOLING_CATALOG,
+  TOOLING_CATEGORIES,
+  inferToolLifecycleBaseline,
+} from "../../railway_tooling.jsx";
 import { createDefaultWorkforce } from "./projectDefaults.js";
 
 export function getProjectSubsystemIds(project) {
@@ -48,53 +52,8 @@ function getMultiplierForTool(project, tool) {
   return 1;
 }
 
-function inferLifecycleBaseline(tool) {
-  const period = String(tool.period || "").toLowerCase();
-  let type = "durable";
-  let intervalValue = "";
-  let intervalUnit = "years";
-  let replacementRatio = 100;
-
-  if (period.includes("consumable")) {
-    type = "consumable";
-    intervalValue = 12;
-    intervalUnit = "months";
-  } else if (
-    period.includes("replace when worn") ||
-    period.includes("replace if defective") ||
-    period.includes("after arc event")
-  ) {
-    type = "condition_based";
-  } else {
-    const yearMatch = period.match(/(\d+)\s*year/);
-    const monthMatch = period.match(/(\d+)\s*month/);
-    if (yearMatch) {
-      type = "periodic_replacement";
-      intervalValue = Number(yearMatch[1]);
-      intervalUnit = "years";
-    } else if (monthMatch) {
-      type = "periodic_replacement";
-      intervalValue = Number(monthMatch[1]);
-      intervalUnit = "months";
-    } else if (period.includes("annual")) {
-      type = "periodic_replacement";
-      intervalValue = 1;
-      intervalUnit = "years";
-    }
-  }
-
-  return {
-    type,
-    intervalValue,
-    intervalUnit,
-    replacementRatio,
-    source: "",
-    year: "",
-  };
-}
-
 function normalizeLifecycle(tool, project) {
-  const baseline = inferLifecycleBaseline(tool);
+  const baseline = inferToolLifecycleBaseline(tool);
   const override = getToolLifecycleOverride(project, tool.uid);
   const replacementRatio = Number(override?.replacementRatio ?? baseline.replacementRatio);
 
@@ -106,8 +65,15 @@ function normalizeLifecycle(tool, project) {
       Number.isFinite(replacementRatio) && replacementRatio >= 0
         ? Math.min(100, replacementRatio)
         : 100,
-    source: typeof override?.source === "string" ? override.source.trim() : "",
-    year: typeof override?.year === "string" ? override.year.trim() : "",
+    source:
+      typeof override?.source === "string" && override.source.trim()
+        ? override.source.trim()
+        : baseline.source,
+    year:
+      typeof override?.year === "string" && override.year.trim()
+        ? override.year.trim()
+        : baseline.year,
+    basis: override ? "manual" : baseline.basis,
     hasOverride: Boolean(override),
   };
 }
