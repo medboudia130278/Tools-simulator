@@ -96,6 +96,7 @@ export function ProjectProvider({ children }) {
         workforce: JSON.parse(JSON.stringify(source.workforce)),
         priceOverrides: JSON.parse(JSON.stringify(source.priceOverrides || {})),
         lifecycleOverrides: JSON.parse(JSON.stringify(source.lifecycleOverrides || {})),
+        serviceOverrides: JSON.parse(JSON.stringify(source.serviceOverrides || {})),
         notes: source.notes,
       });
       duplicated.name = `Project ${String(nextIndex).padStart(2, "0")} - Copy`;
@@ -204,6 +205,8 @@ export function ProjectProvider({ children }) {
       activeProject && updateProject(activeProject.id, { priceOverrides }),
     setProjectLifecycleOverrides: (lifecycleOverrides) =>
       activeProject && updateProject(activeProject.id, { lifecycleOverrides }),
+    setProjectServiceOverrides: (serviceOverrides) =>
+      activeProject && updateProject(activeProject.id, { serviceOverrides }),
     setProjectMaintenanceContract: (maintenanceContract) =>
       activeProject && updateProject(activeProject.id, { maintenanceContract }),
   };

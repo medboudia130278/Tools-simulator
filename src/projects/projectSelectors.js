@@ -2,6 +2,8 @@ import {
   TOOLING_CATALOG,
   TOOLING_CATEGORIES,
   inferToolLifecycleBaseline,
+  inferToolServiceBaseline,
+  inferServiceIntervalMonthsFromPeriod,
 } from "../../railway_tooling.jsx";
 import { createDefaultWorkforce } from "./projectDefaults.js";
 
@@ -27,6 +29,10 @@ function getToolPriceOverride(project, uid) {
 
 function getToolLifecycleOverride(project, uid) {
   return project?.lifecycleOverrides?.[uid];
+}
+
+function getToolServiceOverride(project, uid) {
+  return project?.serviceOverrides?.[uid];
 }
 
 function getCurrentPrice(tool, project) {
@@ -78,6 +84,29 @@ function normalizeLifecycle(tool, project) {
   };
 }
 
+function normalizeService(tool, project) {
+  const baseline = inferToolServiceBaseline(tool);
+  const override = getToolServiceOverride(project, tool.uid);
+  const resolvedType = override?.type || baseline.type;
+  const resolvedCost = Number.parseFloat(String(override?.cost ?? baseline.cost ?? "").replace(",", "."));
+
+  return {
+    type: resolvedType,
+    costPerEvent: Number.isFinite(resolvedCost) && resolvedCost >= 0 ? resolvedCost : 0,
+    source:
+      typeof override?.source === "string" && override.source.trim()
+        ? override.source.trim()
+        : baseline.source,
+    year:
+      typeof override?.year === "string" && override.year.trim()
+        ? override.year.trim()
+        : baseline.year,
+    basis: override ? "manual" : baseline.basis,
+    hasOverride: Boolean(override),
+    intervalMonths: baseline.intervalMonths || inferServiceIntervalMonthsFromPeriod(tool.period) || 0,
+  };
+}
+
 function toMonths(value, unit) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric) || numeric <= 0) return 0;
@@ -104,6 +133,12 @@ function getRenewalCount(contractDurationMonths, lifecycle) {
   return Math.max(0, Math.ceil(contractDurationMonths / intervalMonths) - 1);
 }
 
+function getServiceEventCount(contractDurationMonths, service) {
+  if (service.type === "none" || service.costPerEvent <= 0) return 0;
+  if (!Number.isFinite(service.intervalMonths) || service.intervalMonths <= 0) return 0;
+  return Math.max(0, Math.floor(contractDurationMonths / service.intervalMonths));
+}
+
 function annualizeCost(value, contractDurationMonths) {
   if (!Number.isFinite(value) || value <= 0) return 0;
   if (!Number.isFinite(contractDurationMonths) || contractDurationMonths <= 0) return 0;
@@ -116,7 +151,9 @@ function createCostBucket(id, label) {
     label,
     mobilization: 0,
     renewals: 0,
+    service: 0,
     annualRenewals: 0,
+    annualService: 0,
     total: 0,
   };
 }
@@ -124,6 +161,7 @@ function createCostBucket(id, label) {
 function applyToolCost(bucket, tool) {
   bucket.mobilization += tool.mobilizationCost;
   bucket.renewals += tool.renewalCost;
+  bucket.service += tool.serviceCost;
   bucket.total += tool.contractCost;
   return bucket;
 }
@@ -132,10 +170,13 @@ function getResolvedProjectTool(tool, project, contractDurationMonths) {
   const currentPrice = getCurrentPrice(tool, project);
   const priceReference = getPriceReference(tool, project);
   const lifecycle = normalizeLifecycle(tool, project);
+  const service = normalizeService(tool, project);
   const multiplier = getMultiplierForTool(project, tool);
   const mobilizationCost = tool.qty * currentPrice * multiplier;
   const renewalCount = getRenewalCount(contractDurationMonths, lifecycle);
   const renewalCost = mobilizationCost * renewalCount * (lifecycle.replacementRatio / 100);
+  const serviceEventCount = getServiceEventCount(contractDurationMonths, service);
+  const serviceCost = tool.qty * multiplier * service.costPerEvent * serviceEventCount;
 
   return {
     ...tool,
@@ -144,11 +185,14 @@ function getResolvedProjectTool(tool, project, contractDurationMonths) {
     priceYear: priceReference.year,
     hasPriceOverride: priceReference.hasOverride,
     lifecycle,
+    service,
     multiplier,
     mobilizationCost,
     renewalCount,
     renewalCost,
-    contractCost: mobilizationCost + renewalCost,
+    serviceEventCount,
+    serviceCost,
+    contractCost: mobilizationCost + renewalCost + serviceCost,
   };
 }
 
@@ -170,7 +214,8 @@ export function getProjectBudgetMetrics(project) {
 
   const initialMobilization = selectedTools.reduce((sum, tool) => sum + tool.mobilizationCost, 0);
   const renewalBudget = selectedTools.reduce((sum, tool) => sum + tool.renewalCost, 0);
-  const contractTotal = initialMobilization + renewalBudget;
+  const serviceBudget = selectedTools.reduce((sum, tool) => sum + tool.serviceCost, 0);
+  const contractTotal = initialMobilization + renewalBudget + serviceBudget;
 
   const levelTotals = {
     T: selectedTools
@@ -196,11 +241,29 @@ export function getProjectBudgetMetrics(project) {
       .reduce((sum, tool) => sum + tool.renewalCost, 0),
   };
 
+  const serviceLevelTotals = {
+    T: selectedTools
+      .filter((tool) => tool.level === "T")
+      .reduce((sum, tool) => sum + tool.serviceCost, 0),
+    E: selectedTools
+      .filter((tool) => tool.level === "E")
+      .reduce((sum, tool) => sum + tool.serviceCost, 0),
+    P: selectedTools
+      .filter((tool) => tool.level === "P")
+      .reduce((sum, tool) => sum + tool.serviceCost, 0),
+  };
+
   const annualRenewalBudget = annualizeCost(renewalBudget, contractDurationMonths);
+  const annualServiceBudget = annualizeCost(serviceBudget, contractDurationMonths);
   const renewalLevelAnnualTotals = {
     T: annualizeCost(renewalLevelTotals.T, contractDurationMonths),
     E: annualizeCost(renewalLevelTotals.E, contractDurationMonths),
     P: annualizeCost(renewalLevelTotals.P, contractDurationMonths),
+  };
+  const serviceLevelAnnualTotals = {
+    T: annualizeCost(serviceLevelTotals.T, contractDurationMonths),
+    E: annualizeCost(serviceLevelTotals.E, contractDurationMonths),
+    P: annualizeCost(serviceLevelTotals.P, contractDurationMonths),
   };
 
   const subsystemTotals = Array.from(
@@ -209,11 +272,14 @@ export function getProjectBudgetMetrics(project) {
         subsystem: tool.subsystem,
         mobilization: 0,
         renewals: 0,
+        service: 0,
         total: 0,
         annualRenewals: 0,
+        annualService: 0,
       };
       current.mobilization += tool.mobilizationCost;
       current.renewals += tool.renewalCost;
+      current.service += tool.serviceCost;
       current.total += tool.contractCost;
       map.set(tool.subsystem, current);
       return map;
@@ -222,11 +288,16 @@ export function getProjectBudgetMetrics(project) {
     .map(([, value]) => ({
       ...value,
       annualRenewals: annualizeCost(value.renewals, contractDurationMonths),
+      annualService: annualizeCost(value.service, contractDurationMonths),
     }));
 
   const renewalDrivers = [...selectedTools]
     .filter((tool) => tool.renewalCost > 0)
     .sort((left, right) => right.renewalCost - left.renewalCost)
+    .slice(0, 8);
+  const serviceDrivers = [...selectedTools]
+    .filter((tool) => tool.serviceCost > 0)
+    .sort((left, right) => right.serviceCost - left.serviceCost)
     .slice(0, 8);
 
   return {
@@ -237,15 +308,20 @@ export function getProjectBudgetMetrics(project) {
     totalAllocated: initialMobilization,
     initialMobilization,
     renewalBudget,
+    serviceBudget,
     contractTotal,
     contractDurationMonths,
     contractDurationLabel,
     levelTotals,
     renewalLevelTotals,
+    serviceLevelTotals,
     annualRenewalBudget,
+    annualServiceBudget,
     renewalLevelAnnualTotals,
+    serviceLevelAnnualTotals,
     subsystemTotals,
     renewalDrivers,
+    serviceDrivers,
   };
 }
 
@@ -262,6 +338,9 @@ export function getProjectReportingMetrics(project) {
   const calibrationTools = selectedTools.filter((tool) =>
     tool.period.toLowerCase().includes("calibration")
   );
+  const serviceTrackedTools = selectedTools
+    .filter((tool) => tool.service.type !== "none" && tool.service.costPerEvent > 0)
+    .sort((left, right) => right.serviceCost - left.serviceCost);
   const catalogWithImages = catalog.filter((tool) => Boolean(tool.imgSrc));
   const selectedWithoutImages = selectedTools.filter((tool) => !tool.imgSrc);
   const fragileLinkTools = selectedTools.filter((tool) =>
@@ -276,8 +355,16 @@ export function getProjectReportingMetrics(project) {
   const selectedWithoutLifecycleReference = selectedTools.filter(
     (tool) => !tool.lifecycle.source && !tool.lifecycle.year
   );
+  const selectedWithoutServiceReference = selectedTools.filter(
+    (tool) =>
+      tool.service.type !== "none" &&
+      tool.service.costPerEvent > 0 &&
+      !tool.service.source &&
+      !tool.service.year
+  );
   const selectedWithManualPrice = selectedTools.filter((tool) => tool.hasPriceOverride);
   const selectedWithManualLifecycle = selectedTools.filter((tool) => tool.lifecycle.hasOverride);
+  const selectedWithManualService = selectedTools.filter((tool) => tool.service.hasOverride);
   const levelSelection = {
     T: selectedTools.filter((tool) => tool.level === "T").length,
     E: selectedTools.filter((tool) => tool.level === "E").length,
@@ -296,6 +383,7 @@ export function getProjectReportingMetrics(project) {
     .map(([, value]) => ({
       ...value,
       annualRenewals: annualizeCost(value.renewals, contractDurationMonths),
+      annualService: annualizeCost(value.service, contractDurationMonths),
     }))
     .sort((left, right) => right.total - left.total);
 
@@ -307,6 +395,7 @@ export function getProjectReportingMetrics(project) {
     return {
       ...current,
       annualRenewals: annualizeCost(current.renewals, contractDurationMonths),
+      annualService: annualizeCost(current.service, contractDurationMonths),
     };
   });
 
@@ -318,6 +407,9 @@ export function getProjectReportingMetrics(project) {
     const techRenewals = tools.filter((tool) => tool.level === "T").reduce((sum, tool) => sum + tool.renewalCost, 0);
     const teamRenewals = tools.filter((tool) => tool.level === "E").reduce((sum, tool) => sum + tool.renewalCost, 0);
     const projectRenewals = tools.filter((tool) => tool.level === "P").reduce((sum, tool) => sum + tool.renewalCost, 0);
+    const techService = tools.filter((tool) => tool.level === "T").reduce((sum, tool) => sum + tool.serviceCost, 0);
+    const teamService = tools.filter((tool) => tool.level === "E").reduce((sum, tool) => sum + tool.serviceCost, 0);
+    const projectService = tools.filter((tool) => tool.level === "P").reduce((sum, tool) => sum + tool.serviceCost, 0);
 
     return {
       subsystem: subsystemId,
@@ -327,10 +419,25 @@ export function getProjectReportingMetrics(project) {
       techRenewals,
       teamRenewals,
       projectRenewals,
+      techService,
+      teamService,
+      projectService,
       techAnnualRenewals: annualizeCost(techRenewals, contractDurationMonths),
       teamAnnualRenewals: annualizeCost(teamRenewals, contractDurationMonths),
       projectAnnualRenewals: annualizeCost(projectRenewals, contractDurationMonths),
-      total: techMob + teamMob + projectMob + techRenewals + teamRenewals + projectRenewals,
+      techAnnualService: annualizeCost(techService, contractDurationMonths),
+      teamAnnualService: annualizeCost(teamService, contractDurationMonths),
+      projectAnnualService: annualizeCost(projectService, contractDurationMonths),
+      total:
+        techMob +
+        teamMob +
+        projectMob +
+        techRenewals +
+        teamRenewals +
+        projectRenewals +
+        techService +
+        teamService +
+        projectService,
     };
   });
 
@@ -350,18 +457,24 @@ export function getProjectReportingMetrics(project) {
               techRenewals: 0,
               teamRenewals: 0,
               projectRenewals: 0,
+              techService: 0,
+              teamService: 0,
+              projectService: 0,
               total: 0,
             };
 
             if (tool.level === "T") {
               current.techMob += tool.mobilizationCost;
               current.techRenewals += tool.renewalCost;
+              current.techService += tool.serviceCost;
             } else if (tool.level === "E") {
               current.teamMob += tool.mobilizationCost;
               current.teamRenewals += tool.renewalCost;
+              current.teamService += tool.serviceCost;
             } else if (tool.level === "P") {
               current.projectMob += tool.mobilizationCost;
               current.projectRenewals += tool.renewalCost;
+              current.projectService += tool.serviceCost;
             }
 
             current.total += tool.contractCost;
@@ -374,10 +487,18 @@ export function getProjectReportingMetrics(project) {
           techAnnualRenewals: annualizeCost(value.techRenewals, contractDurationMonths),
           teamAnnualRenewals: annualizeCost(value.teamRenewals, contractDurationMonths),
           projectAnnualRenewals: annualizeCost(value.projectRenewals, contractDurationMonths),
+          techAnnualService: annualizeCost(value.techService, contractDurationMonths),
+          teamAnnualService: annualizeCost(value.teamService, contractDurationMonths),
+          projectAnnualService: annualizeCost(value.projectService, contractDurationMonths),
           mobilization: value.techMob + value.teamMob + value.projectMob,
           renewals: value.techRenewals + value.teamRenewals + value.projectRenewals,
+          service: value.techService + value.teamService + value.projectService,
           annualRenewals: annualizeCost(
             value.techRenewals + value.teamRenewals + value.projectRenewals,
+            contractDurationMonths
+          ),
+          annualService: annualizeCost(
+            value.techService + value.teamService + value.projectService,
             contractDurationMonths
           ),
         }))
@@ -431,6 +552,13 @@ export function getProjectReportingMetrics(project) {
       detail: `${selectedWithoutLifecycleReference.length} selected tool(s) still rely on undocumented lifecycle assumptions.`,
     });
   }
+  if (selectedWithoutServiceReference.length > 0) {
+    alerts.push({
+      severity: "medium",
+      title: "Undocumented service cost references",
+      detail: `${selectedWithoutServiceReference.length} selected tool(s) have a service cost without an explicit source or year.`,
+    });
+  }
   if (fragileLinkTools.length > 0) {
     alerts.push({
       severity: "low",
@@ -451,6 +579,8 @@ export function getProjectReportingMetrics(project) {
       : 100,
     calibrationCount: calibrationTools.length,
     calibrationTools: calibrationTools.slice(0, 8),
+    serviceTrackedCount: serviceTrackedTools.length,
+    serviceTrackedTools: serviceTrackedTools.slice(0, 10),
     imageCoverage: catalogWithImages.length,
     imageCoveragePct: catalog.length ? Math.round((catalogWithImages.length / catalog.length) * 100) : 100,
     selectedWithoutImagesCount: selectedWithoutImages.length,
@@ -463,8 +593,11 @@ export function getProjectReportingMetrics(project) {
     selectedWithoutPriceReference: selectedWithoutPriceReference.slice(0, 8),
     selectedWithoutLifecycleReferenceCount: selectedWithoutLifecycleReference.length,
     selectedWithoutLifecycleReference: selectedWithoutLifecycleReference.slice(0, 8),
+    selectedWithoutServiceReferenceCount: selectedWithoutServiceReference.length,
+    selectedWithoutServiceReference: selectedWithoutServiceReference.slice(0, 8),
     selectedWithManualPriceCount: selectedWithManualPrice.length,
     selectedWithManualLifecycleCount: selectedWithManualLifecycle.length,
+    selectedWithManualServiceCount: selectedWithManualService.length,
     levelSelection,
     categoryCostRows,
     subsystemCostRows,

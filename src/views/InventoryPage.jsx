@@ -9,6 +9,7 @@ export default function InventoryPage({ subsystem, onSubsystemChange, context, o
     setProjectWorkforce,
     setProjectPriceOverrides,
     setProjectLifecycleOverrides,
+    setProjectServiceOverrides,
   } = useProjects();
 
   if (!activeProject) return null;
@@ -28,6 +29,8 @@ export default function InventoryPage({ subsystem, onSubsystemChange, context, o
       onPriceOverridesChange={setProjectPriceOverrides}
       lifecycleOverrides={activeProject.lifecycleOverrides}
       onLifecycleOverridesChange={setProjectLifecycleOverrides}
+      serviceOverrides={activeProject.serviceOverrides}
+      onServiceOverridesChange={setProjectServiceOverrides}
     />
   );
 }

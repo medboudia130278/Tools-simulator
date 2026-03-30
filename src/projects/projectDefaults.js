@@ -47,6 +47,7 @@ export function createProject(overrides = {}) {
     workforce: createDefaultWorkforce(),
     priceOverrides: {},
     lifecycleOverrides: {},
+    serviceOverrides: {},
     notes: "",
     createdAt: now,
     updatedAt: now,
@@ -72,6 +73,10 @@ export function normalizeProject(project) {
     lifecycleOverrides:
       project?.lifecycleOverrides && typeof project.lifecycleOverrides === "object"
         ? project.lifecycleOverrides
+        : {},
+    serviceOverrides:
+      project?.serviceOverrides && typeof project.serviceOverrides === "object"
+        ? project.serviceOverrides
         : {},
     status: project?.status === "archived" ? "archived" : "active",
   };

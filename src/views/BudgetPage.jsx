@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { CalendarClock, Layers3, Wallet } from "lucide-react";
+import { CalendarClock, Layers3, ShieldCheck, Wallet } from "lucide-react";
 import { TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { palette } from "../app/theme.js";
 import { useProjects } from "../projects/ProjectStore.jsx";
@@ -99,7 +99,7 @@ function StackedBarChart({ rows, total }) {
           Cost by subsystem
         </div>
         <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
-          Mobilization and renewals are stacked to show the full contract cost footprint by subsystem.
+          Mobilization, renewals and calibration / verification service are stacked to show the full contract cost footprint by subsystem.
         </div>
       </div>
 
@@ -107,6 +107,7 @@ function StackedBarChart({ rows, total }) {
         {rows.map((row) => {
           const mobilizationWidth = total ? (row.mobilization / total) * 100 : 0;
           const renewalsWidth = total ? (row.renewals / total) * 100 : 0;
+          const serviceWidth = total ? (row.service / total) * 100 : 0;
           return (
             <div key={row.subsystemId} style={{ display: "grid", gap: "8px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "baseline" }}>
@@ -150,12 +151,21 @@ function StackedBarChart({ rows, total }) {
                     minWidth: row.renewals > 0 ? "2px" : 0,
                   }}
                 />
+                <div
+                  style={{
+                    width: `${serviceWidth}%`,
+                    background: "#f97316",
+                    minWidth: row.service > 0 ? "2px" : 0,
+                  }}
+                />
               </div>
 
               <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", fontSize: "12px", color: palette.inkMuted }}>
                 <span>Mobilization: <strong style={{ color: palette.teal }}>{fmt(row.mobilization)} EUR</strong></span>
                 <span>Renewals: <strong style={{ color: "#7c3aed" }}>{fmt(row.renewals)} EUR</strong></span>
+                <span>Service: <strong style={{ color: "#f97316" }}>{fmt(row.service)} EUR</strong></span>
                 <span>Renewals/year: <strong style={{ color: palette.ink }}>{fmt(row.annualRenewals)} EUR</strong></span>
+                <span>Service/year: <strong style={{ color: palette.ink }}>{fmt(row.annualService)} EUR</strong></span>
               </div>
             </div>
           );
@@ -171,6 +181,10 @@ function StackedBarChart({ rows, total }) {
           <span style={{ width: "10px", height: "10px", borderRadius: "999px", background: "#7c3aed" }} />
           Renewals
         </span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+          <span style={{ width: "10px", height: "10px", borderRadius: "999px", background: "#f97316" }} />
+          Calibration / verification
+        </span>
       </div>
     </div>
   );
@@ -182,26 +196,32 @@ function DonutLevelChart({ metrics }) {
       label: "Technician",
       mobilization: metrics.levelTotals.T,
       renewals: metrics.renewalLevelTotals.T,
+      service: metrics.serviceLevelTotals.T,
       annualRenewals: metrics.renewalLevelAnnualTotals.T,
+      annualService: metrics.serviceLevelAnnualTotals.T,
       color: palette.teal,
     },
     {
       label: "Team",
       mobilization: metrics.levelTotals.E,
       renewals: metrics.renewalLevelTotals.E,
+      service: metrics.serviceLevelTotals.E,
       annualRenewals: metrics.renewalLevelAnnualTotals.E,
+      annualService: metrics.serviceLevelAnnualTotals.E,
       color: palette.primary,
     },
     {
       label: "Project / depot",
       mobilization: metrics.levelTotals.P,
       renewals: metrics.renewalLevelTotals.P,
+      service: metrics.serviceLevelTotals.P,
       annualRenewals: metrics.renewalLevelAnnualTotals.P,
+      annualService: metrics.serviceLevelAnnualTotals.P,
       color: "#7c3aed",
     },
   ].map((segment) => ({
     ...segment,
-    total: segment.mobilization + segment.renewals,
+    total: segment.mobilization + segment.renewals + segment.service,
   }));
 
   const total = segments.reduce((sum, segment) => sum + segment.total, 0);
@@ -230,7 +250,7 @@ function DonutLevelChart({ metrics }) {
           Contract mix by level
         </div>
         <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
-          Distribution of mobilization plus renewals across Technician, Team and Project / depot tooling.
+          Distribution of mobilization, renewals and recurring service across Technician, Team and Project / depot tooling.
         </div>
       </div>
 
@@ -307,9 +327,9 @@ function DonutLevelChart({ metrics }) {
               <div style={{ color: palette.inkMuted, fontSize: "12px", lineHeight: 1.5 }}>
                 {pct(segment.total, total)}% of contract total
                 <br />
-                Mobilization {fmt(segment.mobilization)} EUR · Renewals {fmt(segment.renewals)} EUR
+                Mobilization {fmt(segment.mobilization)} EUR · Renewals {fmt(segment.renewals)} EUR · Service {fmt(segment.service)} EUR
                 <br />
-                Renewals/year {fmt(segment.annualRenewals)} EUR
+                Renewals/year {fmt(segment.annualRenewals)} EUR · Service/year {fmt(segment.annualService)} EUR
               </div>
             </div>
           ))}
@@ -343,14 +363,16 @@ function SubsystemTable({ rows, contractTotal }) {
         <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "980px" }}>
           <thead>
             <tr style={{ textAlign: "left", color: palette.inkMuted, fontSize: "12px" }}>
-              {[
+              {[ 
                 "Subsystem",
                 "Tech",
                 "Team",
                 "Project / depot",
                 "Mobilization",
                 "Renewals",
+                "Calibration / verification",
                 "Renewals / year",
+                "Service / year",
                 "Contract total",
                 "% of total",
               ].map((label) => (
@@ -402,12 +424,34 @@ function SubsystemTable({ rows, contractTotal }) {
                   style={{
                     padding: "14px 8px",
                     borderBottom: `1px solid ${palette.surfaceLow}`,
+                    color: "#f97316",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  {fmt(row.service)}
+                </td>
+                <td
+                  style={{
+                    padding: "14px 8px",
+                    borderBottom: `1px solid ${palette.surfaceLow}`,
                     color: palette.ink,
                     fontFamily: "'JetBrains Mono', monospace",
                     fontWeight: 700,
                   }}
                 >
                   {fmt(row.annualRenewals)}
+                </td>
+                <td
+                  style={{
+                    padding: "14px 8px",
+                    borderBottom: `1px solid ${palette.surfaceLow}`,
+                    color: palette.ink,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 700,
+                  }}
+                >
+                  {fmt(row.annualService)}
                 </td>
                 <td
                   style={{
@@ -499,6 +543,75 @@ function RenewalDrivers({ metrics }) {
   );
 }
 
+function ServiceDrivers({ metrics }) {
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "14px" }}>
+      <div>
+        <div
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: "22px",
+            fontWeight: 700,
+            marginBottom: "8px",
+          }}
+        >
+          Main service-cost drivers
+        </div>
+        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
+          Highest projected calibration, verification or dielectric-testing costs over the contract.
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gap: "12px" }}>
+        {metrics.serviceDrivers.map((tool) => (
+          <div
+            key={tool.uid}
+            style={{
+              background: palette.surfaceLow,
+              borderRadius: "14px",
+              padding: "14px 16px",
+              display: "grid",
+              gap: "8px",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
+              <div>
+                <div style={{ fontWeight: 700, color: palette.ink }}>{tool.name}</div>
+                <div style={{ color: palette.inkMuted, fontSize: "12px", marginTop: "4px" }}>
+                  {tool.subsystem} · {tool.brand} · {tool.model}
+                </div>
+              </div>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "13px",
+                  fontWeight: 700,
+                  color: "#f97316",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {fmt(tool.serviceCost)} EUR
+              </div>
+            </div>
+            <div style={{ color: palette.inkMuted, fontSize: "12px", lineHeight: 1.55 }}>
+              {tool.service.type === "none" ? "No periodic service" : `${tool.service.type.replaceAll("_", " ")}`}
+              {" · "}
+              {tool.serviceEventCount} event(s) over contract
+              <br />
+              Service/year {fmt(tool.serviceCost / Math.max(1, metrics.contractDurationMonths / 12))} EUR
+            </div>
+          </div>
+        ))}
+        {metrics.serviceDrivers.length === 0 && (
+          <div style={{ color: palette.inkMuted, lineHeight: 1.6 }}>
+            No calibration or verification cost is currently forecast for this project.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function BudgetPage() {
   const { activeProject } = useProjects();
   const metrics = useMemo(() => getProjectBudgetMetrics(activeProject), [activeProject]);
@@ -519,7 +632,9 @@ export default function BudgetPage() {
         const totals = metrics.subsystemTotals.find((item) => item.subsystem === subsystemId) || {
           mobilization: 0,
           renewals: 0,
+          service: 0,
           annualRenewals: 0,
+          annualService: 0,
           total: 0,
         };
 
@@ -530,7 +645,9 @@ export default function BudgetPage() {
           counts,
           mobilization: totals.mobilization,
           renewals: totals.renewals,
+          service: totals.service,
           annualRenewals: totals.annualRenewals,
+          annualService: totals.annualService,
           total: totals.total,
         };
       }),
@@ -571,7 +688,7 @@ export default function BudgetPage() {
         </div>
         <div style={{ maxWidth: "820px", lineHeight: 1.6, opacity: 0.92 }}>
           The budget view is now organized as an analysis workspace: a small KPI strip, a stacked
-          subsystem histogram, a level mix donut, an operating table and a focused renewal driver list.
+          subsystem histogram, a level mix donut, an operating table and focused recurring-cost driver lists.
         </div>
         <div
           style={{
@@ -594,6 +711,12 @@ export default function BudgetPage() {
             </div>
           </div>
           <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
+            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Service / year</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+              {fmt(metrics.annualServiceBudget)} EUR
+            </div>
+          </div>
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
             <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Mandatory coverage</div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{coveragePct}%</div>
           </div>
@@ -603,7 +726,7 @@ export default function BudgetPage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
           gap: "18px",
         }}
       >
@@ -624,10 +747,18 @@ export default function BudgetPage() {
           tone="rgba(124, 58, 237, 0.08)"
         />
         <KpiCard
+          icon={ShieldCheck}
+          label="Calibration / verification"
+          value={`${fmt(metrics.serviceBudget)} EUR`}
+          note={`Average ${fmt(metrics.annualServiceBudget)} EUR/year over ${metrics.contractDurationLabel}.`}
+          accent="#f97316"
+          tone="rgba(249, 115, 22, 0.10)"
+        />
+        <KpiCard
           icon={Wallet}
           label="Total contract tooling cost"
           value={`${fmt(metrics.contractTotal)} EUR`}
-          note="Mobilization plus all forecast renewals over the contract."
+          note="Mobilization plus forecast renewals and calibration / verification service over the contract."
           accent={palette.primary}
           tone={palette.primarySoft}
         />
@@ -646,7 +777,16 @@ export default function BudgetPage() {
 
       <SubsystemTable rows={subsystemRows} contractTotal={metrics.contractTotal} />
 
-      <RenewalDrivers metrics={metrics} />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "18px",
+        }}
+      >
+        <RenewalDrivers metrics={metrics} />
+        <ServiceDrivers metrics={metrics} />
+      </div>
     </div>
   );
 }

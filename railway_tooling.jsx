@@ -150,7 +150,7 @@ const RAW_BY_SUBSYSTEM = {
   ['t16','E','MBTDC','Three-phase Rotation Tester 40-700V AC','Fluke','9040','LV / Auxiliaries 400V','EN 61010 – EN 61557-7','OB',1,316,'Annual','Clear official product page for phase-sequence verification before energisation. Replaces the incorrect CA 6412 reference.','https://www.fluke.com/en/product/electrical-testing/basic-testers/fluke-9040'],
   ['t17','T','MBTDC','Traction DC Bipolar Voltage and Polarity Tester 24-1500V','Gossen Metrawatt','METRAVOLT 12D+L','DC Traction 750-1500V / LV','DIN EN 61243-3 – CAT IV 600V / CAT III 1000V','RC',1,435,'Annual','Two-pole contact tester used mainly for traction DC polarity identification, AC/DC voltage confirmation and diagnostic checks where the safety VAT alone is not sufficient. Distinct from the mandatory absence-of-voltage tool.','https://www.gossenmetrawatt.de/produkte/mess-und-prueftechnik/prueftechnik/pruefung-elektrischer-installationen-und-anlagen/spannung-phase-drehfeld-durchgang-polaritaet/metravolt-12d-plusl/'],
   ['t18','T','MBTDC','Infrared Thermometer -50 to +550°C','Fluke','62 MAX+','All domains','EN 61010-1','RC',1,166,'Annual','Fast detection of hot spots on lugs, busbars, fuses.','https://www.fluke.com/fr-fr/produit/thermometres/thermometres-infrarouges/fluke-62-max'],
-  ['t19','T','OUTILS','Ratchet Set 3/8" metric 29 pcs','Wera','8100 SB 6 Zyklop Speed','LV / MV – Bolting','ISO 2725 / DIN 3122','OB',1,108,'Replace when worn','Current official ratchet/socket set page with compact textile case. Suitable for cabinet fixings, lugs and terminal work.','https://www.wera.de/fr/outillages/8100-sb-6-jeu-cliquet-zyklop-speed-a-carre-3-8-metrique'],
+  ['t19','E','OUTILS','Ratchet Set 3/8" metric 29 pcs','Wera','8100 SB 6 Zyklop Speed','LV / MV – Bolting','ISO 2725 / DIN 3122','OB',1,108,'Replace when worn','Current official ratchet/socket set page with compact textile case. Suitable for cabinet fixings, lugs and terminal work.','https://www.wera.de/fr/outillages/8100-sb-6-jeu-cliquet-zyklop-speed-a-carre-3-8-metrique'],
   ['t20','T','OUTILS','Hex Key Set metric 1.5-10mm','Wera','950/9 Hex-Plus Multicolour 1 SB','All domains','DIN 911 / ISO 2936','OB',1,42,'Replace when worn','Current official hex key set page. Daily use for socket-head screws, drives, relays and rail equipment.','https://www.wera.de/fr/outillages/950-9-hex-plus-multicolour-1-sb-jeu-de-cles-males-coudees-syst-metrique-blacklaser'],
   ['t21','T','OUTILS','Belt pouch for two pliers up to 150 mm','Knipex','00 19 72 LE','All domains','–','OB',1,12,'Replace when worn','Official KNIPEX belt pouch for two pliers up to 150 mm, with side holder for flashlight or pen. Corrects the previous mismatched tool-bag description.','https://www.knipex.com/products/tool-bags-and-tool-cases/belt-pouch-for-two-pliers-empty/belt-pouch-two-pliers-empty/001972LE'],
   ['t22','T','OUTILS','Heat Gun 2000W 50-630°C + 2 nozzles','Bosch','GHG 20-63 Professional','LV / DC – Sleeves & Cables','–','OB',1,143,'Replace if defective','Official Bosch product page for the GHG 20-63 heat gun, suitable for heat-shrink work on lugs, cables and connectors.','https://www.bosch-professional.com/de/de/products/ghg-20-63-06012A6200'],
@@ -170,6 +170,7 @@ const RAW_BY_SUBSYSTEM = {
   ['t36','T','LOTO','Danger Lockout Tags – pack 25','Brady','48797','All domains','Lockout Tagout','OB',1,18,'Consumable','Current official Brady pack of 25 durable danger lockout tags with brass grommet and write-on area.','https://www.bradyid.com/products/bilingual-danger-this-tag-lock-to-be-removed-only-by-person-shown-on-back-tags-pid-48797'],
   ['t37','T','OUTILS','Portable Tool Container with shoulder strap','Wera','Wera 2go 2 Tool Container','All domains – mobile maintenance','–','RC',1,115,'Replace when worn','Current official Wera mobile container system with shoulder strap and detachable quiver. Good fit for a technician who must keep essential hand tools on him while moving between rooms, cabinets and platforms.','https://www.wera.de/en/tools/wera-2go-2-tool-container'],
   ['t38','T','OUTILS','Open-end / Ring Wrench Set 8-19 mm in roll-up pouch','Stahlwille','96401007','All domains – daily fastening','DIN 3113 Form B / ISO 7738 Form B','OB',1,185,'Replace when worn','Current official STAHLWILLE set covering the most common small and medium metric sizes for day-to-day fastening. It gives the technician both open-end and ring ends in one compact pouch.','https://stahlwille.com/fr_fr/products/detail/26151321'],
+  ['t39','T','OUTILS','Compact 1/4" Spinner Ratchet and Socket Set – 6 pcs','Facom','R.360NANOPB','All domains – compact fastening','ISO 2725 / DIN 3122','OB',1,163,'Replace when worn','Compact FACOM rotating-handle 1/4 inch ratchet and socket set suited to technician carry. Added as a personal fastener-access set for cramped cabinets and small hardware where a full team ratchet set is unnecessary.','https://www.manomano.fr/p/facom-coffret-cliquet-manche-rotatif-360-avec-douilles-14-6-r360nanopb-94034707?model_id=6124264'],
   ['e01','E','PPE','Insulating Gloves Class 4 (36kV)','Honeywell / Salisbury','NG418RB/11 Electriflex','MV 10-36kV','Class 4 – IEC EN 60903 / ASTM D120','OB',4,1101,'6 months (dielectric test)','Official Salisbury Electriflex class 4 glove page for high-voltage live work. Use with matching leather protectors sized for class 4 gloves.','https://www.salisburyshop.com/buy/product/salisbury-electriflex-class-4-rubber-insulating-gloves-ng418rb-11/211574'],
   ['e02','E','PPE','Insulating Gloves Class 2 (17kV) + leather protectors','Honeywell / Salisbury','GK218B/10H glove kit','DC Traction 1500V / BT 1000V','Class 2 – IEC EN 60903 / ASTM D120','OB',4,464,'6 months (dielectric test)','Official Salisbury glove kit page including class 2 gloves, leather protectors and storage bag for 1500 V DC traction or reinforced LV applications.','https://www.salisburyshop.com/buy/product/salisbury-size-10-1-2-class-2-black-insulating-rubber-gloves-kit-gk218b-10h/209680'],
   ['e03','E','PPE','Arc-flash Suit Class 3 (25 cal/cm²) – full coverall','Oberon','TCG25-XXL','MV/HV 25kV','IEC 61482-2 Class 3','OB',2,680,'3 years or after incident','Mandatory for work near 25kV live systems.','https://www.oberoncompany.com/arc-flash-clothing/arc-flash-suits'],
@@ -250,12 +251,22 @@ const TOOL_CONTEXT_OVERRIDES = {
 };
 const PRICE_OVERRIDE_STORAGE_KEY = 'railway-tooling-price-overrides-v1';
 const LIFECYCLE_OVERRIDE_STORAGE_KEY = 'railway-tooling-lifecycle-overrides-v1';
+const SERVICE_OVERRIDE_STORAGE_KEY = 'railway-tooling-service-overrides-v1';
 
 const LIFECYCLE_TYPES = {
   durable: { label: 'Durable asset' },
   periodic_replacement: { label: 'Periodic replacement' },
   condition_based: { label: 'Condition-based replacement' },
   consumable: { label: 'Consumable / replenishment' },
+};
+
+const SERVICE_TYPES = {
+  none: { label: 'No recurring service cost' },
+  calibration: { label: 'Calibration' },
+  verification: { label: 'Verification / periodic test' },
+  dielectric_test: { label: 'Dielectric test' },
+  inspection: { label: 'Inspection / periodic control' },
+  maintenance_service: { label: 'Maintenance service' },
 };
 
 const lifecycleDefaultsFor = (uids, config) =>
@@ -343,7 +354,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['POS:t09', 'POS:t10', 'POS:t19', 'POS:t20', 'POS:t21', 'POS:t23', 'POS:t24', 'POS:t25', 'POS:t30', 'POS:t31', 'POS:t37', 'POS:t38', 'POS:e08', 'POS:e41', 'POS:e42', 'POS:e49', 'POS:e51'], {
+  ...lifecycleDefaultsFor(['POS:t09', 'POS:t10', 'POS:t19', 'POS:t20', 'POS:t21', 'POS:t23', 'POS:t24', 'POS:t25', 'POS:t30', 'POS:t31', 'POS:t37', 'POS:t38', 'POS:t39', 'POS:e08', 'POS:e41', 'POS:e42', 'POS:e49', 'POS:e51'], {
     type: 'condition_based',
     intervalValue: '',
     intervalUnit: 'years',
@@ -489,6 +500,229 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
   }),
 };
 
+const serviceDefaultsFor = (uids, config) =>
+  Object.fromEntries(uids.map(uid => [uid, { ...config }]));
+
+export const TOOLING_SERVICE_DEFAULTS = {
+  ...serviceDefaultsFor(['POS:t01'], {
+    type: 'calibration',
+    cost: '256',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:t12', 'POS:e25'], {
+    type: 'calibration',
+    cost: '203',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:t13'], {
+    type: 'calibration',
+    cost: '284',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:t15'], {
+    type: 'calibration',
+    cost: '137',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:t16'], {
+    type: 'calibration',
+    cost: '99',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:t18'], {
+    type: 'calibration',
+    cost: '166',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:t11'], {
+    type: 'calibration',
+    cost: '26',
+    source: 'GEDORE torque service price list',
+    year: '2025',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e13'], {
+    type: 'calibration',
+    cost: '36',
+    source: 'GEDORE torque service price list',
+    year: '2025',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e11', 'POS:e12', 'POS:e14'], {
+    type: 'calibration',
+    cost: '450',
+    source: 'GEDORE torque service price list',
+    year: '2025',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e15', 'POS:e16'], {
+    type: 'verification',
+    cost: '10',
+    source: 'Venko voltage indicator testing price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e17'], {
+    type: 'verification',
+    cost: '9',
+    source: 'Venko phase comparator testing price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e05', 'POS:e35', 'POS:e36'], {
+    type: 'dielectric_test',
+    cost: '18',
+    source: 'Venko dielectric rods testing price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e06'], {
+    type: 'dielectric_test',
+    cost: '23',
+    source: 'Venko dielectric rods testing price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:t09', 'POS:t10'], {
+    type: 'dielectric_test',
+    cost: '3.5',
+    source: 'Venko electrical insulating tool testing price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e52'], {
+    type: 'inspection',
+    cost: '35',
+    source: 'Venko insulated ladder testing price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e24'], {
+    type: 'calibration',
+    cost: '400',
+    source: 'Venko high-voltage equipment calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e18'], {
+    type: 'calibration',
+    cost: '728',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e28'], {
+    type: 'calibration',
+    cost: '665',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e29'], {
+    type: 'calibration',
+    cost: '210',
+    source: 'Fluke BT521 calibration certificate add-on',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e30'], {
+    type: 'calibration',
+    cost: '215',
+    source: 'Fluke 1625-2 calibration certificate add-on',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e31'], {
+    type: 'calibration',
+    cost: '570',
+    source: 'Fluke Ti480 PRO calibration certificate add-on',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['POS:e34'], {
+    type: 'calibration',
+    cost: '1027',
+    source: 'Anritsu spectrum analyzer calibration quote baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:t14'], {
+    type: 'calibration',
+    cost: '250',
+    source: 'Estimated Metrel multifunction tester calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e19'], {
+    type: 'calibration',
+    cost: '190',
+    source: 'Estimated 5 kV insulation tester calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e20'], {
+    type: 'calibration',
+    cost: '210',
+    source: 'Estimated 10 kV insulation tester calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e21'], {
+    type: 'calibration',
+    cost: '175',
+    source: 'Estimated low-resistance ohmmeter calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e22'], {
+    type: 'calibration',
+    cost: '750',
+    source: 'Estimated relay test set calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e23'], {
+    type: 'calibration',
+    cost: '400',
+    source: 'Estimated CT/VT test set calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e27'], {
+    type: 'calibration',
+    cost: '160',
+    source: 'Estimated clamp meter calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e32'], {
+    type: 'calibration',
+    cost: '340',
+    source: 'Estimated portable oscilloscope calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e33'], {
+    type: 'calibration',
+    cost: '450',
+    source: 'Estimated TDR / fault locator calibration budget',
+    year: '2026',
+    basis: 'estimated',
+  }),
+};
+
 function loadStoredPriceOverrides() {
   if (typeof window === 'undefined') return {};
   try {
@@ -505,6 +739,18 @@ function loadStoredLifecycleOverrides() {
   if (typeof window === 'undefined') return {};
   try {
     const raw = window.localStorage.getItem(LIFECYCLE_OVERRIDE_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function loadStoredServiceOverrides() {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(SERVICE_OVERRIDE_STORAGE_KEY);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
     return parsed && typeof parsed === 'object' ? parsed : {};
@@ -572,6 +818,59 @@ export function inferToolLifecycleBaseline(tool) {
   };
 }
 
+export function inferServiceIntervalMonthsFromPeriod(period) {
+  const text = String(period || '').toLowerCase();
+  if (!text) return 0;
+
+  const monthMatch = text.match(/(\d+(?:[.,]\d+)?)\s*month/);
+  if (monthMatch) return Math.round(Number.parseFloat(monthMatch[1].replace(',', '.')));
+
+  const yearMatch = text.match(/(\d+(?:[.,]\d+)?)\s*year/);
+  if (yearMatch) return Math.round(Number.parseFloat(yearMatch[1].replace(',', '.')) * 12);
+
+  if (text.includes('annual')) return 12;
+  return 0;
+}
+
+export function inferToolServiceBaseline(tool) {
+  const explicit = TOOLING_SERVICE_DEFAULTS[tool.uid];
+  if (explicit) {
+    return {
+      type: explicit.type || 'none',
+      cost: explicit.cost ?? '',
+      source: explicit.source || '',
+      year: explicit.year || '',
+      basis: explicit.basis || 'estimated',
+      intervalMonths: inferServiceIntervalMonthsFromPeriod(tool.period),
+    };
+  }
+
+  const period = String(tool.period || '').toLowerCase();
+  let type = 'none';
+
+  if (period.includes('calibration')) {
+    type = 'calibration';
+  } else if (period.includes('dielectric')) {
+    type = 'dielectric_test';
+  } else if (
+    period.includes('inspection') ||
+    period.includes('pressure check') ||
+    period.includes('oil change') ||
+    period.includes('expiry')
+  ) {
+    type = 'inspection';
+  }
+
+  return {
+    type,
+    cost: '',
+    source: '',
+    year: '',
+    basis: 'derived',
+    intervalMonths: inferServiceIntervalMonthsFromPeriod(tool.period),
+  };
+}
+
 function resolveLifecycle(tool, lifecycleOverrides) {
   const baseline = inferToolLifecycleBaseline(tool);
   const override = lifecycleOverrides?.[tool.uid];
@@ -593,6 +892,25 @@ function resolveLifecycle(tool, lifecycleOverrides) {
     hasLifecycleOverride: Boolean(override),
     lifecycleBasis: override ? 'manual' : baseline.basis,
     lifecycleBaseline: baseline,
+  };
+}
+
+function resolveService(tool, serviceOverrides) {
+  const baseline = inferToolServiceBaseline(tool);
+  const override = serviceOverrides?.[tool.uid];
+  return {
+    serviceType: override?.type || baseline.type,
+    serviceCost: String(override?.cost ?? baseline.cost ?? ''),
+    serviceSource: typeof override?.source === 'string' && override.source.trim()
+      ? override.source.trim()
+      : baseline.source,
+    serviceYear: typeof override?.year === 'string' && override.year.trim()
+      ? override.year.trim()
+      : baseline.year,
+    serviceIntervalMonths: baseline.intervalMonths || 0,
+    hasServiceOverride: Boolean(override),
+    serviceBasis: override ? 'manual' : baseline.basis,
+    serviceBaseline: baseline,
   };
 }
 
@@ -648,7 +966,7 @@ const PRIMARY_USE_OVERRIDES = {
   t16: 'Quick pre-energisation phase-sequence verifier for motors, auxiliaries and rotating equipment. Use it before startup or after reconnection work to avoid reverse rotation and wrong three-phase wiring.',
   t17: 'Contact voltage and polarity tester for traction DC circuits and mixed AC/DC environments. Use it when you must identify DC polarity, confirm potential difference or perform a diagnostic contact check on conductors where the formal VAT tool is not the right instrument on its own.',
   t18: 'Fast thermal screening tool for hot spots on terminals, fuses, disconnectors, cable lugs and electronic components. Use it during inspections to identify abnormal heating before moving to a deeper electrical diagnosis.',
-  t19: 'Personal socket and ratchet set for day-to-day cabinet, support and terminal hardware work. Use it for repeated assembly and disassembly tasks where a screwdriver or open-end wrench is not the most efficient option.',
+  t19: 'Team-level 3/8 inch ratchet and socket set for broader cabinet, support and terminal hardware work. Use it as the shared mechanical socket base when the technician carry kit is too compact or when medium-duty bolting is repeated across the workfront.',
   t20: 'Compact hex-key set for drives, relays, electronic modules and socket-head fasteners. Use it on adjustment, removal and reassembly tasks where Allen screws are common and speed matters.',
   t21: 'Minimal carry pouch used to keep the most-used pliers directly on the technician during mobile interventions. Use it when moving repeatedly between cabinets or rooms and a full bag would be cumbersome.',
   t22: 'Heat-shrink preparation tool for sleeves, boots and connector finishing work. Use it after crimping, cable repair or sealing operations when controlled heating is needed to shrink and form insulating components.',
@@ -668,6 +986,7 @@ const PRIMARY_USE_OVERRIDES = {
   t36: 'Consumable warning tag used with padlocks and group isolation devices to identify who locked out the equipment and why. Use it on every lockout point where human-readable warning information is required.',
   t37: 'Portable soft-sided container for carrying the technician daily tool set between distributed work zones. Use it when the intervention footprint is larger than one cabinet and belt carry is no longer enough.',
   t38: 'Technician-level mixed wrench set for the most common small and medium fastening sizes. Use it on routine mechanical and electromechanical interfaces before escalating to the larger team-level wrench range.',
+  t39: 'Compact 1/4 inch spinner ratchet and socket set assigned to each technician for tight-access fastening. Use it inside crowded cabinets, narrow terminal areas and small assemblies where a low-profile rotating handle is faster and more practical than the larger team 3/8 inch ratchet set.',
   e15: 'Primary medium-voltage presence detector used before earthing, short-circuiting or authorising access on MV switchgear. Use it as the team reference to confirm whether a feeder or cubicle is still energised in the 20-36 kV range.',
   e16: 'Dedicated catenary voltage detector for 25 kV AC overhead line environments. Use it before railway earthing operations, possession access and worksite release to confirm the contact line is not live.',
   e17: 'Synchronism and phase-comparison instrument for medium-voltage sources before coupling or transfer operations. Use it when checking whether two MV points belong to the same phase relationship prior to switching actions.',
@@ -857,6 +1176,8 @@ export default function App({
   onPriceOverridesChange,
   lifecycleOverrides: controlledLifecycleOverrides,
   onLifecycleOverridesChange,
+  serviceOverrides: controlledServiceOverrides,
+  onServiceOverridesChange,
 }) {
   const [localSubsystem, setLocalSubsystem] = useState(controlledSubsystem || 'POS');
   const subsystem = controlledSubsystem ?? localSubsystem;
@@ -868,6 +1189,7 @@ export default function App({
   const isWorkforceControlled = controlledWorkforce !== undefined;
   const isPriceOverridesControlled = controlledPriceOverrides !== undefined;
   const isLifecycleOverridesControlled = controlledLifecycleOverrides !== undefined;
+  const isServiceOverridesControlled = controlledServiceOverrides !== undefined;
   const [lvl, setLvl]     = useState('ALL');
   const [cat, setCat]     = useState('ALL');
   const [stat, setStat]   = useState('ALL');
@@ -878,6 +1200,7 @@ export default function App({
   const currentReferenceYear = String(new Date().getFullYear());
   const [priceDraft, setPriceDraft] = useState({ price:'', source:'', year:currentReferenceYear });
   const [localLifecycleOverrides, setLocalLifecycleOverrides] = useState(loadStoredLifecycleOverrides);
+  const [localServiceOverrides, setLocalServiceOverrides] = useState(loadStoredServiceOverrides);
   const [lifecycleDraft, setLifecycleDraft] = useState({
     type: 'durable',
     intervalValue: '',
@@ -885,6 +1208,12 @@ export default function App({
     replacementRatio: '100',
     source: '',
     year: '',
+  });
+  const [serviceDraft, setServiceDraft] = useState({
+    type: 'none',
+    cost: '',
+    source: '',
+    year: currentReferenceYear,
   });
   const [vw, setVw]       = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
   // ── Workforce config per subsystem ──
@@ -935,6 +1264,15 @@ export default function App({
     }
     setLocalLifecycleOverrides(nextValue);
   };
+  const serviceOverrides = isServiceOverridesControlled ? controlledServiceOverrides : localServiceOverrides;
+  const setServiceOverrides = updater => {
+    const nextValue = typeof updater === 'function' ? updater(serviceOverrides) : updater;
+    if (isServiceOverridesControlled) {
+      onServiceOverridesChange?.(nextValue);
+      return;
+    }
+    setLocalServiceOverrides(nextValue);
+  };
   const nbTech  = workforce[subsystem].tech;
   const nbEquipe = workforce[subsystem].equipe;
   const nbProject = workforce[subsystem].project;
@@ -956,16 +1294,18 @@ export default function App({
         const priceSource = typeof override?.source === 'string' ? override.source.trim() : '';
         const priceYear = typeof override?.year === 'string' ? override.year.trim() : '';
         const lifecycle = resolveLifecycle(tool, lifecycleOverrides);
+        const service = resolveService(tool, serviceOverrides);
         return {
           ...tool,
           currentPrice,
           priceSource,
           priceYear,
           ...lifecycle,
+          ...service,
           hasPriceOverride: Boolean(override),
         };
       }),
-    [ctx, subsystem, priceOverrides, lifecycleOverrides]
+    [ctx, subsystem, priceOverrides, lifecycleOverrides, serviceOverrides]
   );
   const modalTool = modal ? activeTools.find(t=>t.uid===modal.uid) || TOOLS.find(t=>t.uid===modal.uid) || modal : null;
 
@@ -986,6 +1326,11 @@ export default function App({
   }, [isLifecycleOverridesControlled, lifecycleOverrides]);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || isServiceOverridesControlled) return;
+    window.localStorage.setItem(SERVICE_OVERRIDE_STORAGE_KEY, JSON.stringify(serviceOverrides));
+  }, [isServiceOverridesControlled, serviceOverrides]);
+
+  useEffect(() => {
     if (!modalTool) return;
     setPriceDraft({
       price: String(modalTool.currentPrice ?? modalTool.price ?? ''),
@@ -999,6 +1344,12 @@ export default function App({
       replacementRatio: String(modalTool.lifecycleReplacementRatio ?? '100'),
       source: modalTool.lifecycleSource || '',
       year: modalTool.lifecycleYear || '',
+    });
+    setServiceDraft({
+      type: modalTool.serviceType || 'none',
+      cost: String(modalTool.serviceCost ?? ''),
+      source: modalTool.serviceSource || '',
+      year: modalTool.serviceYear || currentReferenceYear,
     });
   }, [modalTool]);
 
@@ -1033,6 +1384,10 @@ export default function App({
     lifecycleReplacementRatio >= 0 &&
     lifecycleReplacementRatio <= 100 &&
     (!lifecycleNeedsInterval || (Number.isFinite(lifecycleIntervalValue) && lifecycleIntervalValue > 0));
+  const serviceDraftValue = Number.parseFloat(String(serviceDraft.cost).replace(',', '.'));
+  const canSaveServiceOverride =
+    Boolean(serviceDraft.type) &&
+    (serviceDraft.type === 'none' || (Number.isFinite(serviceDraftValue) && serviceDraftValue >= 0));
   const getLevelMeta = level => LEVELS[level] || LEVELS.T;
   const getUnitLabel = tool => `${tool.qty} ${getLevelMeta(tool.level).unit}`;
   const getPriceReferenceLabel = tool => {
@@ -1061,6 +1416,29 @@ export default function App({
       return `${typeLabel} Â· every ${interval} Â· ${ratioLabel}`;
     }
     return `${typeLabel} Â· ${ratioLabel}`;
+  };
+  const getServiceReferenceLabel = tool => {
+    if (tool.serviceSource && tool.serviceYear) {
+      const suffix = tool.serviceBasis === 'estimated' ? ' · estimated baseline' : tool.serviceBasis === 'manual' ? ' · manual override' : '';
+      return `${tool.serviceSource} · ${tool.serviceYear}${suffix}`;
+    }
+    if (tool.serviceSource) return tool.serviceSource;
+    if (tool.serviceYear) return `Reference year · ${tool.serviceYear}`;
+    if (tool.hasServiceOverride) return 'Manual service cost assumption';
+    return tool.serviceBasis === 'derived' ? 'Derived from current maintenance note' : 'No service cost documented';
+  };
+  const getServiceSummary = tool => {
+    const typeLabel = SERVICE_TYPES[tool.serviceType]?.label || 'Service';
+    const costValue = Number.parseFloat(String(tool.serviceCost).replace(',', '.'));
+    const costLabel = Number.isFinite(costValue) && costValue > 0
+      ? `${tool.serviceCost} EUR per event`
+      : 'cost not documented';
+    const cadence = tool.serviceIntervalMonths
+      ? tool.serviceIntervalMonths % 12 === 0
+        ? `every ${tool.serviceIntervalMonths / 12} year${tool.serviceIntervalMonths / 12 > 1 ? 's' : ''}`
+        : `every ${tool.serviceIntervalMonths} month${tool.serviceIntervalMonths > 1 ? 's' : ''}`
+      : 'cadence not derived';
+    return `${typeLabel} · ${costLabel} · ${cadence}`;
   };
   const savePriceOverride = () => {
     if (!modalTool || !canSavePriceOverride) return;
@@ -1099,6 +1477,26 @@ export default function App({
   const resetLifecycleOverride = () => {
     if (!modalTool) return;
     setLifecycleOverrides(prev => {
+      const next = { ...prev };
+      delete next[modalTool.uid];
+      return next;
+    });
+  };
+  const saveServiceOverride = () => {
+    if (!modalTool || !canSaveServiceOverride) return;
+    setServiceOverrides(prev => ({
+      ...prev,
+      [modalTool.uid]: {
+        type: serviceDraft.type,
+        cost: serviceDraft.type === 'none' ? '' : String(serviceDraftValue),
+        source: serviceDraft.source.trim(),
+        year: serviceDraft.year.trim(),
+      },
+    }));
+  };
+  const resetServiceOverride = () => {
+    if (!modalTool) return;
+    setServiceOverrides(prev => {
       const next = { ...prev };
       delete next[modalTool.uid];
       return next;
@@ -2042,6 +2440,78 @@ export default function App({
                       </div>
                     </div>
 
+                    <div style={{ background:'#FFFFFF', borderRadius:22, padding:'18px 18px 16px', boxShadow:'0 18px 36px rgba(17,24,39,0.05)' }}>
+                      <div style={{ fontSize:11, color:'#1C6090', marginBottom:12, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.08em', display:'flex', alignItems:'center', gap:6 }}>
+                        <BarChart2 size={12}/> CALIBRATION / VERIFICATION COST
+                      </div>
+                      <div style={{ display:'grid', gap:12 }}>
+                        <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 120px 112px', gap:10 }}>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>SERVICE TYPE</div>
+                            <select
+                              value={serviceDraft.type}
+                              onChange={e=>setServiceDraft(p=>({ ...p, type:e.target.value }))}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                            >
+                              {Object.entries(SERVICE_TYPES).map(([value, meta])=>(
+                                <option key={value} value={value}>{meta.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>COST / EVENT (EUR)</div>
+                            <input
+                              value={serviceDraft.cost}
+                              onChange={e=>setServiceDraft(p=>({ ...p, cost:e.target.value }))}
+                              placeholder="0"
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                            />
+                          </div>
+                          <div>
+                            <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>YEAR</div>
+                            <input
+                              value={serviceDraft.year}
+                              onChange={e=>setServiceDraft(p=>({ ...p, year:e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }))}
+                              placeholder={currentYear}
+                              style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div style={{ fontSize:10, color:'#667085', marginBottom:6, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>SOURCE</div>
+                          <input
+                            value={serviceDraft.source}
+                            onChange={e=>setServiceDraft(p=>({ ...p, source:e.target.value }))}
+                            placeholder="Calibration lab, testing contractor, framework..."
+                            style={{ width:'100%', background:'#F2F4F7', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', color:'#191C1E', fontSize:13, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                          />
+                        </div>
+                        <div style={{ display:'grid', gap:6 }}>
+                          <div style={{ fontSize:12, color:'#667085', lineHeight:1.55 }}>
+                            Current assumption: <strong style={{ color:'#191C1E' }}>{getServiceSummary(modal)}</strong>
+                          </div>
+                          <div style={{ fontSize:12, color:'#667085', lineHeight:1.55 }}>
+                            Active reference: <strong style={{ color:'#191C1E' }}>{getServiceReferenceLabel(modal)}</strong>
+                          </div>
+                        </div>
+                        <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                          <button
+                            onClick={resetServiceOverride}
+                            style={{ background:'#FFFFFF', border:'1px solid rgba(71,84,103,0.14)', borderRadius:12, padding:'10px 12px', cursor:'pointer', fontSize:12, color:'#475467', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}
+                          >
+                            RESET SERVICE COST
+                          </button>
+                          <button
+                            onClick={saveServiceOverride}
+                            disabled={!canSaveServiceOverride}
+                            style={{ background:canSaveServiceOverride?'#7C3AED':'#D0D5DD', border:'none', borderRadius:12, padding:'10px 14px', cursor:canSaveServiceOverride?'pointer':'not-allowed', fontSize:12, color:'#FFFFFF', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}
+                          >
+                            SAVE SERVICE COST
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                     {(modal.statut==='OB' || modal.period.toLowerCase().includes('calibration')) && (
                       <div style={{ display:'grid', gap:10 }}>
                         {modal.statut==='OB'&&(
@@ -2286,6 +2756,57 @@ export default function App({
                         </button>
                         <button onClick={saveLifecycleOverride} disabled={!canSaveLifecycleOverride} style={{ background:canSaveLifecycleOverride?C.teal:C.borderL, border:'none', borderRadius:8, padding:'8px 12px', cursor:canSaveLifecycleOverride?'pointer':'not-allowed', fontSize:11, color:'#fff', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
                           SAVE LIFECYCLE
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ background:C.bgMid, borderRadius:10, padding:'12px 14px', border:`1px solid ${C.border}` }}>
+                    <div style={{ fontSize:10, color:c.color, marginBottom:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em', display:'flex', alignItems:'center', gap:5 }}>
+                      <BarChart2 size={10}/> CALIBRATION / VERIFICATION COST
+                    </div>
+                    <div style={{ display:'grid', gap:10 }}>
+                      <div style={{ display:'grid', gridTemplateColumns:isMobile?'1fr':'1fr 96px 96px', gap:8 }}>
+                        <select
+                          value={serviceDraft.type}
+                          onChange={e=>setServiceDraft(p=>({ ...p, type:e.target.value }))}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                        >
+                          {Object.entries(SERVICE_TYPES).map(([value, meta])=>(
+                            <option key={value} value={value}>{meta.label}</option>
+                          ))}
+                        </select>
+                        <input
+                          value={serviceDraft.cost}
+                          onChange={e=>setServiceDraft(p=>({ ...p, cost:e.target.value }))}
+                          placeholder="0"
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                        />
+                        <input
+                          value={serviceDraft.year}
+                          onChange={e=>setServiceDraft(p=>({ ...p, year:e.target.value.replace(/[^0-9]/g, '').slice(0, 4) }))}
+                          placeholder={currentYear}
+                          style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'JetBrains Mono', monospace" }}
+                        />
+                      </div>
+                      <input
+                        value={serviceDraft.source}
+                        onChange={e=>setServiceDraft(p=>({ ...p, source:e.target.value }))}
+                        placeholder="Source"
+                        style={{ width:'100%', background:C.bg, border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 10px', color:C.text, fontSize:12, outline:'none', fontFamily:"'Barlow', sans-serif" }}
+                      />
+                      <div style={{ fontSize:11, color:C.textSub, lineHeight:1.5 }}>
+                        Current assumption: <span style={{ color:C.text }}>{getServiceSummary(modal)}</span>
+                      </div>
+                      <div style={{ fontSize:11, color:C.textSub, lineHeight:1.5 }}>
+                        Active reference: <span style={{ color:C.text }}>{getServiceReferenceLabel(modal)}</span>
+                      </div>
+                      <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                        <button onClick={resetServiceOverride} style={{ background:'transparent', border:`1px solid ${C.borderL}`, borderRadius:8, padding:'8px 10px', cursor:'pointer', fontSize:11, color:C.textSub, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                          RESET SERVICE COST
+                        </button>
+                        <button onClick={saveServiceOverride} disabled={!canSaveServiceOverride} style={{ background:canSaveServiceOverride?C.violet:C.borderL, border:'none', borderRadius:8, padding:'8px 12px', cursor:canSaveServiceOverride?'pointer':'not-allowed', fontSize:11, color:'#fff', fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                          SAVE SERVICE COST
                         </button>
                       </div>
                     </div>

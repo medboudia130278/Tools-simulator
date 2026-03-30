@@ -137,10 +137,10 @@ function CostByCategoryTable({ rows, contractTotal }) {
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
         title="Cost by category"
-        description="Global category split for the active project, combining mobilization, project-phase renewals and annualized renewal exposure."
+        description="Global category split for the active project, combining mobilization, project-phase renewals, calibration / verification cost and annualized recurring exposure."
       />
       <SimpleTable
-        headers={["Category", "Mobilization", "Project phase renewals", "Avg / year", "Contract total", "% total"]}
+        headers={["Category", "Mobilization", "Project phase renewals", "Calibration / verification", "Avg recurring / year", "Contract total", "% total"]}
         rows={rows}
         renderRow={(row) => (
           <tr key={row.id}>
@@ -153,8 +153,11 @@ function CostByCategoryTable({ rows, contractTotal }) {
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>
               {fmt(row.renewals)} EUR
             </td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>
+              {fmt(row.service)} EUR
+            </td>
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>
-              {fmt(row.annualRenewals)} EUR
+              {fmt(row.annualRenewals + row.annualService)} EUR
             </td>
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, ...monoStyle }}>
               {fmt(row.total)} EUR
@@ -174,10 +177,10 @@ function CostBySubsystemTable({ rows }) {
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
         title="Cost by subsystem"
-        description="Financial footprint of each subsystem selected on the active project."
+        description="Financial footprint of each subsystem selected on the active project, including recurring service-cost assumptions."
       />
       <SimpleTable
-        headers={["Subsystem", "Mobilization", "Project phase renewals", "Avg / year", "Contract total"]}
+        headers={["Subsystem", "Mobilization", "Project phase renewals", "Calibration / verification", "Avg recurring / year", "Contract total"]}
         rows={rows}
         minWidth="760px"
         renderRow={(row) => (
@@ -192,8 +195,11 @@ function CostBySubsystemTable({ rows }) {
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>
               {fmt(row.renewals)} EUR
             </td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>
+              {fmt(row.service)} EUR
+            </td>
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>
-              {fmt(row.annualRenewals)} EUR
+              {fmt(row.annualRenewals + row.annualService)} EUR
             </td>
             <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, ...monoStyle }}>
               {fmt(row.total)} EUR
@@ -210,7 +216,7 @@ function AllocationLevelMatrix({ rows }) {
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
         title="Subsystem x allocation level matrix"
-        description="Mobilization, project-phase renewals and annualized renewals split between Technician, Team and Project / depot."
+        description="Mobilization, project-phase renewals, calibration / verification cost and annualized recurring exposure split between Technician, Team and Project / depot."
       />
       <SimpleTable
         headers={[
@@ -221,12 +227,15 @@ function AllocationLevelMatrix({ rows }) {
           "Tech renewals",
           "Team renewals",
           "Project renewals",
+          "Tech service",
+          "Team service",
+          "Project service",
           "Tech avg/year",
           "Team avg/year",
           "Project avg/year",
         ]}
         rows={rows}
-        minWidth="1240px"
+        minWidth="1540px"
         renderRow={(row) => (
           <tr key={row.subsystem}>
             <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}`, fontWeight: 700, color: palette.ink }}>
@@ -238,9 +247,12 @@ function AllocationLevelMatrix({ rows }) {
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>{fmt(row.techRenewals)}</td>
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>{fmt(row.teamRenewals)}</td>
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>{fmt(row.projectRenewals)}</td>
-            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.techAnnualRenewals)}</td>
-            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.teamAnnualRenewals)}</td>
-            <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.projectAnnualRenewals)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>{fmt(row.techService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>{fmt(row.teamService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>{fmt(row.projectService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.techAnnualRenewals + row.techAnnualService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.teamAnnualRenewals + row.teamAnnualService)}</td>
+            <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.projectAnnualRenewals + row.projectAnnualService)}</td>
           </tr>
         )}
       />
@@ -253,7 +265,7 @@ function DetailedSubsystemBreakdown({ subsystemTabs, activeSubsystem, onChange, 
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
         title="Detailed subsystem breakdown"
-        description="Category-level cost split inside each subsystem, with separate Technician, Team and Project / depot views."
+        description="Category-level cost split inside each subsystem, with separate Technician, Team and Project / depot views for mobilization, renewals and recurring service."
       />
 
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
@@ -286,13 +298,16 @@ function DetailedSubsystemBreakdown({ subsystemTabs, activeSubsystem, onChange, 
           "Tech renewals",
           "Team renewals",
           "Project renewals",
+          "Tech service",
+          "Team service",
+          "Project service",
           "Tech avg/year",
           "Team avg/year",
           "Project avg/year",
           "Contract total",
         ]}
         rows={rows}
-        minWidth="1400px"
+        minWidth="1700px"
         renderRow={(row) => (
           <tr key={row.id}>
             <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}`, fontWeight: 700, color: palette.ink }}>
@@ -304,9 +319,12 @@ function DetailedSubsystemBreakdown({ subsystemTabs, activeSubsystem, onChange, 
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>{fmt(row.techRenewals)}</td>
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>{fmt(row.teamRenewals)}</td>
             <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>{fmt(row.projectRenewals)}</td>
-            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.techAnnualRenewals)}</td>
-            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.teamAnnualRenewals)}</td>
-            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.projectAnnualRenewals)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>{fmt(row.techService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>{fmt(row.teamService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>{fmt(row.projectService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.techAnnualRenewals + row.techAnnualService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.teamAnnualRenewals + row.teamAnnualService)}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>{fmt(row.projectAnnualRenewals + row.projectAnnualService)}</td>
             <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, ...monoStyle }}>{fmt(row.total)}</td>
           </tr>
         )}
@@ -462,10 +480,55 @@ function RenewalWatchlist({ tools, contractDurationLabel, contractDurationMonths
   );
 }
 
+function ServiceWatchlist({ tools, contractDurationLabel, contractDurationMonths }) {
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
+      <SectionTitle
+        title="Calibration / verification watchlist"
+        description={`Recurring service-cost exposure over the ${contractDurationLabel} maintenance contract. This covers calibration, verification and dielectric-test assumptions currently stored on the selected tools.`}
+      />
+      <div style={{ display: "grid", gap: "12px" }}>
+        {tools.map((tool) => (
+          <div key={tool.uid} style={{ background: palette.surfaceLow, borderRadius: "14px", padding: "14px 16px", display: "grid", gap: "8px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "12px" }}>
+              <div>
+                <div style={{ fontWeight: 700, color: palette.ink }}>{tool.name}</div>
+                <div style={{ color: palette.inkMuted, fontSize: "12px", marginTop: "4px" }}>
+                  {tool.subsystem} · {tool.brand} · {tool.model}
+                </div>
+              </div>
+              <div style={{ color: "#f97316", ...monoStyle, whiteSpace: "nowrap" }}>{fmt(tool.serviceCost)} EUR</div>
+            </div>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 10px", borderRadius: "999px", background: palette.primarySoft, color: palette.primary, fontSize: "12px", fontWeight: 700 }}>
+                {tool.level === "T" ? "Technician" : tool.level === "E" ? "Team" : "Project / depot"}
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 10px", borderRadius: "999px", background: "rgba(249, 115, 22, 0.10)", color: "#f97316", fontSize: "12px", fontWeight: 700 }}>
+                {tool.serviceEventCount} event(s)
+              </span>
+            </div>
+            <div style={{ color: palette.inkMuted, fontSize: "12px", lineHeight: 1.55 }}>
+              {tool.service.type === "none" ? "No recurring service" : tool.service.type.replaceAll("_", " ")}
+              <br />
+              Service/year {fmt(tool.serviceCost / Math.max(1, contractDurationMonths / 12))} EUR
+            </div>
+          </div>
+        ))}
+        {tools.length === 0 && (
+          <div style={{ color: palette.inkMuted, lineHeight: 1.6 }}>
+            No calibration or verification cost is currently forecast on the active project.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function DataQualityPanel({ metrics }) {
   const items = [
     { label: "No price reference", value: metrics.selectedWithoutPriceReferenceCount, tone: palette.primarySoft, color: palette.primary },
     { label: "No lifecycle reference", value: metrics.selectedWithoutLifecycleReferenceCount, tone: palette.tealSoft, color: palette.teal },
+    { label: "No service reference", value: metrics.selectedWithoutServiceReferenceCount, tone: "rgba(249, 115, 22, 0.10)", color: "#f97316" },
     { label: "Missing image", value: metrics.selectedWithoutImagesCount, tone: palette.surfaceLow, color: palette.ink },
     { label: "Fragile links", value: metrics.fragileLinks, tone: palette.safetySoft, color: palette.safety },
   ];
@@ -474,7 +537,7 @@ function DataQualityPanel({ metrics }) {
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
         title="Data quality and assumptions"
-        description="This block shows where the tooling baseline still relies on undocumented sources, weak links or missing media."
+        description="This block shows where the tooling baseline still relies on undocumented price, lifecycle or service assumptions, weak links or missing media."
       />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "12px" }}>
         {items.map((item) => (
@@ -488,6 +551,8 @@ function DataQualityPanel({ metrics }) {
         Manual price references documented: <strong style={{ color: palette.ink }}>{metrics.selectedWithManualPriceCount}</strong>
         <br />
         Manual lifecycle assumptions documented: <strong style={{ color: palette.ink }}>{metrics.selectedWithManualLifecycleCount}</strong>
+        <br />
+        Manual service-cost assumptions documented: <strong style={{ color: palette.ink }}>{metrics.selectedWithManualServiceCount}</strong>
         <br />
         Catalog image coverage in active project perimeter: <strong style={{ color: palette.ink }}>{metrics.imageCoveragePct}%</strong>
       </div>
@@ -628,6 +693,7 @@ export default function ReportingPage() {
     metrics.missingMandatoryCount +
     metrics.selectedWithoutPriceReferenceCount +
     metrics.selectedWithoutLifecycleReferenceCount +
+    metrics.selectedWithoutServiceReferenceCount +
     metrics.fragileLinks;
 
   const cards = [
@@ -656,9 +722,17 @@ export default function ReportingPage() {
       tone: "rgba(124, 58, 237, 0.08)",
     },
     {
+      label: "Calibration / verification",
+      value: `${fmt(budgetMetrics.serviceBudget)} EUR`,
+      note: `${metrics.serviceTrackedCount} selected tool(s) currently carry a recurring service-cost assumption.`,
+      icon: CalendarClock,
+      accent: "#f97316",
+      tone: "rgba(249, 115, 22, 0.10)",
+    },
+    {
       label: "Data quality issues",
       value: `${issueCount}`,
-      note: `${metrics.selectedWithoutPriceReferenceCount} price gaps · ${metrics.selectedWithoutLifecycleReferenceCount} lifecycle gaps.`,
+      note: `${metrics.selectedWithoutPriceReferenceCount} price gaps · ${metrics.selectedWithoutLifecycleReferenceCount} lifecycle gaps · ${metrics.selectedWithoutServiceReferenceCount} service gaps.`,
       icon: Database,
       accent: palette.ink,
       tone: palette.surfaceLow,
@@ -691,7 +765,7 @@ export default function ReportingPage() {
         </div>
         <div style={{ maxWidth: "920px", lineHeight: 1.6, opacity: 0.92 }}>
           Reporting is the dense pilotage view: it combines conformity, category costs, subsystem costs,
-          allocation-level split, renewal-sensitive tooling and portfolio exposure.
+          allocation-level split, renewal-sensitive tooling, calibration / verification exposure and portfolio exposure.
         </div>
         <div style={{ marginTop: "18px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
           <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
@@ -738,14 +812,20 @@ export default function ReportingPage() {
         <AlertsPanel alerts={metrics.alerts} missingMandatoryTools={metrics.missingMandatoryTools} />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.05fr) minmax(320px, 0.95fr)", gap: "18px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "18px" }}>
         <RenewalWatchlist
           tools={metrics.renewalSensitiveTools}
           contractDurationLabel={budgetMetrics.contractDurationLabel}
           contractDurationMonths={budgetMetrics.contractDurationMonths}
         />
-        <DataQualityPanel metrics={metrics} />
+        <ServiceWatchlist
+          tools={metrics.serviceTrackedTools}
+          contractDurationLabel={budgetMetrics.contractDurationLabel}
+          contractDurationMonths={budgetMetrics.contractDurationMonths}
+        />
       </div>
+
+      <DataQualityPanel metrics={metrics} />
 
       <PortfolioSnapshot rows={portfolioRows} />
     </div>
