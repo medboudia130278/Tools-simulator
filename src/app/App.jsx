@@ -122,6 +122,7 @@ export default function App() {
     () => TOOLING_CONTEXTS.find((context) => context.id === activeContext) ?? TOOLING_CONTEXTS[0],
     [activeContext]
   );
+  const contextEditable = activePage === "projects";
 
   const CurrentPage = current.component;
 
@@ -366,35 +367,62 @@ export default function App() {
                 >
                   Operating context
                 </div>
-                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                  {TOOLING_CONTEXTS.map((context) => {
-                    const active = context.id === activeContext;
-                    return (
-                      <button
-                        key={context.id}
-                        onClick={() => setProjectContext(context.id)}
-                        style={{
-                          border: `1px solid ${active ? context.accent : "rgba(71, 84, 103, 0.14)"}`,
-                          cursor: "pointer",
-                          padding: "10px 14px",
-                          borderRadius: "999px",
-                          background: active ? `${context.accent}16` : palette.surfaceLow,
-                          color: active ? context.accent : palette.inkSoft,
-                          fontSize: "13px",
-                          fontWeight: 700,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "8px",
-                        }}
-                      >
-                        <span>{context.icon}</span>
-                        <span>{context.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                {contextEditable ? (
+                  <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                    {TOOLING_CONTEXTS.map((context) => {
+                      const active = context.id === activeContext;
+                      return (
+                        <button
+                          key={context.id}
+                          onClick={() => setProjectContext(context.id)}
+                          style={{
+                            border: `1px solid ${active ? context.accent : "rgba(71, 84, 103, 0.14)"}`,
+                            cursor: "pointer",
+                            padding: "10px 14px",
+                            borderRadius: "999px",
+                            background: active ? `${context.accent}16` : palette.surfaceLow,
+                            color: active ? context.accent : palette.inkSoft,
+                            fontSize: "13px",
+                            fontWeight: 700,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <span>{context.icon}</span>
+                          <span>{context.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
+                    <div
+                      style={{
+                        border: `1px solid ${activeContextMeta.accent}`,
+                        padding: "10px 14px",
+                        borderRadius: "999px",
+                        background: `${activeContextMeta.accent}16`,
+                        color: activeContextMeta.accent,
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <span>{activeContextMeta.icon}</span>
+                      <span>{activeContextMeta.label}</span>
+                    </div>
+                    <div style={{ color: palette.inkMuted, fontSize: "13px" }}>
+                      Locked by the active project. Change it from `Projects`.
+                    </div>
+                  </div>
+                )}
                 <div style={{ marginTop: "10px", color: palette.inkMuted, fontSize: "13px", lineHeight: 1.55 }}>
-                  For now, the `POS` catalog stays identical across `Metro`, `Tram`, `Heavy Rail` and `APM`. Context-specific additions and removals will come later.
+                  {contextEditable
+                    ? "For now, the `POS` catalog stays identical across `Metro`, `Tram`, `Heavy Rail` and `APM`. Context-specific additions and removals will come later."
+                    : "Inventory, budget and reporting now follow the context defined on the active project. Other contexts are intentionally hidden here."}
                 </div>
               </div>
 
@@ -483,7 +511,7 @@ export default function App() {
               subsystem={activeSubsystem}
               onSubsystemChange={setProjectSubsystem}
               context={activeContext}
-              onContextChange={setProjectContext}
+              onContextChange={contextEditable ? setProjectContext : undefined}
             />
           </main>
         </div>

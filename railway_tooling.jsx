@@ -1520,6 +1520,7 @@ export default function App({
   const [localContext, setLocalContext] = useState(controlledContext || 'metro');
   const ctx = controlledContext ?? localContext;
   const setCtx = onContextChange ?? setLocalContext;
+  const contextLocked = controlledContext !== undefined && !onContextChange;
   const isSelectionControlled = controlledSelection !== undefined;
   const isWorkforceControlled = controlledWorkforce !== undefined;
   const isPriceOverridesControlled = controlledPriceOverrides !== undefined;
@@ -1905,16 +1906,22 @@ export default function App({
           </div>
 
           {/* Context pills */}
-          <div style={{ marginLeft:isTablet?0:'auto', display:'flex', gap:6, flexWrap:'wrap', width:isTablet?'100%':'auto' }}>
+          <div style={{ marginLeft:isTablet?0:'auto', display:'flex', gap:6, flexWrap:'wrap', width:isTablet?'100%':'auto', alignItems:'center' }}>
             {CONTEXTS.map(c=>(
-              <button key={c.id} onClick={()=>setCtx(c.id)} style={{
+              <button key={c.id} onClick={()=>!contextLocked && setCtx(c.id)} style={{
                 background:ctx===c.id?c.accent+'20':C.bg,
                 border:`1px solid ${ctx===c.id?c.accent:C.border}`,
                 color:ctx===c.id?c.accent:C.textSub,
-                padding:'5px 13px', borderRadius:20, cursor:'pointer', fontSize:12, fontWeight:600,
+                padding:'5px 13px', borderRadius:20, cursor:contextLocked?'default':'pointer', fontSize:12, fontWeight:600,
                 fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em', transition:'all 0.15s',
+                opacity:contextLocked && ctx!==c.id ? 0.45 : 1,
               }}>{c.icon} {c.label}</button>
             ))}
+            {contextLocked && (
+              <div style={{ fontSize:11, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                Locked by project
+              </div>
+            )}
           </div>
 
           {/* Summary KPIs */}
