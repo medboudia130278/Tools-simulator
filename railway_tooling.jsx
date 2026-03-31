@@ -140,13 +140,15 @@ const RAW_BY_SUBSYSTEM = {
   ['t06','T','PPE','Arc-flash Safety Glasses EN166','Bolle Safety','Cobra COBPSI','All domains','EN 166 / EN 170','OB',1,22,'1 year','Anti-scratch, anti-fog. Systematic use during all interventions.','https://www.bollesafety.com/fr/lunettes-de-securite/cobra'],
   ['t07','T','PPE','Arc-flash Safety Kit Category 2 (8 cal/cm²)','Honeywell / Salisbury','SKCP8RG-WB','All domains','NFPA 70E – ASTM F1506','OB',1,510,'3 years or after arc event','Current official kit page for coat + pants + PrismShield faceshield + hard hat. More realistic replacement than the obsolete AGF40KIT link.','https://www.salisburyonline.com/product/384/salisbury-safety-kit-8-cal-coat-pant-as1000-prismshield-faceshield-skcp8rg-wb'],
   ['t08','T','SAFETY','ATEX Headlamp – 115 lm','Peli','2755Z0','All domains','ATEX Zone 0 – IP54','OB',1,118,'Annual (battery)','Current official intrinsically safe headlamp page. Suitable for hazardous environments and easier to source than the obsolete PIXA 3 ATEX reference.','https://www.peli.com/es/en/product/flashlights/headlamp/2755z0/'],
+  ['t40','T','PPE','Safety Shoes S3 ESD SRC mid-cut','PUMA Safety','KRYPTON MID 634200','All domains','EN ISO 20345 – S3 ESD SRC','OB',1,119.39,'2 years or replace when worn','Mid-cut safety footwear for daily maintenance mobility, slip resistance and toe protection in stations, substations, technical rooms and depot areas.','https://www.puma-safety.com/eu/de/maenner/schuhe/sicherheitsschuhe/sicherheitsschuhe-s3/231/krypton-mid-puma-safety-sicherheitsschuhe-s3-esd'],
+  ['t41','T','PPE','Hi-visibility Vest Class 2','Seton','CPS4375052','Platform work zones / worksite visibility','EN ISO 20471 Class 2','OB',1,9.9,'2 years','Mandatory visibility PPE for service windows, platform-side activity and any intervention where technician conspicuity must be maintained.','https://www.seton.fr/gilet-securite-haute-visibilite-2-ceintures.html'],
   ['t09','T','SAFETY','VDE 1000V Insulated Screwdriver Set – 7 pcs','Wiha','36295 SoftFinish VDE Set','LV','VDE – IEC 60900 – 1000V AC','OB',1,78,'Annual (visual inspection)','Bi-material handles. Compliant with DIN VDE 0680. Tested to 10kV.','https://www.wiha.com/fr-fr/outillage/tournevis/tournevis-vde/softfinish-vde/36295'],
   ['t10','T','SAFETY','VDE 1000V Insulated Tool Set – 5 pcs','Knipex','00 20 13','LV','DIN EN/IEC 60900 – 1000V AC','OB',1,109,'Annual (visual inspection)','Official KNIPEX 5-piece VDE set combining insulated pliers and screwdrivers for standard low-voltage work.','https://www.knipex.com/products/tool-kits/tool-kits/tool-kits/002013'],
   ['t11','T','SAFETY','VDE Torque Wrench 1/2" 10-50 Nm','Gedore','VDE 4508-05','LV','DIN EN ISO 6789-2 / IEC 60900','RC',1,395,'Annual (calibration)','Official GEDORE insulated torque wrench page for controlled tightening on live components up to 1000 V.','https://www.gedore.com/en-at/products/torque-tools/torque-wrenches--accessories/torque-wrenches%2C-releasing-for-sockets/vde-4508-vde-torque-wrench/vde-4508-05---3079066'],
   ['t12','T','MBTDC','Portable Insulation Tester 500V/1000V','Fluke','1507 Insulation Tester','DC Auxiliaries 24-110V / LV','IEC 61557-2 – CAT IV 600V','OB',1,630,'Annual (calibration)','Daily use: insulation testing of 24VDC control circuits. Lighter than team MIT525.','https://www.fluke.com/fr-fr/produit/testeurs-isolement/fluke-1507'],
   ['t13','E','MBTDC','RCD Tester + Fault Loop Impedance','Fluke','1664 FC Multifunction','LV / Auxiliaries 400V','IEC 61557 – IEC 60364','OB',1,1998,'Annual (calibration)','RCD test 10-500mA, fault loop impedance. Mandatory before 400V commissioning.','https://www.fluke.com/fr-fr/produit/testeurs-installation-electrique/fluke-1664-fc'],
   ['t14','E','MBTDC','Loop Impedance / Installation Tester NF C 15-100','Metrel','MI 3102H BT EurotestXE 2.5 kV','LV / Auxiliaries 400V','IEC 61557 – NF C 15-100','RC',1,1353,'Annual (calibration)','Current official Metrel page for a Eurotest platform still suited to installation testing, loop impedance and higher-voltage insulation checks.','https://www.metrel.si/en/shop/EIS/multifunctional-testers/mi-3102h-bt.html'],
-  ['t15','T','MBTDC','TRMS AC/DC Clamp Meter 1000A WiFi','Fluke','376 FC','LV / DC Traction 750-1500V','CAT IV 600V – CAT III 1000V','OB',1,767,'Annual (calibration)','DC measurement up to 2500A with iFlex. Fluke Connect wireless.','https://www.fluke.com/fr-fr/produit/mesure-courant/pinces-amperemetriques/fluke-376-fc'],
+  ['t15','T','MBTDC','TRMS AC/DC Clamp Meter 1000A with iFlex','Fluke','376 FC','LV / DC Traction 750-1500V','CAT IV 600V - CAT III 1000V','OB',1,699,'Annual (calibration)','Handheld clamp meter with iFlex for current checks on LV feeders, auxiliaries and traction-related conductors when a standard multimeter is not practical.','https://www.fluke.com/fr-fr/produit/mesure-courant/pinces-amperemetriques/fluke-376-fc'],
   ['t16','E','MBTDC','Three-phase Rotation Tester 40-700V AC','Fluke','9040','LV / Auxiliaries 400V','EN 61010 – EN 61557-7','OB',1,316,'Annual','Clear official product page for phase-sequence verification before energisation. Replaces the incorrect CA 6412 reference.','https://www.fluke.com/en/product/electrical-testing/basic-testers/fluke-9040'],
   ['t17','T','MBTDC','Traction DC Bipolar Voltage and Polarity Tester 24-1500V','Gossen Metrawatt','METRAVOLT 12D+L','DC Traction 750-1500V / LV','DIN EN 61243-3 – CAT IV 600V / CAT III 1000V','RC',1,435,'Annual','Two-pole contact tester used mainly for traction DC polarity identification, AC/DC voltage confirmation and diagnostic checks where the safety VAT alone is not sufficient. Distinct from the mandatory absence-of-voltage tool.','https://www.gossenmetrawatt.de/produkte/mess-und-prueftechnik/prueftechnik/pruefung-elektrischer-installationen-und-anlagen/spannung-phase-drehfeld-durchgang-polaritaet/metravolt-12d-plusl/'],
   ['t18','T','MBTDC','Infrared Thermometer -50 to +550°C','Fluke','62 MAX+','All domains','EN 61010-1','RC',1,166,'Annual','Fast detection of hot spots on lugs, busbars, fuses.','https://www.fluke.com/fr-fr/produit/thermometres/thermometres-infrarouges/fluke-62-max'],
@@ -161,7 +163,7 @@ const RAW_BY_SUBSYSTEM = {
   ['t27','T','OUTILS','Rechargeable Work Light 500 lm magnet IP65','Scangrip','UNIFORM 03.6208','All domains','IP65 – EN 13032-1','OB',1,89,'Annual (battery)','Portable inspection/work light with integrated magnet, hook and adjustable output up to 500 lm. Replaces the obsolete FLEX WEAR link.','https://www.scangrip.com/fr-fr/boutique/lampes-de-travail/03-6208-uniform'],
   ['t28','T','OUTILS','Technician Drill/Driver 18V for routine fastening','Bosch','GSR 18V-55 Professional','All domains – routine fixing and assembly','–','OB',1,317,'Replace if defective','Technician-level cordless drill/driver intended as the personal daily-use machine: cabinet covers, terminal blocks, light brackets, trunking accessories and routine assembly work. One unit per technician.','https://www.bosch-professional.com/fr/fr/products/gsr-18v-55-06019H5200'],
   ['t29','E','CABLE','Hand-operated Hydraulic Crimping Tool 10-240mm²','Klauke','HK 60 VP','LV / DC Traction','EN 61238-1','OB',1,895,'2 years','Official Klauke hydraulic crimping tool page for cable lugs and connectors up to 240 mm² without interchangeable dies.','https://www.klauke.com/bh/en/ek-60-ft-hand-operated-hydraulic-crimping-tool-10-240-mm'],
-  ['t30','T','CABLE','Automatic Wire Stripper 0.2-6mm²','Jokari','SECURA 2K 20100','LV / DC','–','OB',1,42,'Replace when worn','Current official JOKARI automatic stripper page for 0.2 to 6.0 mm² conductors. More reliable than the old T-Stripper Vario link.','https://jokari.de/en/SECURA-2K-2.htm'],
+  ['t30','T','CABLE','Automatic Wire Stripper 0.2-6.0 mm2','JOKARI','SECURA 2K 20100','LV / DC','–','OB',1,38.66,'Annual (visual / blade condition)','Used to strip insulation cleanly on small LV and control conductors before reconnection to terminals, connector replacement, sensor rewiring or local harness repair. Not intended for outer-sheath removal or crimping.','https://jokari.de/en/SECURA-2K-2.htm'],
   ['t31','T','CABLE','Cable Jacket Knife for round cables 8-28 mm','Jokari','Cable Knife No. 28G Standard','BT / HTA','–','OB',1,32,'Replace when worn','Current official JOKARI cable knife page for round cable sheaths and longitudinal cuts without damaging inner conductors.','https://jokari.de/en/products/detail/cable-knife-no-28g-standard'],
   ['t32','T','CABLE','Portable Cable Label Printer P-touch Bluetooth','Brother','PT-E310BTVP','All domains','–','RC',1,227,'Battery replacement','Official current Brother product page for the portable industrial Bluetooth labeller used for cable and terminal marking.','https://store.brother.fr/appareils/imprimantes-d-etiquettes/p-touch/pt/pte310btvp'],
   ['t33','T','CABLE','Insulating Tape Scotch 23 self-amalgamating + Scotch 35 PVC','3M','Scotch 23 + Scotch 35','LV / DC','UL 510 / IEC 60454','OB',2,12,'Consumable','23 = self-amalgamating, 35 = standard PVC insulating tape.','https://www.3m.fr/3M/fr_FR/p/d/v000057551/'],
@@ -177,14 +179,13 @@ const RAW_BY_SUBSYSTEM = {
   ['e04','E','PPE','Arc-flash Face Shield 25 cal/cm² Class 3','Oberon','TCG25-HHG','MV/HV 25kV','IEC 61482-2 – Class 3','OB',2,220,'3 years or replacement','Compatible with insulating helmet. Arc Flash Rating minimum 25 cal/cm².','https://www.oberoncompany.com/arc-flash-face-protection'],
   ['e05','E','SAFETY','Switching Stick MV 1-36kV','DEHN','SCS 36 1000','MV 10-36kV','DIN VDE V 0681-1 / -2','OB',2,380,'Annual (dielectric test)','Official switching stick page for indoor/outdoor MV operation. Functional replacement for the previous CATU operating rod link.','https://www.dehn-international.com/store/p/en-DE/F48498/scs-switching-sticks'],
   ['e06','E','SAFETY','Insulating Protective Shutters up to 36kV','DEHN','Insulating Protective Shutters','MV 10-36kV','DIN VDE 0682-552','OB',2,145,'Annual (dielectric test)','Official DEHN product page for insulating protective shutters used to protect against accidental contact with adjacent live parts up to 36 kV.','https://www.dehn-international.com/store/p/en-DE/F48602/insulating-protective-shutters-up-to-36-kv'],
-  ['e07','E','OUTILS','Portable Tool Chest 3 lockable drawers','Beta Tools','RSC22-A / 022003007','All domains','–','OB',1,502,'Replace when worn','Official Beta Tools 3-drawer portable chest with central lock and ball-bearing drawers, suitable for team tooling, testers and maintenance kits.','https://www.beta-tools.com/en/products/containers-and-assortments/portable-tool-chests-and-mobile-roller-cabs/portable-tool-chest-with-3-drawers.html'],
+  ['e07','E','OUTILS','Mobile Workshop Roller Cabinet 6 drawers','Beta Tools','RSC24A/6','All domains','–','OB',1,669,'Replace when worn','Shared team roller cabinet with drawers for storing tools, testers, consumables and work-front equipment in a more usable workshop format than a simple carry chest.','https://www.beta-tools.com/en/mobile-roller-cab-with-6-drawers-with-anti-tilt-system.html'],
   ['e08','E','OUTILS','VDE 3/8" insulated socket/tool set – 23 pcs','Stahlwille','12171/19/4 VDE','LV / MV – Protected bolting','IEC 60900','OB',1,670,'Replace when worn','Official insulated 23-piece socket/tool set reference still online. The previous wording understated the full TCS kit content.','https://stahlwille.com/en_us/products/detail/893236'],
   ['e09','E','OUTILS','Cordless Impact Wrench 18V 400 Nm 1/2"','Bosch','GDS 18V-400 Professional','MV / HV – Heavy bolting','–','RC',1,494,'Replace if defective','Official Bosch impact wrench page for the 400 Nm 1/2 inch heavy-bolting tool. This entry is the impact wrench for loosening and tightening bolts, distinct from the drill/driver entry below.','https://www.bosch-professional.com/ge/en/products/gds-18v-400-06019K0020'],
   ['e10','E','OUTILS','Team Hammer Drill/Driver 18V for heavier fixing work','Bosch','GSB 18V-55 Professional','All domains – heavier drilling and fixing','–','RC',1,355,'Replace if defective','Team-level hammer drill/driver reserved for heavier work than the personal technician driver: masonry anchors, metal supports, cable tray fixings and jobs where hammer mode is needed. One shared unit per team.','https://www.bosch-professional.com/fr/fr/products/gsb-18v-55-06019H5301'],
-  ['e11','E','OUTILS','Electronic Torque Wrench 2-20 Nm with 1/4" reversible ratchet insert','Stahlwille','MANOSKOP 714R/2 eClick','LV / DC – Fine bolting','DIN EN ISO 6789-2','OB',1,1468,'Annual (calibration)','Official documented torque wrench page with 2-20 Nm range, visual/acoustic feedback and calibration traceability.','https://stahlwille.com/en_us/products/detail/852642'],
-  ['e12','E','OUTILS','Electronic Torque/Angle Wrench 20-200 Nm with 14x18 insert mount','Stahlwille','MANOSKOP 714/20','LV / MV – Medium bolting','DIN EN ISO 6789-2','OB',1,1268,'Annual (COFRAC calibration)','Official torque wrench page with 20-200 Nm range, suited to cabinet fixings, MV bolting and traceable calibration workflows.','https://stahlwille.com/en_us/products/detail/852570'],
+  ['e11','E','OUTILS','Torque Wrench 5-25 Nm with removable ratchet','Facom','R.306A25','LV / DC – Fine bolting','ISO 6789 Class II','OB',1,155,'Annual (COFRAC calibration)','Mechanical fine-range torque wrench retained for controlled tightening on terminals, clamps, brackets and other low-to-medium torque assemblies where sub-5 Nm range and digital traceability are not required.','https://www.facom.com/GLOBALBOM/XJ/E.306A200S/1/Instruction_Manual/EN/E.306_T1_EUR.pdf'],
+  ['e12','E','OUTILS','Mechanical Torque Wrench with display 40-200 Nm and 14x18 insert mount','Facom','S.307A200','LV / MV – Medium bolting','ISO 6789 Class II','OB',1,389,'Annual (COFRAC calibration)','Mechanical torque wrench with display for controlled medium-range tightening on cabinets, supports and LV/MV assemblies where angle mode and digital traceability are not required.','https://www.facom.com/product/s307a200/12-digi-cal-mechanical-torque-wrench-removable-ratchet-attachment-14-x-18-range-40-200nm'],
   ['e13','E','OUTILS','Torque Wrench 3/4" 160-800 Nm – busbars','Stahlwille','730/80 Service MANOSKOP','MV / HV – Heavy bolting','DIN EN ISO 6789-2','OB',1,891,'Annual (COFRAC calibration)','Official STAHLWILLE heavy-duty torque wrench page for large busbar, flange and substation bolting, with insert-tool holder for high-torque maintenance work.','https://stahlwille.com/en_us/products/detail/852072'],
-  ['e14','E','OUTILS','Electronic Torque/Angle Wrench 20-200 Nm with USB/BLE traceability','Stahlwille','MANOSKOP 714R/20 eClick','LV / MV – Torque traceability','DIN EN ISO 6789-2 / VDI-VDE 2648-2','RC',1,1117,'Annual (COFRAC calibration)','Official electromechanical torque wrench page with data storage, micro USB communication and optional BLE module.','https://stahlwille.com/en_us/products/detail/852648'],
   ['e15','E','MHTA','MV Voltage Detector 20-36kV','DEHN','PHE4 20 36 S','MV 20-36kV','IEC 61243-1','OB',2,1668,'Annual (mandatory calibration)','Official DEHN PHE4 product family for medium-voltage installations up to 36 kV with self-test, acoustic and visual indication. This concrete variant aligns with the displayed working range.','https://www.dehn-international.com/phe4-voltage-detector'],
   ['e16','E','MHTA','HV Voltage Detector 25kV – AC catenary','DEHN','PHE III 25 S 50 1P','HV 25kV Catenary','IEC 61243-1','OB',1,2122,'Annual (mandatory calibration)','Official DEHN product page for overhead contact lines of electric railways up to 25 kV / 50 Hz.','https://dehn-international.com/store/p/en-DE/F41570/phe-iii-voltage-detector'],
   ['e17','E','MHTA','MV Phase Comparator synchronism 5-36kV','DEHN','PHV1P U 5 36','MV 5-36kV','EN/IEC 61481-1','OB',1,1851,'Annual','Retail-listed DEHN phase comparator variant covering medium-voltage synchronism checks with a switchable nominal range up to 36 kV.','https://www.dehn-international.com/store/h/en-DE/H986/phase-comparators'],
@@ -219,12 +220,55 @@ const RAW_BY_SUBSYSTEM = {
   ['e46','E','COLLECTIF','Professional First Aid Case DIN 13169','SÖHNGEN','DYNAMIC-GLOW L 0301401','All domains','DIN 13169','OB',1,339,'6 months (expiry check)','Official SÖHNGEN first aid case page with DIN 13169 filling, wall holder and splash-protected case for vehicles and workshops.','https://shop.aluderm.de/erste-hilfe-koffer-orange-dynamic-glow-l-ind-norm-plus-din-13169'],
   ['e47','E','COLLECTIF','CO2 Extinguisher 5kg – class B electrical cabinets','GLORIA','KS 5 ST','All domains','EN 3','OB',1,140,'Annual (pressure check)','Official GLORIA CO2 extinguisher page listing 5 kg models suitable for electrical equipment and residue-free firefighting.','https://www.gloria.de/de/produkt/feuerloescher/co2-handhebel/'],
   ['e48','E','COLLECTIF','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','All domains – Diagnostics','IP53 – MIL-STD-810H','RC',1,2595,'5-year replacement','Current official Panasonic Connect page for the Toughbook 55 platform used for IEC 61850 relay connection, SCADA and drive diagnostics. Entry aligned to a current base mk3 market configuration.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
-  ['e49','E','OUTILS','Open-end / Ring Wrench Set 6-34 mm – 25 pcs','Facom','440.JE25','All domains – heavy bolting','NF ISO 1711-1 / NF ISO 691 / NF ISO 7738','RC',1,520,'Replace when worn','Current official FACOM large-range set covering the heavier fastening sizes that are not practical to carry at technician level. Suitable as the team-level wrench base for cabinets, supports and heavier mechanical interfaces.','https://www.facom.com/product/440je25/6mm-34mm-combination-wrench-set-25-pc'],
+  ['e49','E','OUTILS','Open-end / Ring Wrench Set 6-34 mm – 25 pcs','Facom','440.JE25','All domains – heavy bolting','NF ISO 1711-1 / NF ISO 691 / NF ISO 7738','RC',1,381,'Replace when worn','Current official FACOM large-range set covering the heavier fastening sizes that are not practical to carry at technician level. Suitable as the team-level wrench base for cabinets, supports and heavier mechanical interfaces.','https://www.facom.com/product/440je25/6mm-34mm-combination-wrench-set-25-pc'],
   ['e51','E','OUTILS','Maintenance Pliers Set – cutting, combination, long-nose, multigrip','Facom','CPE.A4','All domains – team hand tools','ISO 5746 / ISO 5748 / ISO 8976','OB',1,145,'Replace when worn','Official FACOM 4-piece maintenance plier set including combination pliers, diagonal cutters, half-round long-nose pliers and locking multigrip pliers. Good team-level complement to the insulated technician kit when broader mechanical handling and gripping are needed.','https://www.facom.com/product/cpea4/maintenance-plier-set-4-pc'],
-  ['e52','E','COLLECTIF','Maintenance Access Platform / PIR 8 steps â€“ indoor work up to about 3.8 m','Tubesca-Comabi','Sherpamatic Fixe 8 marches','Indoor substation / technical rooms','EN 131-7 / PIR-PIRL / Decree 2004-924','RC',1,1280,'Annual (inspection)','Secure maintenance access platform with guardrail, stabilisers and wide treads for indoor elevated work in substations, technical rooms and equipment spaces. Added as a safer team-level access solution than a generic domestic stepladder when technicians need stable repeated access above cabinets or cable routes.','https://boutique.tubesca-comabi.com/sherpamatic-fixe'],
-  ['e53','E','COLLECTIF','Antistatic Industrial Vacuum Cleaner for electrical cubicles and panels','KÃ¤rcher','NT 30/1 Tact Te M','Substations / switchboards / electrical rooms','Dust class M / antistatic system','OB',1,1490,'Annual (inspection + filter replacement)','Professional vacuum cleaner with antistatic system and conductive accessories for controlled cleaning of electrical cubicles, LV cabinets and technical rooms. Added to favour dust extraction in de-energised panels instead of uncontrolled blowing that would redistribute conductive dust.','https://www.karcher.com/pl/professional/profesjonalne-odkurzacze-do-pracy-na-mokro-i-sucho/odkurzacze-do-pylow-niebezpiecznych/nt-30-1-tact-te-m-11482350.html'],
+  ['e52','E','COLLECTIF','Maintenance Access Platform / PIR 8 steps - indoor work up to about 3.8 m','Tubesca-Comabi','Sherpamatic Fixe 8 marches (02272158)','Indoor substation / technical rooms','EN 131-7 / PIR-PIRL / Decree 2004-924','RC',1,1043.4,'Annual (inspection)','Secure maintenance access platform with guardrail, stabilisers and wide treads for indoor elevated work in substations, technical rooms and equipment spaces. Added as a safer team-level access solution than a generic domestic stepladder when technicians need stable repeated access above cabinets or cable routes.','https://www.tubesca-comabi.com/fr/sherpamatic-fixe'],
+  ['e53','E','COLLECTIF','Antistatic Industrial Vacuum Cleaner for electrical cabinets and panels','Karcher','NT 30/1 Tact Te M','Substations / switchboards / electrical rooms','Dust class M / antistatic system','OB',1,659,'Annual (inspection + filter replacement)','Professional vacuum cleaner with antistatic system and conductive accessories for controlled cleaning of electrical cabinets, LV panels and technical rooms. Added to favour dust extraction in de-energised equipment instead of uncontrolled blowing that would redistribute conductive dust.','https://www.kaercher.com/int/professional/vacuums/wet-and-dry-vacuum-cleaners/safety-vacuum-cleaners/nt-30-1-tact-te-m-11482350.html'],
   ],
-  PSD: [],
+  PSD: [
+  ['t01','T','MBTDC','TRMS Multimeter CAT III 600V','Fluke','117','PSD control panels','CAT III 600V','OB',1,349,'Annual (calibration)','Daily diagnostic multimeter for PSD control panels, door circuits and live troubleshooting on 24VDC, 48VDC and 110VAC auxiliaries.','https://www.fluke.com/fr-fr/produit/multimetres/multimetres-numeriques/fluke-117'],
+  ['t02','T','PPE','Safety Glasses anti-scratch anti-fog','Bolle Safety','Cobra COBPSI','Platform and technical rooms','EN 166 / EN 170','OB',1,22,'1 year or if scratched','Eye protection during all PSD interventions, including guide rail work, spring handling and glass-panel operations.','https://www.bollesafety.com/en-int/sport/cobra'],
+  ['t03','T','PPE','Safety Helmet with chin strap','JSP Safety','EVO3 REV AJF170','Platform and technical rooms','EN 397','OB',1,55,'3 years','Head protection under header beams, overhead cable runs and during panel extraction.','https://www.jspsafety.com/en-gb/products/head-protection/helmets/evo3-revolution/'],
+  ['t04','T','SAFETY','Rechargeable Headlamp 625 lm','Petzl','ACTIK CORE','Technical rooms and confined access','-','OB',1,55,'Annual (battery check)','Hands-free lighting for technical rooms, below-platform inspections and work inside header cavities.','https://www.petzl.com/US/en/Sport/Headlamps/ACTIK-CORE'],
+  ['t05','T','PPE','Hi-visibility Vest Class 2','Seton','CPS4375052','Platform work zones','EN ISO 20471 Class 2','OB',1,9.9,'2 years','Mandatory visibility PPE during service windows and platform-side interventions.','https://www.seton.fr/gilet-securite-haute-visibilite-2-ceintures.html'],
+  ['t06','T','LOTO','Personal LOTO Kit','Brady','65674 Personal LOTO Kit','PSD local control boxes','Lockout Tagout','OB',1,58,'Annual (inspection)','Individual lockout of PSD local control boxes, UPS isolators and local breakers before maintenance.','https://www.bradyid.eu/en-eu/lockout-tagout/personal-lockout-kits/65674'],
+  ['t07','T','LOTO','Lockout Padlock keyed different - red','Master Lock','S410RED','PSD local control boxes','Lockout Tagout','OB',2,16,'5 years','Individual keyed-different safety padlocks carried by each PSD technician.','https://www.masterlock.eu/products/padlocks/safety-lockout-padlocks/S410RED'],
+  ['t08','T','SAFETY','VDE 1000V Insulated Screwdriver Set - 7 pcs','Wiha','36295 SoftFinish VDE','PSD control wiring','IEC 60900','OB',1,78,'Annual (visual)','Insulated screwdrivers for terminal covers, connectors, fuse holders and protected electrical work.','https://www.wiha.com/eu/en/products/screwdrivers/vde-screwdrivers/softfinish-vde-set-in-a-roll/36295/'],
+  ['t09','T','SAFETY','VDE 1000V Insulated Pliers Set - 5 pcs','Knipex','00 20 12 VDE','PSD control wiring','IEC 60900','OB',1,145,'Annual (visual)','Insulated pliers set for cutting, shaping and handling control wiring and terminals.','https://www.knipex.com/en/products/002012'],
+  ['t10','T','OUTILS','Ratchet Set 1/4 and 3/8 metric - 40 pcs','Wera','9100 SB RA','Door hardware and fixings','-','OB',1,100,'Replace when worn','Daily fastening and removal of operator bolts, guide rail fixings and header hardware.','https://www.wera.de/en/products/sets/ratchet-sets/kollektion-9100-sb-ra/'],
+  ['t11','T','OUTILS','Hex Key Set metric 1.5-10mm - 18 pcs','Wiha','352 SB 18 T-handle','Door operators and brackets','-','OB',1,42,'Replace when worn','Long-reach hex keys for recessed fasteners on operator cassettes, brackets and shims.','https://www.wiha.com/eu/en/products/hex-tools-and-keys/hex-keys/hex-key-set-in-a-staple-with-t-handle-18-pcs/352sb18/'],
+  ['t12','T','OUTILS','Individual Tool Bag with shoulder strap','Knipex','00 21 02 LE Tool Bag Classic','Technician carry solution','-','OB',1,132,'Replace if worn','Personal carry bag for daily PSD hand tools and test instruments.','https://www.knipex.com/products/tool-bags-and-tool-cases/tool-bag-classic-empty/tool-bag-classic-empty/002102LE'],
+  ['t13','T','OUTILS','Soft-face Mallet 50 mm with nylon tips','Facom Expert','E150304','Mechanical fitting work','-','RC',1,46,'5 years','Soft-face mallet used for gentle seating of guides, seals, threshold profiles and cassettes without damaging painted or glazed surfaces.','https://www.facom.fr/products/e150304-massettes-a-embouts-interchangeables'],
+  ['t14','T','OUTILS','Feeler Gauge Set 0.05-1.00 mm','Mitutoyo','188-101','Door geometry checks','-','OB',1,28,'10 years','Measures clearances, play, engagement depth and geometry settings on PSD doors.','https://shop.mitutoyo.eu/web/mitutoyo/en_GB/mitutoyo/01.05.01/Straight%20Feeler%20Gauge/188-101/$catalogue/mitutoyoData/PR/188-101/index.xhtml'],
+  ['t15','T','OUTILS','Telescopic Magnetic Pick-up Tool','Stahlwille','12601','Header cavities and thresholds','-','RC',1,14,'5 years','Retrieves dropped screws, nuts and springs inside difficult PSD cavities.','https://stahlwille.com/en_us/products/detail/826592'],
+  ['t16','T','OUTILS','Telescopic Inspection Mirror 360°','Gedore','718 / 1979841','Hidden inspection points','-','OB',1,22,'5 years','Used to inspect hidden PSD points such as lock-bolt engagement, upper guide rollers, cable routing, sensor brackets and fasteners inside header zones without removing all covers or dismantling the operator cassette.','https://www.gedore.com/en-de/products/measuring---marking---testing-tools/test-tools/mirror/718-inspection-mirror/718---1979841'],
+  ['t17','T','OUTILS','Dry PTFE Lubricant Spray 400 ml','WD-40','Specialist PTFE Lubricant 300013','Guides, latches and moving parts','-','OB',2,12,'Consumable','Dry PTFE lubricant for guides, latch pins, rolling mechanisms and friction points where dust retention must be limited.','https://uk.rs-online.com/web/p/lubricants/0382306/'],
+  ['t18','T','OUTILS','Silicone Spray 500 ml','Wurth','0893 221','Seals and gaskets','-','OB',1,9,'Consumable','Seal conditioner and lubricant for rubber seals, gaskets and flexible wipers.','https://eshop.wurth.co.uk/Product-categories/Silicon-spray/31083007150102.cyid/3108.cgid/en/GB/GBP/'],
+  ['t19','T','OUTILS','Microfibre Cloths + Glass Cleaner Kit','Wurth','Professional Glass Cleaner + cloths','Glass panels and optical sensors','-','OB',2,14,'Consumable','Cleaning kit for glass panels, optical sensors and emitter lenses to prevent false obstruction faults.','https://www.wurth.co.uk/glass-cleaner'],
+  ['t20','T','SAFETY','Two-pole Voltage and Continuity Tester','Fluke','T150','PSD cabinets and proving dead','IEC/EN 61243-3','OB',1,191,'Annual (calibration)','Formal bipolar absence-of-voltage tester used before opening cabinets or proving circuits dead.','https://www.fluke.com/en/product/electrical-testing/basic-testers/fluke-t90-t110-t130-t150'],
+  ['t21','T','OUTILS','Automatic Wire Stripper 0.2-6.0 mm2','JOKARI','SECURA 2K 20100','Control wiring preparation','-','OB',1,38.66,'Annual (visual / blade condition)','Used to strip insulation cleanly on small PSD control conductors before reconnection to terminals, connector replacement, sensor rewiring or local harness repair. Not intended for outer-sheath removal or crimping.','https://jokari.de/en/SECURA-2K-2.htm'],
+  ['t22','T','PPE','Safety Shoes S3 ESD SRC mid-cut','PUMA Safety','KRYPTON MID 634200','Platform and technical rooms','EN ISO 20345 - S3 ESD SRC','OB',1,119.39,'2 years or replace when worn','Mid-cut safety footwear for platform walking, technical room access, threshold work and daily PSD interventions where toe protection, grip and ESD-compatible footwear are required.','https://www.puma-safety.com/eu/de/maenner/schuhe/sicherheitsschuhe/sicherheitsschuhe-s3/231/krypton-mid-puma-safety-sicherheitsschuhe-s3-esd'],
+
+  ['e01','E','COLLECTIF','Safety Barrier Kit - 2 retractable posts with 5 m belt','Novap','2019866','Platform zoning','-','OB',2,348.28,'Annual (inspection)','Safe exclusion-zone kit for platform work areas during PSD maintenance service windows.','https://www.novap.fr/kit-2-poteaux-a-sangles-alu-noir-sur-socle-leste-10kg-avec-tete-a-sangle-rouge-5m-x-50mm-et-tete-receptrice-2019866.html'],
+  ['e02','E','CABLE','Portable Cable Label Printer P-touch Bluetooth','Brother','PT-E310BTVP','Cables, terminals and cabinets','–','RC',1,227,'Battery replacement','Portable industrial label printer used after PSD corrective work to restore cable, terminal and cabinet identification. Shared team asset for relabelling after rewiring, fuse replacement or control-box modifications.','https://store.brother.fr/appareils/imprimantes-d-etiquettes/p-touch/pt/pte310btvp'],
+  ['e03','E','DIAG','Wireless Door Closing Force System','PCE / DriveTest','BIA-600 BT System','Door safety compliance','EN 14752','OB',1,2490,'Annual (ISO calibration + certificate)','Team standard for PSD closing-force campaigns and post-repair safety verification with PinchPilot reporting.','https://www.pce-instruments.com/english/measuring-instruments/test-meters/closing-force-measuring-device-pce-instruments-closing-force-measuring-device-bia-600-bt-for-rail-vehicle-doors-sliding-steps-det_6126436.htm'],
+  ['e04','E','DIAG','Sonic Belt Tension Meter','Gates','Sonic Tension Meter 550C','Timing belt drives','-','RC',1,680,'Annual','Non-contact belt-tension measurement for PSD operator belt drives.','https://www.gates.com/en_us/maintenance-tools/belt-maintenance/sonic-tension-meter.html'],
+  ['e05','E','DIAG','Laser Line Level 3x360 self-levelling','Bosch Professional','GLL 3-80 (0601063S00)','Alignment campaigns','IP54','OP',1,359.14,'Annual','Alignment verification of panels, header beam and facade geometry after installation or replacement work.','https://www.bosch-professional.com/gb/en/products/gll-3-80-0601063S00.html'],
+  ['e06','E','DIAG','Thermal Imaging Camera 160x120 radiometric','Fluke','TiS60+','Preventive diagnostics','-','RC',1,2150,'Annual (COFRAC)','Thermographic inspection of operator motors, PCB hotspots and poor electrical connections.','https://www.fluke.com/fr-fr/produit/cameras-thermiques/fluke-tis60-plus'],
+  ['e08','E','DIAG','Digital Tachometer contact / non-contact','Shimpo','DT-205LR-S12','Motor speed checks','-','RC',1,531.87,'Annual','Checks operator motor speed, pulley speed and deviation against programmed profiles.','https://www.raptorsupplies.es/c/tachometers'],
+  ['e09','E','COLLECTIF','Vacuum Suction Lifter 3-cup lever - 100 kg','Bohle Group','Veribor BO603.021','Glass panel replacement','-','OB',2,79.91,'Annual (seal + pressure test)','Safe lifting tool for laminated tempered PSD glass panels during replacement.','https://www.bohle.com/ee-EN/Veribor-Aluminium-Suction-Lifter-3-Cup/BO603.021'],
+  ['e10','E','COLLECTIF','Glass Transport Trolley with integrated suction lifter','Bohle Group','Veribor BO680.0','Glass panel transport','-','RC',1,540.5,'Annual (inspection)','Controlled transport of replacement glass panels from storage to installation point.','https://www.bohle.com/fr-FR/Chariot-de-transport-Veribor-avec-ventouse-integree/BO680.0'],
+  ['e11','E','DIAG','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','PSD software diagnostics','IP53 – MIL-STD-810H','OB',2,2595,'5-year replacement','Shared diagnostic computer for PSD monitoring systems, parameter adjustment, alarm history, firmware workflows and vendor maintenance software.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
+  ['e12','E','COLLECTIF','Mobile Workshop Roller Cabinet 6 drawers','Beta Tools','RSC24A/6','Team storage and mobile workshop support','-','OB',1,669,'Replace when worn','Shared team roller cabinet with drawers for storing PSD tools, calibrated instruments, consumables and work-front equipment in a more usable workshop format than a simple carry chest.','https://www.beta-tools.com/en/mobile-roller-cab-with-6-drawers-with-anti-tilt-system.html'],
+  ['e13','E','OUTILS','Torque Wrench 5-25 Nm with removable ratchet','Facom','R.306A25','Fine bolting','ISO 6789 Class II','OB',1,155,'Annual (COFRAC)','Controlled torque on panel fixings, LCB hardware and brackets where a low-to-medium traceable tightening range is required.','https://www.facom.com/GLOBALBOM/XJ/E.306A200S/1/Instruction_Manual/EN/E.306_T1_EUR.pdf'],
+  ['e14','P','OUTILS','Mechanical Torque Wrench with display 40-200 Nm and 14x18 insert mount','Facom','S.307A200','Heavy bolting','ISO 6789 Class II','RC',1,389,'Annual (COFRAC calibration)','Useful depot or project-level torque wrench for higher-load PSD work on header beams, floor anchors and large cassette hardware when controlled tightening is needed without angle mode or digital traceability.','https://www.facom.com/product/s307a200/12-digi-cal-mechanical-torque-wrench-removable-ratchet-attachment-14-x-18-range-40-200nm'],
+  ['e15','E','LOTO','Group LOTO Kit with hasp and 4 team padlocks','Master Lock','416 + S410RED x4','Multi-technician isolation','Lockout Tagout','OB',2,92,'Annual (inspection)','Shared group lockout kit built around one aluminium safety hasp and four keyed-different team padlocks for multi-technician isolation on PSD zones and control panels.','https://shop.masterlock.eu/products/416'],
+  ['e16','E','OUTILS','Team Drill/Driver 18V for corrective maintenance','Bosch','GSR 18V-55 Professional','Corrective maintenance and fitting','-','OB',1,317,'Replace if defective','Shared drill/driver for panel fixings, brackets, covers and rapid corrective work during service windows. Use it as the team-level cordless drill/driver platform aligned with the POS technician reference, but shared rather than individually issued.','https://www.bosch-professional.com/fr/fr/products/gsr-18v-55-06019H5200'],
+  ['e17','E','MBTDC','Portable Insulation Tester 500V/1000V','Fluke','1507 Insulation Tester','Facade wiring and motors','IEC 61557-2 – CAT IV 600V','OB',1,630,'Annual (calibration)','Team insulation testing of PSD facade wiring, motor windings and cable harness integrity before re-energisation or after corrective work.','https://www.fluke.com/fr-fr/produit/testeurs-isolement/fluke-1507'],
+  ['e18','E','COLLECTIF','Antistatic Industrial Vacuum Cleaner for electrical cabinets and panels','Karcher','NT 30/1 Tact Te M','Electrical cabinets / PSD enclosures / technical rooms','Dust class M / antistatic system','OB',1,659,'Annual (inspection + filter replacement)','Shared PSD vacuum cleaner with antistatic system and conductive accessories for controlled cleaning of controller cabinets, encoder zones and dusty enclosures while equipment is de-energised.','https://www.kaercher.com/int/professional/vacuums/wet-and-dry-vacuum-cleaners/safety-vacuum-cleaners/nt-30-1-tact-te-m-11482350.html'],
+  ['e19','E','COLLECTIF','Maintenance Access Platform / PIR 8 steps - indoor work up to about 3.8 m','Tubesca-Comabi','Sherpamatic Fixe 8 marches (02272158)','PSD header beam / upper sensors / cable routes','EN 131-7 / PIR-PIRL / Decree 2004-924','OB',1,1043.4,'Annual (inspection)','Safe elevated access platform for PSD header beams, upper sensors, cable routes and fascia elements when stable repeated work at height is needed with guardrails and a larger standing area than a simple stepladder.','https://www.tubesca-comabi.com/fr/sherpamatic-fixe'],
+  ['e20','E','MBTDC','TRMS AC/DC Clamp Meter 1000A with iFlex','Fluke','376 FC','Advanced current diagnostics / PSD power circuits','CAT IV 600V - CAT III 1000V','RC',1,699,'Annual (calibration)','Shared advanced current-diagnostic clamp meter for PSD teams, especially on inaccessible conductors, overload investigations and current confirmation on door power/control circuits.','https://www.fluke.com/fr-fr/produit/mesure-courant/pinces-amperemetriques/fluke-376-fc'],
+  ],
   CAT: [],
   TRACK: [],
   '3RD': [],
@@ -239,10 +283,20 @@ const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,
 });
 
 const DEFAULT_CONTEXT_IDS = CONTEXTS.map(context => context.id);
+const contextOverridesFor = (uids, contexts) =>
+  Object.fromEntries(uids.map(uid => [uid, [...contexts]]));
 const TOOL_CONTEXT_OVERRIDES = {
+  ...contextOverridesFor([
+    'PSD:t01','PSD:t02','PSD:t03','PSD:t04','PSD:t05','PSD:t06','PSD:t07','PSD:t08','PSD:t09','PSD:t10',
+    'PSD:t11','PSD:t12','PSD:t13','PSD:t14','PSD:t15','PSD:t16','PSD:t17','PSD:t18','PSD:t19','PSD:t20',
+    'PSD:t21','PSD:t22',
+    'PSD:e01','PSD:e02','PSD:e03','PSD:e04','PSD:e05','PSD:e06','PSD:e08','PSD:e09','PSD:e10',
+    'PSD:e11','PSD:e12','PSD:e13','PSD:e14','PSD:e15','PSD:e16','PSD:e17','PSD:e18','PSD:e19','PSD:e20',
+  ], ['metro', 'apm']),
   'POS:e01': ['heavy'],
   'POS:e03': ['heavy'],
   'POS:e04': ['heavy'],
+  'POS:e13': ['heavy'],
   'POS:e15': ['heavy'],
   'POS:e16': ['heavy'],
   'POS:e17': ['heavy'],
@@ -318,6 +372,24 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
+  ...lifecycleDefaultsFor(['POS:t40', 'PSD:t22'], {
+    type: 'periodic_replacement',
+    intervalValue: '24',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated safety footwear replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:t41', 'PSD:t05'], {
+    type: 'periodic_replacement',
+    intervalValue: '24',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated hi-visibility vest replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
   ...lifecycleDefaultsFor(['POS:t01', 'POS:t02', 'POS:t03', 'POS:t12', 'POS:t15', 'POS:t16', 'POS:t17', 'POS:t18'], {
     type: 'periodic_replacement',
     intervalValue: '84',
@@ -345,7 +417,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['POS:t11', 'POS:e11', 'POS:e12', 'POS:e13', 'POS:e14'], {
+  ...lifecycleDefaultsFor(['POS:t11', 'POS:e11', 'POS:e12', 'POS:e13'], {
     type: 'periodic_replacement',
     intervalValue: '84',
     intervalUnit: 'months',
@@ -395,7 +467,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     intervalValue: '84',
     intervalUnit: 'months',
     replacementRatio: '100',
-    source: 'Estimated mobile tool chest life',
+    source: 'Estimated workshop roller cabinet life',
     year: '2026',
     basis: 'estimated',
   }),
@@ -498,6 +570,177 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
+  ...lifecycleDefaultsFor(['PSD:t01', 'PSD:t10', 'PSD:t11', 'PSD:t14', 'PSD:t20', 'PSD:e03', 'PSD:e04', 'PSD:e13', 'PSD:e14', 'PSD:e15', 'PSD:e17', 'PSD:e20'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t02'], {
+    type: 'periodic_replacement',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t03'], {
+    type: 'periodic_replacement',
+    intervalValue: '36',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t04'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t05'], {
+    type: 'periodic_replacement',
+    intervalValue: '24',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t06'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t07'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t08', 'PSD:t09'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t12'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t13', 'PSD:t15', 'PSD:t16', 'PSD:t21'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:t17', 'PSD:t18', 'PSD:t19'], {
+    type: 'consumable',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e01'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e02', 'PSD:e11'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e05', 'PSD:e06', 'PSD:e08'], {
+    type: 'periodic_replacement',
+    intervalValue: '96',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e09'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e10', 'PSD:e12'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e16'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e18'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['PSD:e19'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'PSD workbook lifecycle baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
 };
 
 const serviceDefaultsFor = (uids, config) =>
@@ -560,12 +803,19 @@ export const TOOLING_SERVICE_DEFAULTS = {
     year: '2025',
     basis: 'source_based',
   }),
-  ...serviceDefaultsFor(['POS:e11', 'POS:e12', 'POS:e14'], {
+  ...serviceDefaultsFor(['POS:e11'], {
     type: 'calibration',
-    cost: '450',
-    source: 'GEDORE torque service price list',
-    year: '2025',
-    basis: 'source_based',
+    cost: '75',
+    source: 'Maintenance planning baseline aligned with PSD torque wrench',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['POS:e12'], {
+    type: 'calibration',
+    cost: '95',
+    source: 'Maintenance planning baseline for Facom S.307A200 mechanical-display torque wrench',
+    year: '2026',
+    basis: 'estimated',
   }),
   ...serviceDefaultsFor(['POS:e15', 'POS:e16'], {
     type: 'verification',
@@ -720,6 +970,90 @@ export const TOOLING_SERVICE_DEFAULTS = {
     source: 'Estimated TDR / fault locator calibration budget',
     year: '2026',
     basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:t01'], {
+    type: 'calibration',
+    cost: '137',
+    source: 'PSD workbook / GMC-I Service 2026 list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['PSD:t20'], {
+    type: 'calibration',
+    cost: '76.5',
+    source: 'PSD workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e03'], {
+    type: 'calibration',
+    cost: '350',
+    source: 'PSD workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e04'], {
+    type: 'calibration',
+    cost: '120',
+    source: 'PSD workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e05'], {
+    type: 'calibration',
+    cost: '95',
+    source: 'PSD workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e06'], {
+    type: 'calibration',
+    cost: '380',
+    source: 'PSD workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e08'], {
+    type: 'calibration',
+    cost: '109',
+    source: 'PSD workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e13'], {
+    type: 'calibration',
+    cost: '75',
+    source: 'PSD workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e14'], {
+    type: 'calibration',
+    cost: '95',
+    source: 'Maintenance planning baseline for Facom S.307A200 mechanical-display torque wrench',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['PSD:e17'], {
+    type: 'calibration',
+    cost: '203',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['PSD:e19'], {
+    type: 'inspection',
+    cost: '35',
+    source: 'Venko insulated ladder testing price list',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['PSD:e20'], {
+    type: 'calibration',
+    cost: '137',
+    source: 'GMC-I calibration price list',
+    year: '2026',
+    basis: 'source_based',
   }),
 };
 
@@ -929,7 +1263,21 @@ const TOOL_IMAGE_FILES_BY_BASE = Object.fromEntries(
 );
 
 const TOOL_IMAGE_OVERRIDES = {
+  'POS:e07': 'e12_beta_tools_rsc24a.webp',
+  'POS:e11': 'e13_facom_r_306a25.jpg',
   'POS:e53': 'e53_k_rcher_nt_30.jpg',
+  'POS:e52': 'e52_tubesca_comabi_sherpamatic_fixe_8_marches_02272158.png',
+  'POS:t41': 't05_seton_cps4375052.jpg',
+  'PSD:t22': 't40_puma_safety_krypton_mid_634200.jpg',
+  'PSD:t21': 't30_jokari_secura_2k_20100.png',
+  'PSD:e02': 't32_brother_pt_e310btvp.jpg',
+  'PSD:e11': 'e48_panasonic_toughbook_55_mk3.jpg',
+  'PSD:e14': 'e12_facom_s_307a200.jpg',
+  'PSD:e16': 't28_bosch_gsr_18v_55_professional.jpg',
+  'PSD:e17': 't12_fluke_1507_insulation_tester.jpg',
+  'PSD:e18': 'e53_k_rcher_nt_30.jpg',
+  'PSD:e19': 'e52_tubesca_comabi_sherpamatic_fixe_8_marches_02272158.png',
+  'PSD:e20': 't15_fluke_376_fc.jpg',
 };
 
 const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =>
@@ -956,6 +1304,8 @@ const PRIMARY_USE_OVERRIDES = {
   t06: 'Minimum eye protection worn during routine maintenance, inspection and manipulation around electrical cabinets, cable ends and small mechanical work. Use it as the default eye PPE even when full arc-flash face protection is not required.',
   t07: 'Arc-flash PPE kit used when the task risk assessment requires category 2 protection. Use it for switching, testing or fault intervention where an arc event is credible and the technician needs coat, trousers and face protection as one coordinated set.',
   t08: 'Portable intrinsically safe lighting for poorly lit technical rooms, tunnels or hazardous environments. Use it when both hands must remain free while inspecting, wiring or diagnosing equipment in low-visibility conditions.',
+  t40: 'Baseline technician safety footwear for daily maintenance mobility, ladder access, technical rooms and rough work environments. Use it as the standard protective shoe when slip resistance, toe protection and ESD-compatible footwear are expected across the full maintenance route.',
+  t41: 'Mandatory high-visibility vest for work near platforms, active circulation areas and temporary maintenance work fronts. Use it whenever technician conspicuity is required by worksite rules, service-window arrangements or local operating instructions.',
   t09: 'Basic insulated screwdriver set for daily low-voltage opening, tightening and small adjustment work inside cabinets and terminal assemblies. Use it as the personal core hand-tool set for live-safe LV maintenance practice.',
   t10: 'Compact insulated intervention kit for standard low-voltage maintenance tasks. Use it as the technician backup or travel set when pliers and screwdrivers are needed together for safe everyday work on energized-rated components.',
   t11: 'Insulated technician torque wrench for controlled tightening on small LV connections and terminals. Use it where torque quality matters but the joint is still within the personal technician scope rather than a heavier team bolting task.',
@@ -1017,13 +1367,12 @@ const PRIMARY_USE_OVERRIDES = {
   e04: 'Higher-rated arc-flash face shield used with compatible helmet and upper-body PPE. Use it when face protection must be increased beyond standard glasses or integrated visors because of elevated arc exposure.',
   e05: 'Switching stick used to operate MV apparatus from a safer distance. Use it during opening, closing or manipulation of medium-voltage equipment where direct hand contact is not acceptable.',
   e06: 'Temporary insulating screen used to cover adjacent live parts during nearby work. Use it when one section is isolated but dangerous neighbouring conductors or components remain energised inside the same work zone.',
-  e07: 'Shared mobile storage chest for team tools, testers and consumables. Use it as the physical base kit for a crew moving across rooms, platforms or substations during a maintenance campaign.',
+  e07: 'Shared workshop roller cabinet used to store team tools, testers and consumables in a single mobile base unit. Use it as the physical support cabinet for a crew moving across rooms, platforms or substations during a maintenance campaign.',
   e08: 'Team insulated socket and driver set for protected bolting where the technician carry kit is not sufficient. Use it on larger or more varied low-voltage tasks that still require insulated tooling.',
   e09: 'Team impact wrench for loosening and tightening heavy bolts, brackets and mechanical interfaces. Use it on stubborn or repetitive heavy bolting where a manual ratchet or technician drill/driver is inefficient.',
-  e11: 'Fine-range team torque wrench for low-torque but quality-critical assemblies. Use it on terminals, smaller clamps and sensitive equipment interfaces where overtightening would be damaging.',
-  e12: 'Medium-range torque platform for routine controlled tightening on cabinets, supports and MV-associated assemblies. Use it when the fastening is beyond technician scope but below heavy busbar torque levels.',
+  e11: 'Mechanical fine-range torque wrench for controlled tightening on terminals, clamps, brackets and smaller assemblies. Use it where repeatable low-to-medium torque is required but sub-5 Nm capability and digital traceability are not needed.',
+  e12: 'Mechanical medium-range torque wrench with display for routine controlled tightening on cabinets, supports and MV-associated assemblies. Use it when the fastening is beyond technician scope but below heavy busbar torque levels, without needing angle mode or digital traceability.',
   e13: 'Heavy torque wrench for large bolted power interfaces such as busbars, structural connections and major electrical hardware. Use it where traceable high-torque tightening is required at team level.',
-  e14: 'Traceable electronic torque wrench used when torque value, angle and recordability matter together. Use it for quality-controlled assemblies and jobs where maintenance reporting benefits from digital traceability.',
   e35: 'Portable earthing stick used to install temporary earthing equipment on de-energised MV switchgear. Use it immediately after voltage absence has been proven and before work is authorised on the isolated section.',
   e36: 'Railway earthing and short-circuiting assembly for traction DC possessions. Use it to create a visible and effective protective short-circuit/earth condition before working on the isolated traction section.',
   e37: 'Group lock box used when several technicians must depend on the same isolation. Use it to centralise the keys of energy-isolation devices so each worker can add a personal padlock before work starts.',
@@ -1142,7 +1491,15 @@ function CopyBtn({ text, label, accent=C.teal, light=false }) {
 }
 
 function PrimaryUse({ tool }) {
-  return PRIMARY_USE_OVERRIDES[tool.id] || tool.notes;
+  if (tool.uid && PRIMARY_USE_OVERRIDES[tool.uid]) {
+    return PRIMARY_USE_OVERRIDES[tool.uid];
+  }
+
+  if (tool.subsystem === 'POS' && PRIMARY_USE_OVERRIDES[tool.id]) {
+    return PRIMARY_USE_OVERRIDES[tool.id];
+  }
+
+  return tool.notes;
 }
 
 function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border, bodyColor=C.text, labelColor=C.textSub }) {
@@ -1685,17 +2042,17 @@ export default function App({
                         boxShadow:isSel?`0 22px 42px ${c.color}22`:'0 18px 36px rgba(17,24,39,0.06)',
                         display:'flex',
                         flexDirection:'column',
-                        minHeight:374,
+                        minHeight:390,
                       }}
                       onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow=isSel?`0 26px 48px ${c.color}24`:'0 22px 44px rgba(17,24,39,0.09)';}}
                       onMouseLeave={e=>{e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=isSel?`0 22px 42px ${c.color}22`:'0 18px 36px rgba(17,24,39,0.06)';}}
                     >
-                      <div style={{ position:'relative', background:`linear-gradient(180deg, ${c.color}14 0%, rgba(255,255,255,0.96) 100%)`, minHeight:194, display:'flex', alignItems:'center', justifyContent:'center', padding:'22px 18px 14px' }}>
+                      <div style={{ position:'relative', background:`linear-gradient(180deg, ${c.color}14 0%, rgba(255,255,255,0.96) 100%)`, minHeight:214, display:'flex', alignItems:'center', justifyContent:'center', padding:'20px 18px 12px' }}>
                         <div style={{ position:'absolute', inset:'14px 14px auto auto', display:'flex', gap:6, flexWrap:'wrap', justifyContent:'flex-end' }}>
                           <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{s.label}</span>
                           <span style={{ background:levelMeta.bgLight, color:levelMeta.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{levelMeta.short}</span>
                         </div>
-                        <ToolVisual tool={t} size={116} radius={18}/>
+                        <ToolVisual tool={t} size={132} radius={18}/>
                       </div>
 
                       <div style={{ padding:'16px 18px 18px', display:'flex', flexDirection:'column', gap:12, flex:1 }}>
@@ -1764,7 +2121,7 @@ export default function App({
                     transition:'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease',
                     animation:`fadeIn 0.18s ease ${i*0.012}s both${isSel?', softFloat 3.2s ease-in-out infinite':''}`,
                     display:'flex',
-                    minHeight:176,
+                    minHeight:188,
                     boxShadow:isSel?`0 10px 24px ${c.color}12`:'0 8px 18px rgba(0,0,0,0.10)',
                     transform:'translateY(0)',
                   }}
@@ -1772,8 +2129,8 @@ export default function App({
                     onMouseLeave={e=>{e.currentTarget.style.borderColor=isSel?c.color+'50':C.border; e.currentTarget.style.background=isSel?`${c.color}0D`:C.card; e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=isSel?`0 10px 24px ${c.color}12`:'0 8px 18px rgba(0,0,0,0.10)';}}
                   >
                     {/* SVG thumb */}
-                    <div onClick={()=>setModal(t)} style={{ width:96, flexShrink:0, background:isSel?`${c.color}08`:C.bgMid, display:'flex', alignItems:'center', justifyContent:'center', borderRight:`1px solid ${C.border}`, padding:'12px 10px' }}>
-                      <ToolVisual tool={t} size={66} radius={12}/>
+                    <div onClick={()=>setModal(t)} style={{ width:112, flexShrink:0, background:isSel?`${c.color}08`:C.bgMid, display:'flex', alignItems:'center', justifyContent:'center', borderRight:`1px solid ${C.border}`, padding:'12px 10px' }}>
+                      <ToolVisual tool={t} size={80} radius={12}/>
                     </div>
 
                     {/* Content */}
