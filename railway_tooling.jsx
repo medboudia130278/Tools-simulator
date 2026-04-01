@@ -314,24 +314,24 @@ const RAW_BY_SUBSYSTEM = {
   ['t34','T','OUTILS','Corundum Abrasive Cloth pack of 30','Bosch Professional','Expert C355 Sanding Sheets pack 30','Surface preparation','N/A (consumable)','OB',1,22,'N/A','For deburring, rust removal and surface prep before assembly or welding.','https://www.bosch-professional.com/gb/en/products/expert-c355/'],
   ['t35','T','OUTILS','Brake Cleaner / Industrial Degreaser Aerosol pack of 3','Wurth','0890 108 7','Cleaning and degreasing','N/A (consumable)','OB',3,25,'N/A','Residue-free brake cleaner and degreaser for components before testing, reassembly, bonding or welding.','https://www.wurth.co.uk/brake-cleaner'],
 
-  ['e02','E','SAFETY','4-gas Detector ATEX X-am 2500','Drager Safety','8323919 X-am 2500 4-Gas Set','Confined-space and ventilation risk','Annual (gas calibration)','RC',2,1270,'5 years','Gas detector for pits, compressor rooms, battery charging zones and confined-space checks.','https://www.draeger.com/fr_fr/Products/X-am-2500'],
+  ['e02','E','SAFETY','4-gas Detector ATEX X-am 2500','Drager Safety','8323919 X-am 2500 4-Gas Set','Confined-space and ventilation risk','Annual (gas calibration)','RC',1,995,'5 years','Gas detector for pits, compressor rooms, battery charging zones and confined-space checks.','https://www.draeger.com/fr_fr/Products/X-am-2500'],
   ['e03','P','DIAG','Thermal Imaging Camera TiS60+ 320x240','Fluke','TiS60+ Thermal Camera','Electrical and thermal diagnostics','Annual (accredited)','RC',1,3812,'8 years','Project/depot thermal camera for electrical panels, bearings, drives, couplings and hot-spot detection during expert inspections and condition-based maintenance campaigns.','https://www.fluke.com/fr-fr/produit/cameras-thermiques/fluke-tis60-plus'],
   ['e04','E','DIAG','Mobile HP Test Station 0-250 bar','Enerpac','P-392 + calibrated gauge + fittings','Wash-plant pressure testing','Annual','RC',1,685,'10 years','Pressure-test setup for wash-plant rails, switches and hydraulic-style validation work.','https://www.lakeudenhydro.fi/en/hydraulic-components/enerpac-handpump-p-392/p/52427/'],
   ['e05','E','DIAG','Industrial Inspection Camera / Borescope','Extech / Fluke','BR250 / DS703 FC','Internal visual inspection','Annual (optical check)','RC',1,380,'7 years','Borescope for wash pipes, compressor cavities, tanks and inaccessible internal checks.','https://uk.rs-online.com/web/c/test-measurement/test-inspection-equipment/borescopes/'],
   ['e06','E','DIAG','Geometric Calibration Station with optical level and rule','Facom / Tesa Metrology','804B rule + TESA level','Wheel-lathe geometry control','Annual (metrology)','RC',1,1850,'10 years','Geometry verification set for wheel lathe level, rail planarity and machine checks.','https://www.tesa-metrology.com/en/'],
-  ['e07','E','COLLECTIF','Mobile Waste Oil Drainer / Extractor 80 L','PIUSI','EASY DRAINER 80 - F00215A20','Major fluid-service work','Annual (consumable replacement)','OB',1,499.1,'10 years','Shared drainer for compressor service, vehicle oil changes and workshop fluid recovery.','https://www.piusi.com/fr/products/easy-drainer-80'],
   ['e08','E','DIAG','Digital Lifting Dynamometer 0-50 kN','Tractel','Dynafor Pro 50 kN','Overhead crane load testing','Annual (COFRAC)','RC',1,2850,'10 years','For crane load tests, load-limiter checks and certified lifting verification campaigns.','https://www.tractel.com/en/products/load-monitoring-instrumentation/dynamometers/'],
   ['e09','E','DIAG','Multi-line Air Brake Test Set RTC4','Haldex','TestPoint RTC4','Hi-rail vehicle brakes','Annual','RC',1,780,'10 years','Brake-circuit diagnostic set for hi-rail vehicle pneumatic systems.','https://www.haldex.com/en/group/products-and-services/brakes/'],
-  ['e10','E','COLLECTIF','Portable HP Washer 150 bar','Karcher Professional','HD 5/12 C','Workshop cleaning support','Annual (inspection)','RC',1,528.9,'7 years','Shared washer for cleaning equipment before inspection, measurement or overhaul.','https://www.kaercher.com/fr/professionnel/nettoyeurs-haute-pression/'],
+  ['e10','E','COLLECTIF','Portable HP Washer 150 bar','Karcher Professional','HD 5/12 C','Workshop cleaning support','Annual (inspection)','RC',1,655,'7 years','Shared washer for cleaning equipment before inspection, measurement or overhaul.','https://www.kaercher.com/fr/professionnel/nettoyeurs-haute-pression/'],
   ['e11','E','COLLECTIF','Mobile Workshop Roller Cabinet 6 drawers','Beta Tools','RSC24A/6','Shared workshop storage','Replace when worn','RC',1,669,'10 years','Shared rolling cabinet for team instruments, gauges, consumables and workshop tooling in a standardised drawer-based workshop format.','https://www.beta-tools.com/en/mobile-roller-cab-with-6-drawers-with-anti-tilt-system.html'],
-  ['e12','E','OUTILS','Certified Torque Wrench Set 40-200 Nm plus 100-600 Nm','Facom','S.307A200 + S.309-600 with certificates','Controlled bolting','Annual (COFRAC)','RC',1,575,'10 years','Shared torque-wrench set for controlled tightening on anchors, flanges and structural hardware.','https://www.facom.com/fr-fr/products/tightening-and-torque/torque-wrenches/'],
+  ['e12','E','OUTILS','Mechanical Torque Wrench with display 40-200 Nm and 14x18 insert mount','Facom','S.307A200','Controlled bolting','ISO 6789 Class II','RC',1,389,'10 years','Shared torque wrench for controlled tightening on anchors, flanges and structural hardware where angle mode and digital traceability are not required.','https://www.facom.com/product/s307a200/12-digi-cal-mechanical-torque-wrench-removable-ratchet-attachment-14-x-18-range-40-200nm'],
   ['e13','E','COLLECTIF','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','PLC and vendor diagnostics','5 years (replacement)','OB',1,2595,'5 years','Shared diagnostic laptop for PLCs, parameters, alarms, firmware and maintenance software.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
   ['e14','E','OUTILS','3/4 Pneumatic Impact Wrench Kit','Ingersoll Rand','285B-6PKG','Heavy mechanical bolting','Annual (inspection)','RC',1,480,'10 years','Shared high-torque impact wrench for heavy bolts on lifting columns, forklifts and crane hardware.','https://www.irtools.com/en-gb/products/air-impact-wrenches/'],
-  ['e15','E','COLLECTIF','Portable Compressor 24 L 8 bar','Metabo','Basic 250-24 W','Backup compressed air supply','Annual (inspection + safety valve)','RC',1,185,'7 years','Backup air source when fixed depot air is unavailable or isolated for maintenance.','https://www.metabo.com/fr-fr/outillage-electrique/compresseurs/'],
-  ['e16','E','OUTILS','MIG/MAG Welder 200 A','Lincoln Electric','POWER MIG 215 MPi','Fabrication and repair welding','Annual (inspection + PE check)','RC',1,1905,'10 years','Shared welder for qualified repair work on structures, brackets and workshop fabrication.','https://www.lgmtools.eu/en/gereedschappen/524/lincoln-power-mig-215-mpi%E2%84%A2-multi-process-welder.html'],
-  ['e17','E','PPE','Full Welder PPE Kit','3M / Ansell','Speedglas 9100X + apron + gloves + leggings','Welding protection','Annual (helmet inspection)','RC',1,285,'3 years','Complete PPE kit supporting welding tasks with the shared MIG/MAG set.','https://www.3m.com/3M/en_US/p/d/v000057578/'],
-  ['e18','E','OUTILS','Portable Magnetic Drill 35 mm','FEIN','JHM 50-2','Metal drilling and tapping','Annual (inspection)','RC',1,780,'10 years','Magnetic drill for in-situ steelwork drilling on crane and workshop structures.','https://www.fein.com/en-gb/products/mag-drill/'],
-  ['e19','E','OUTILS','18V Angle Grinder 125 mm','Bosch Professional','GWS 18V-125 SC Professional','General workshop cutting and grinding','Annual (guard inspection)','RC',1,195,'7 years','Shared grinder for seized bolts, rust removal, weld prep and deburring.','https://www.bosch-professional.com/gb/en/products/gws-18v-125-sc-06019G310B.html'],
+  ['e45','E','OUTILS','Cordless Impact Wrench 18V 400 Nm 1/2"','Bosch','GDS 18V-400 Professional','General mechanical bolting','Replace if defective','RC',1,494,'5 years','Shared 1/2 inch cordless impact wrench for compressor skids, wash-plant hardware, forklift maintenance and repetitive bolting jobs where the impact socket set is used more efficiently than manual tools.','https://www.bosch-professional.com/ge/en/products/gds-18v-400-06019K0020'],
+  ['e15','P','COLLECTIF','Portable Compressor 24 L 8 bar','Metabo','Basic 250-24 W','Backup compressed air supply','Annual (inspection + safety valve)','RC',1,185,'7 years','Project/depot backup air source when fixed depot air is unavailable or isolated for maintenance.','https://www.metabo.com/fr-fr/outillage-electrique/compresseurs/'],
+  ['e16','P','OUTILS','MIG/MAG Welder 200 A','Lincoln Electric','POWER MIG 215 MPi','Fabrication and repair welding','Annual (inspection + PE check)','RC',1,1905,'10 years','Project/depot welder for qualified repair work on structures, brackets and workshop fabrication where welding capability is needed but not carried as routine team equipment.','https://www.lgmtools.eu/en/gereedschappen/524/lincoln-power-mig-215-mpi%E2%84%A2-multi-process-welder.html'],
+  ['e17','P','PPE','Auto-darkening Welding Helmet','Portwest','PW65 BizWeld Plus Welding Helmet','Welding face and eye protection','Annual (inspection)','RC',1,79,'3 years','Project/depot welding helmet for qualified repair and fabrication work with auto-darkening visor.','https://www.portwest.com/products/view/PW65'],
+  ['e18','P','OUTILS','Portable Magnetic Drill 35 mm','FEIN','KBU 35 PQ','Metal drilling and tapping','Annual (inspection)','RC',1,1559,'10 years','Project/depot magnetic drill for in-situ steelwork drilling, reaming and tapping on crane and workshop structures where a heavier shared drilling platform is needed.','https://fein.com/fr_fr/machines/percage-par-carottage/universelle/kbu-35-pq-72707161000/'],
+  ['e19','E','OUTILS','18V Angle Grinder 125 mm','Bosch Professional','GWS 18V-15 SC Professional','General workshop cutting and grinding','Annual (guard inspection)','RC',1,195,'7 years','Shared grinder for seized bolts, rust removal, weld prep and deburring.','https://www.bosch-professional.com/gb/en/products/gws-18v-15-sc-06019H6100'],
   ['e20','E','DIAG','Digital Caliper 0-300 mm IP67','Mitutoyo','500-197-30','Dimensional checks','Annual','RC',1,95,'10 years','Shared caliper for clearances, shaft diameters and mechanical wear checks.','https://shop.mitutoyo.eu/web/mitutoyo/en_GB/mitutoyo/01.03.03/Digital%20ABS%20Caliper%20Coolant%20Proof%20IP67/'],
   ['e21','E','DIAG','External Micrometer Set 0-50 mm','Mitutoyo','293-831-30 + 293-832-30','Precision dimensional checks','Annual','RC',1,145,'10 years','Precision micrometer set for shaft, rod and critical wear measurements.','https://shop.mitutoyo.eu/web/mitutoyo/en_GB/mitutoyo/01.03.04/'],
   ['e22','E','DIAG','Digital Magnetic Level 360 deg','Mitutoyo','960-272 Pro 360','Level and alignment checks','Annual','RC',1,285,'8 years','For wheel-lathe level, crane level and lifting-column rail planarity verification.','https://shop.mitutoyo.eu/web/mitutoyo/en_GB/mitutoyo/'],
@@ -352,17 +352,16 @@ const RAW_BY_SUBSYSTEM = {
   ['e37','E','DIAG','Fork Wear Gauge Inspection Kit','Cascade','Fork Inspection Kit','Forklift fork inspection','Annual (visual)','RC',1,85,'10 years','Profile and deflection gauge for annual forklift fork inspection.','https://www.cascorp.com/Products/Accessories'],
   ['e38','E','DIAG','Hydraulic Test Pressure Gauge 0-350 bar with coupler','Wika','232.50 0-350 bar + coupler','Forklift hydraulic checks','Annual','RC',1,110,'7 years','Shared pressure gauge for forklift lift, steering and brake-assist hydraulic diagnostics.','https://www.wika.com/fr-fr/232_50.WIKA'],
   ['e39','E','DIAG','Battery Conductance Tester for Forklift Batteries','Midtronics','CPX-900','Forklift battery health checks','Annual','RC',1,1010,'7 years','Battery decision tool for forklift traction or service batteries.','https://www.europe.midtronics.com/de/zh-hans/testers/cpx-900/'],
-  ['e40','E','SAFETY','Full-body Safety Harness EN 361','3M DBI-SALA','ExoFit XE50 Safety Harness','Work-at-height PPE','Annual (inspection)','OB',2,306.43,'5 years','Base fall-arrest harness for overhead crane and elevated maintenance access.','https://www.pps-ppe.com/catalogue/ppe/personal-protection-equipment/other/FA%2F3M%2F1112715/'],
-  ['e41','E','SAFETY','Twin-leg Personal Self-retracting Lifeline 2 m','3M DBI-SALA','3101298','Work-at-height PPE','Annual (inspection)','OB',2,392,'5 years','Twin-leg SRL for 100 percent tie-off during movement on elevated structures.','https://www.3m.com/3M/en_LB/p/d/v100323732/'],
-  ['e42','E','SAFETY','Temporary Anchor Sling 2 m','3M DBI-SALA','KM421','Work-at-height PPE','Annual (inspection)','OB',2,98.4,'5 years','Reusable anchor sling for temporary attachment on beams and structural members.','https://www.3m.com/3M/sl_SI/p/dc/v100324904/'],
+  ['e40','E','PPE','Full-body Safety Harness EN 361','3M DBI-SALA','ExoFit XE50 Safety Harness','Work-at-height PPE','Annual (inspection)','OB',2,306.43,'5 years','Base fall-arrest harness for overhead crane and elevated maintenance access.','https://www.pps-ppe.com/catalogue/ppe/personal-protection-equipment/other/FA%2F3M%2F1112715/'],
+  ['e41','E','PPE','Twin-leg Personal Self-retracting Lifeline 2 m','3M DBI-SALA','3101298','Work-at-height PPE','Annual (inspection)','OB',2,392,'5 years','Twin-leg SRL for 100 percent tie-off during movement on elevated structures.','https://www.3m.com/3M/en_LB/p/d/v100323732/'],
+  ['e42','E','PPE','Temporary Anchor Sling 2 m','3M DBI-SALA','KM421','Work-at-height PPE','Annual (inspection)','OB',2,98.4,'5 years','Reusable anchor sling for temporary attachment on beams and structural members.','https://www.3m.com/3M/sl_SI/p/dc/v100324904/'],
+  ['e43','P','PPE','Leather Welding Apron','Portwest','SW10','Torso welding protection','Replace when worn','RC',1,39,'3 years','Project/depot leather welding apron for qualified repair and fabrication work.','https://www.portwest.com/products/view/SW10/TAR'],
+  ['e44','P','PPE','Welders Split Leather Gauntlet','Portwest','A500','Hand welding protection','Replace when worn','RC',2,12,'1 year','Project/depot welding gloves for qualified repair and fabrication work.','https://portwest.com/products/view/A500'],
 
-  ['e43','P','DIAG','Three-phase Power Quality Analyser Class A','Fluke','435-II','Project and depot electrical diagnostics','Annual','RC',1,7384,'10 years','Project-level analyser for harmonic distortion, dips, unbalance and advanced DEQ supply investigations.','https://www.fluke.com/fr-fr/produit/analyseurs-qualite-alimentation/fluke-435-ii'],
-  ['e44','P','MBTDC','Loop Impedance and RCD Tester CAT IV','Metrel','MI3102H MultiServicer XD','Regulatory electrical verification','Annual','RC',1,1097.98,'10 years','Project/depot installation tester for loop, continuity, RCD and post-modification verification.','https://www.sauguspasaulis.lt/itampos-detektoriai/universalus-instaliacijos-tikrinimo-prietaisas-metrel-eurotestxe-25-kv-mi-3102h-bt?c3=3038&p=14480'],
-  ['e45','P','COLLECTIF','Forklift Load Test Weights and certified spreader beam','Metrology lab / manufacturer','Calibrated test weights 1t x4 + certified flat spreader beam','Forklift regulatory testing','Annual (COFRAC weights)','RC',1,6500,'15 years','Project/depot load-test kit for annual forklift proof-load campaigns.','https://uk.rs-online.com/web/c/test-measurement/'],
   ['e46','P','DIAG','Laser Alignment System for couplings and rotating equipment','Pruftechnik','ROTALIGN Touch','Advanced alignment diagnostics','Annual','RC',1,5800,'10 years','Project-level laser alignment kit for motors, compressors, pumps and rotating shafts.','https://www.pruftechnik.com/en/products-and-services/alignment-systems/rotalign-touch/'],
   ['e47','P','DIAG','Ultrasonic Thickness Gauge 1.2-225 mm','Olympus / Evident','38DL Plus','Wall-thickness and corrosion monitoring','Annual','RC',1,2200,'10 years','Project/depot UT gauge for shells, vessels, structures and corrosion mapping without disassembly.','https://www.olympus-ims.com/fr/38dl-plus/'],
   ['e48','P','DIAG','Lifting Certification Kit with load test register','Enerpac / Bureau Veritas','BHP-series load tester + accredited lab certificate','Lifting-column certification','Annual (accredited load test)','RC',1,8500,'15 years','Project/depot kit for annual lifting-column proof-load and certification campaigns.','https://www.enerpac.com/fr-fr/'],
-  ['e49','P','MHTA','High-voltage Insulation Tester 5 kV','Megger','MIT525/2 Insulation Tester 5kV','Advanced motor insulation diagnostics','Annual','RC',1,1850,'10 years','Project/depot 5 kV insulation tester for higher-power motors and advanced lifting-column diagnostics.','https://www.distrimesure.com/fr/controleurs-d-isolements-megommetres/2328-testeur-d-isolement-5kv-isolametre-megger-1016-085-mit5252.html'],
+  ['e49','P','COLLECTIF','Heavy-duty Bench Vice 150 mm','Bahco','607201500','Workshop holding and bench fitting','Replace if worn','RC',1,397,'15 years','Project/depot bench vice for holding shafts, brackets, hoses, pins and small mechanical assemblies during workshop dismantling, filing, deburring, cutting and reassembly tasks.','https://www.bahco.com/int_en/heavy-duty-square-guide-bench-vice-with-interchangeable-jaws--suitable-for-swivel-base-150-mm-607201500.html'],
   ],
   MEP: [],
 };
@@ -903,7 +902,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:t07', 'DEQ:e01', 'DEQ:e40', 'DEQ:e41', 'DEQ:e42'], {
+  ...lifecycleDefaultsFor(['DEQ:t07', 'DEQ:e40', 'DEQ:e41', 'DEQ:e42'], {
     type: 'periodic_replacement',
     intervalValue: '60',
     intervalUnit: 'months',
@@ -939,7 +938,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:t01', 'DEQ:e27', 'DEQ:e28', 'DEQ:e44', 'DEQ:e49'], {
+  ...lifecycleDefaultsFor(['DEQ:t01', 'DEQ:e27', 'DEQ:e28'], {
     type: 'periodic_replacement',
     intervalValue: '84',
     intervalUnit: 'months',
@@ -948,7 +947,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:e03', 'DEQ:e04', 'DEQ:e05', 'DEQ:e06', 'DEQ:e08', 'DEQ:e09', 'DEQ:e20', 'DEQ:e21', 'DEQ:e22', 'DEQ:e23', 'DEQ:e24', 'DEQ:e25', 'DEQ:e26', 'DEQ:e29', 'DEQ:e31', 'DEQ:e32', 'DEQ:e33', 'DEQ:e34', 'DEQ:e35', 'DEQ:e36', 'DEQ:e37', 'DEQ:e38', 'DEQ:e39', 'DEQ:e43', 'DEQ:e46', 'DEQ:e47'], {
+  ...lifecycleDefaultsFor(['DEQ:e03', 'DEQ:e04', 'DEQ:e05', 'DEQ:e06', 'DEQ:e08', 'DEQ:e09', 'DEQ:e20', 'DEQ:e21', 'DEQ:e22', 'DEQ:e23', 'DEQ:e24', 'DEQ:e25', 'DEQ:e26', 'DEQ:e29', 'DEQ:e31', 'DEQ:e32', 'DEQ:e33', 'DEQ:e34', 'DEQ:e35', 'DEQ:e36', 'DEQ:e37', 'DEQ:e38', 'DEQ:e39', 'DEQ:e46', 'DEQ:e47'], {
     type: 'periodic_replacement',
     intervalValue: '96',
     intervalUnit: 'months',
@@ -975,7 +974,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:e07', 'DEQ:e10', 'DEQ:e11', 'DEQ:e15'], {
+  ...lifecycleDefaultsFor(['DEQ:e10', 'DEQ:e11', 'DEQ:e15'], {
     type: 'periodic_replacement',
     intervalValue: '84',
     intervalUnit: 'months',
@@ -1002,7 +1001,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:e14', 'DEQ:e16', 'DEQ:e18', 'DEQ:e19'], {
+  ...lifecycleDefaultsFor(['DEQ:e14', 'DEQ:e16', 'DEQ:e18', 'DEQ:e19', 'DEQ:e45'], {
     type: 'periodic_replacement',
     intervalValue: '84',
     intervalUnit: 'months',
@@ -1011,7 +1010,16 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:e17'], {
+  ...lifecycleDefaultsFor(['DEQ:e49'], {
+    type: 'condition_based',
+    intervalValue: '',
+    intervalUnit: 'years',
+    replacementRatio: '100',
+    source: 'Estimated heavy workshop vice life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['DEQ:e17', 'DEQ:e43'], {
     type: 'periodic_replacement',
     intervalValue: '36',
     intervalUnit: 'months',
@@ -1020,7 +1028,16 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:e45', 'DEQ:e48'], {
+  ...lifecycleDefaultsFor(['DEQ:e44'], {
+    type: 'periodic_replacement',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated welding glove replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['DEQ:e48'], {
     type: 'periodic_replacement',
     intervalValue: '180',
     intervalUnit: 'months',
@@ -1380,10 +1397,10 @@ export const TOOLING_SERVICE_DEFAULTS = {
   }),
   ...serviceDefaultsFor(['DEQ:e12'], {
     type: 'calibration',
-    cost: '165',
-    source: 'DEQ workbook baseline',
+    cost: '95',
+    source: 'Maintenance planning baseline for Facom S.307A200 mechanical-display torque wrench',
     year: '2026',
-    basis: 'estimated',
+    basis: 'source_based',
   }),
   ...serviceDefaultsFor(['DEQ:e20'], {
     type: 'calibration',
@@ -1455,27 +1472,6 @@ export const TOOLING_SERVICE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...serviceDefaultsFor(['DEQ:e43'], {
-    type: 'calibration',
-    cost: '420',
-    source: 'DEQ workbook baseline',
-    year: '2026',
-    basis: 'estimated',
-  }),
-  ...serviceDefaultsFor(['DEQ:e44'], {
-    type: 'calibration',
-    cost: '220',
-    source: 'DEQ workbook baseline',
-    year: '2026',
-    basis: 'estimated',
-  }),
-  ...serviceDefaultsFor(['DEQ:e45'], {
-    type: 'verification',
-    cost: '380',
-    source: 'DEQ workbook baseline',
-    year: '2026',
-    basis: 'estimated',
-  }),
   ...serviceDefaultsFor(['DEQ:e46'], {
     type: 'calibration',
     cost: '580',
@@ -1493,13 +1489,6 @@ export const TOOLING_SERVICE_DEFAULTS = {
   ...serviceDefaultsFor(['DEQ:e48'], {
     type: 'verification',
     cost: '650',
-    source: 'DEQ workbook baseline',
-    year: '2026',
-    basis: 'estimated',
-  }),
-  ...serviceDefaultsFor(['DEQ:e49'], {
-    type: 'calibration',
-    cost: '220',
     source: 'DEQ workbook baseline',
     year: '2026',
     basis: 'estimated',
@@ -1750,12 +1739,11 @@ const TOOL_IMAGE_OVERRIDES = {
   'DEQ:t18': 't12_knipex_00_21_02_le_tool_bag_classic.jpg',
   'DEQ:e03': 'e06_fluke_tis60.webp',
   'DEQ:e11': 'e12_beta_tools_rsc24a.webp',
+  'DEQ:e12': 'e12_facom_s_307a200.jpg',
   'DEQ:e13': 'e48_panasonic_toughbook_55_mk3.jpg',
+  'DEQ:e45': 'e09_bosch_gds_18v_400_professional.png',
   'DEQ:e27': 't12_fluke_1507_insulation_tester.jpg',
   'DEQ:e28': 't18_fluke_62_max.jpg',
-  'DEQ:e43': 'e18_fluke_435_ii.webp',
-  'DEQ:e44': 't14_metrel_mi_3102h_bt_eurotestxe_2_5_kv.jpg',
-  'DEQ:e49': 'e19_megger_mit525.webp',
 };
 
 const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =>
