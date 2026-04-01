@@ -1741,6 +1741,7 @@ const TOOL_IMAGE_OVERRIDES = {
   'DEQ:t06': 't05_seton_cps4375052.jpg',
   'DEQ:t07': 't06_brady_65674_personal_loto_kit.jpg',
   'DEQ:t10': 't44_portwest_c465.jpg',
+  'DEQ:t11': 't11_3m_8822_ffp2_box_x20.jpg',
   'DEQ:t12': 'e49_facom_440_je25.jpg',
   'DEQ:t16': 't11_wiha_352_sb_18_t_handle.jpg',
   'DEQ:t17': 't13_facom_expert_e150304.jpg',
@@ -1748,9 +1749,13 @@ const TOOL_IMAGE_OVERRIDES = {
   'DEQ:t15': 't09_knipex_00_20_12_vde.jpg',
   'DEQ:t18': 't12_knipex_00_21_02_le_tool_bag_classic.jpg',
   'DEQ:e03': 'e06_fluke_tis60.webp',
+  'DEQ:e11': 'e12_beta_tools_rsc24a.webp',
   'DEQ:e13': 'e48_panasonic_toughbook_55_mk3.jpg',
   'DEQ:e27': 't12_fluke_1507_insulation_tester.jpg',
   'DEQ:e28': 't18_fluke_62_max.jpg',
+  'DEQ:e43': 'e18_fluke_435_ii.webp',
+  'DEQ:e44': 't14_metrel_mi_3102h_bt_eurotestxe_2_5_kv.jpg',
+  'DEQ:e49': 'e19_megger_mit525.webp',
 };
 
 const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =>
