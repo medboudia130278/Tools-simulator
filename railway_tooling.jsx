@@ -55,15 +55,16 @@ const C = {
 
 // ─── CATEGORIES — softer, teal-family palette ─────────────────────────────────
 const CATS = {
-  PPE:      { label:'PPE',              color:C.amber,  bg:C.amberDim,  icon:'🧤' },
-  SAFETY:   { label:'Safety',           color:C.orange, bg:C.orangeDim, icon:'🦺' },
-  MBTDC:    { label:'LV/DC Measurement',       color:C.teal,   bg:C.tealDim,  icon:'⚡' },
-  MHTA:     { label:'MV/HV Measurement',     color:C.blue,   bg:C.blueDim,  icon:'🔬' },
-  CABLE:    { label:'Cabling',            color:C.amber,  bg:C.amberDim, icon:'🔌' },
-  LOTO:     { label:'Lockout/LOTO',  color:C.violet, bg:C.violetDim,icon:'🔒' },
-  DIAG:     { label:'Advanced Diagnostics',  color:C.cyan,   bg:C.cyanDim,  icon:'📡' },
-  OUTILS:   { label:'General Tooling',  color:C.green,  bg:C.greenDim, icon:'🔧' },
-  COLLECTIF:{ label:'Team Equipment', color:C.slate,  bg:C.slateDim, icon:'📦' },
+  PPE:      { label:'PPE',              color:C.amber,  bg:C.amberDim,  icon:'' },
+  SAFETY:   { label:'Safety',           color:C.orange, bg:C.orangeDim, icon:'' },
+  MBTDC:    { label:'LV/DC Measurement',       color:C.teal,   bg:C.tealDim,  icon:'' },
+  MHTA:     { label:'MV/HV Measurement',     color:C.blue,   bg:C.blueDim,  icon:'' },
+  CABLE:    { label:'Cabling',            color:C.amber,  bg:C.amberDim, icon:'' },
+  LOTO:     { label:'Lockout/LOTO',  color:C.violet, bg:C.violetDim,icon:'' },
+  DIAG:     { label:'Advanced Diagnostics',  color:C.cyan,   bg:C.cyanDim,  icon:'' },
+  OUTILS:   { label:'General Tooling',  color:C.green,  bg:C.greenDim, icon:'' },
+  LEVAGE:   { label:'Lifting / Rigging', color:C.orange, bg:C.orangeDim, icon:'' },
+  COLLECTIF:{ label:'Team Equipment', color:C.slate,  bg:C.slateDim, icon:'' },
 };
 
 // Mandatory = orange (not red), Recommended = blue, Optional = teal
@@ -77,7 +78,7 @@ const LEVELS = {
   T: {
     label: 'Technician',
     short: 'TECH',
-    emoji: '👤',
+    emoji: '',
     multiplierLabel: 'Technicians',
     unit: 'per technician',
     color: '#1C6090',
@@ -88,7 +89,7 @@ const LEVELS = {
   E: {
     label: 'Team',
     short: 'TEAM',
-    emoji: '👥',
+    emoji: '',
     multiplierLabel: 'Teams',
     unit: 'per team',
     color: '#1F8A84',
@@ -99,7 +100,7 @@ const LEVELS = {
   P: {
     label: 'Project / Depot',
     short: 'PROJECT',
-    emoji: '🏗️',
+    emoji: '',
     multiplierLabel: 'Projects / Depots',
     unit: 'per project / depot',
     color: '#7C3AED',
@@ -110,10 +111,10 @@ const LEVELS = {
 };
 
 const CONTEXTS = [
-  { id:'metro',  label:'Metro',      icon:'🚇', accent:C.teal   },
-  { id:'tram',   label:'Tram',       icon:'🚊', accent:C.cyan   },
-  { id:'heavy',  label:'Heavy Rail', icon:'🚂', accent:C.amber  },
-  { id:'apm',    label:'APM',        icon:'🚝', accent:C.violet },
+  { id:'metro',  label:'Metro',      icon:'', accent:C.teal   },
+  { id:'tram',   label:'Tram',       icon:'', accent:C.cyan   },
+  { id:'heavy',  label:'Heavy Rail', icon:'', accent:C.amber  },
+  { id:'apm',    label:'APM',        icon:'', accent:C.violet },
 ];
 
 const SUBSYSTEMS = [
@@ -224,6 +225,49 @@ const RAW_BY_SUBSYSTEM = {
   ['e52','E','COLLECTIF','Maintenance Access Platform / PIR 8 steps - indoor work up to about 3.8 m','Tubesca-Comabi','Sherpamatic Fixe 8 marches (02272158)','Indoor substation / technical rooms','EN 131-7 / PIR-PIRL / Decree 2004-924','RC',1,1043.4,'Annual (inspection)','Secure maintenance access platform with guardrail, stabilisers and wide treads for indoor elevated work in substations, technical rooms and equipment spaces. Added as a safer team-level access solution than a generic domestic stepladder when technicians need stable repeated access above cabinets or cable routes.','https://www.tubesca-comabi.com/fr/sherpamatic-fixe'],
   ['e53','E','COLLECTIF','Antistatic Industrial Vacuum Cleaner for electrical cabinets and panels','Karcher','NT 30/1 Tact Te M','Substations / switchboards / electrical rooms','Dust class M / antistatic system','OB',1,659,'Annual (inspection + filter replacement)','Professional vacuum cleaner with antistatic system and conductive accessories for controlled cleaning of electrical cabinets, LV panels and technical rooms. Added to favour dust extraction in de-energised equipment instead of uncontrolled blowing that would redistribute conductive dust.','https://www.kaercher.com/int/professional/vacuums/wet-and-dry-vacuum-cleaners/safety-vacuum-cleaners/nt-30-1-tact-te-m-11482350.html'],
   ],
+  CAT: [
+  ['t01','T','MHTA','HV voltage detector 25kV AC / 1500V DC - audible + visual - insulating pole mount','CATU / 4NRJ','CATU CC-765-25-C (25kV AC) / CATU ZVATDCINDE (1500V DC)','OLE - overhead contact line maintenance','-','OB',1,285,'Annual (functional test + calibration)','Mandatory absence-of-voltage verification before any catenary work (25kV AC mainline/RER or 1500V DC urban networks). Used before earthing operations. Approved type per IEC 61243-3. Mounted on insulating pole. Bi-range models available per network.','https://www.catuelec.com/produitcatu/Equipement%20de%20poste%20et%20de%20mise%20%C3%A0%20la%20terre%20et%20en%20court-circuit%20HTA/D%C3%A9tecteur%20de%20tension%20/67358/146362'],
+  ['t03','T','PPE','Hi-visibility Work Trousers Class 2','Portwest','PW340','OLE - overhead contact line maintenance','EN ISO 20471 Class 2','OB',1,79,'2 years or replace when worn','Base high-visibility lower-body workwear for catenary technicians during trackside access, night possessions and outdoor OLE maintenance where conspicuity must be maintained throughout the intervention.','https://www.lyreco.com/webshop/FRCH/pantalon-haute-visibilite-portwest-pw340-classe-2-orange-noir-taille-58-product-000000000016482764.html'],
+  ['t04','T','PPE','Electrical Safety Helmet with Integrated Faceshield','JSP','EVO VISTAshield','OLE - overhead contact line maintenance','-','OB',1,58,'Annual (visual)','Head and face protection for OLE work at height, with integrated faceshield to improve coverage during proximity work on masts, supports and catenary structures. Chin strap mandatory at working height.','https://www.jspsafety.com/products/PPE/Head-Protection/EN-397-industrial-Safety-Helmets/VAR-AMC170-007-F00_EVO-ViSTAshield-Safety-Helmet-with-integrated-Faceshield'],
+  ['t05','T','PPE','Fall arrest harness full-body EN 361 + energy-absorbing lanyard 2 m + dorsal connector','3M / Petzl','3M DBI-SALA ExoFit NEX / Petzl SEQUOIA','OLE - overhead contact line maintenance','-','OB',1,320,'Annual (inspection by competent person)','Mandatory for all catenary work at height (typically 5–9 m on aerial work platforms or fixed structures). EN 361 full-body harness + EN 355 energy absorber. Annual inspection mandatory. Replace after any fall or shock loading.','https://www.petzl.com/en/Professional/Harnesses/SEQUOIA'],
+  ['t06','T','PPE','Hi-visibility Winter Bomber Jacket Class 3','Portwest','C465','OLE - overhead contact line maintenance','EN ISO 20471 Class 3 - EN 343','OB',1,69,'3 years or replace when damaged','Cold-weather high-visibility outer layer for night possessions, exposed line sections and windy outdoor OLE work where visibility and weather protection are both required.','https://www.lyreco.com/webshop/FRLU/veste-bomber-hi-vis-portwest-c465-orange-bleu-marine-taille-m-la-piece-product-000000000007875167.html'],
+  ['t07','T','PPE','Safety Shoes S3 ESD SRC mid-cut','PUMA Safety','KRYPTON MID 634200','OLE - overhead contact line maintenance','EN ISO 20345 - S3 ESD SRC','OB',1,119.39,'2 years or replace when worn','Standardised safety footwear for OLE technicians working trackside, on platforms and around outdoor maintenance access points where grip, toe protection and durable all-shift comfort are needed.','https://www.puma-safety.com/eu/de/maenner/schuhe/sicherheitsschuhe/sicherheitsschuhe-s3/231/krypton-mid-puma-safety-sicherheitsschuhe-s3-esd'],
+  ['t09','T','PPE','Hard-shell Knee Pads - EN 14404','Portwest','KP20','OLE - overhead contact line maintenance','EN 14404 Type 1 Level 0','OB',1,35,'Replace if worn','OLE technicians frequently work kneeling on aerial work platforms, mast foundations, and trackside walkways. Hard-shell knee pads protect on ballast, concrete and rough access surfaces during repeated inspection and adjustment work.','https://portwest.com/products/view/KP20'],
+  ['t10','T','OUTILS','Tape Measure 5m magnetic anti-shock','Stanley','STHT36334 FatMax','OLE - overhead contact line maintenance','-','OB',1,18,'Replace as needed','General catenary field measurement tape for mast hardware spacing, bracket offsets, accessory positioning and quick dimension checks during OLE interventions. Double-sided magnetic hook supports solo work from platform or structure.','https://www.stanley.fr/outils-a-main/mesure/metres-ruban/fatmax-autolock-5m'],
+  ['t11','E','MBTDC','TRMS AC/DC Clamp Meter 1000A with iFlex','Fluke','376 FC','OLE - overhead contact line maintenance','-','OB',1,703,'Annual','Shared team clamp meter for traction return current measurement on rails and earthing conductors, plus bonding cable current distribution checks. 1000A range covers traction return current on urban networks. iFlex flexible probe suits large conductors and team troubleshooting tasks.','https://www.fluke.com/fr-fr/produit/mesure-courant/pinces-amperemetriques/fluke-376-fc'],
+  ['t12','E','MBTDC','Multimeter TRMS 1000V CAT IV - Fluke 289 - with temperature and logging','Fluke','Fluke 289 (art.2094394)','OLE - overhead contact line maintenance','-','OB',1,976,'Annual','Shared team diagnostic multimeter for secondary voltage checks, bonding resistance, earthing continuity and logged troubleshooting during commissioning or fault finding. Temperature input supports thermal checks on joints and terminals.','https://www.fluke.com/fr/produit/test-electrique/multimetres-numeriques/fluke-289'],
+  ['t13','T','DIAG','Contact Wire Wear Gauge - EN 50149','Steinmeyer','FRM Contact Wire Wear Gauge','OLE - overhead contact line maintenance','EN 50149','OB',1,145,'Annual (calibration)','Manual point measurement of installed contact wire residual thickness and wear at hotspots, support points, section breaks and pantograph wear bands. Suitable for grooved and round contact wires in accordance with EN 50149. Current price kept as an internal estimate pending supplier quote because no reliable public web price was found for the FRM.','https://www.steinmeyer-railway.com/en/measuringdevices/frm-contact-wire-wear-gauge'],
+  ['t14','T','OUTILS','Open-end / Ring Wrench Set 6-34 mm - 25 pcs','Facom','440.JE25','OLE - overhead contact line maintenance','-','OB',1,305,'Replace when worn','Main spanner base for catenary hardware, cantilever fasteners, registration fittings and structural OLE bolting where a full metric range is more practical than a narrow compact set.','https://www.facom.com/product/440je25/6mm-34mm-combination-wrench-set-25-pc'],
+  ['t15','P','OUTILS','3/8 Ratchet Socket Set 7-24 mm - 24 pcs','Facom','J.161-4P12','OLE - overhead contact line maintenance','-','OB',1,306,'Replace if worn','Project/depot shared 3/8 inch ratchet socket set for registration hardware, mast fittings and medium-duty OLE bolting when a full mechanical set is required beyond technician carry tools.','https://www.facom.com/product/j161-4p12/38-socket-set-24-pieces-mbox-performance-round-head-ratchet'],
+  ['t16','T','SAFETY','VDE 1000V Insulated Screwdriver Set - 7 pcs','Wiha','36295 SoftFinish VDE Set','OLE - overhead contact line maintenance','-','OB',1,78,'Annual (visual)','Electrical work on control panels, relay panels, earthing terminals, bonding connections at catenary structures. IEC 60900 1000V rated. Daily use during corrective and preventive maintenance.','https://www.wiha.com/fr-fr/outillage/tournevis/tournevis-vde/softfinish-vde/36295/'],
+  ['t17','T','SAFETY','VDE 1000V Insulated Pliers Set - 5 pcs','Knipex','00 20 12 VDE','OLE - overhead contact line maintenance','-','OB',1,145,'Annual (visual)','Wiring and bonding cable work: cutting/stripping earthing cable (25–95 mm2), connector manipulation, bond clamp handling at catenary structures and relay rooms.','https://www.knipex.com/en/products/002012'],
+  ['t18','T','OUTILS','Individual Tool Bag with shoulder strap','Knipex','00 21 02 LE Tool Bag Classic','OLE - overhead contact line maintenance','-','OB',1,132,'Replace if worn','Personal carry bag for daily catenary hand tools and small test instruments during platform, mast and access-route interventions.','https://www.knipex.com/products/tool-bags-and-tool-cases/tool-bag-classic-empty/tool-bag-classic-empty/002102LE'],
+  ['t19','T','OUTILS','Hex Key Set metric 1.5-10mm - 18 pcs','Wiha','352 SB 18 T-handle','OLE - overhead contact line maintenance','-','OB',1,42,'Replace when worn','Long-reach T-handle hex keys for socket-head catenary fasteners on cantilever assemblies, dropper clamps, registration fittings and section-insulator hardware during adjustment and reassembly work.','https://www.wiha.com/eu/en/products/hex-tools-and-keys/hex-keys/hex-key-set-in-a-staple-with-t-handle-18-pcs/352sb18/'],
+  ['t20','T','OUTILS','Telescopic Inspection Mirror 360°','Gedore','718 / 1979841','OLE - overhead contact line maintenance','-','OB',1,22,'Replace as needed','Visual inspection of contact wire underside, clamp positions, section insulator back-faces and mast bolt holes inaccessible from the front, using the same shared mirror platform already standardised across other subsystems.','https://www.gedore.com/en-de/products/measuring---marking---testing-tools/test-tools/mirror/718-inspection-mirror/718---1979841'],
+  ['t21','T','OUTILS','Penetrating Rust Release Aerosol pack of 3','Wurth','0890 200 004','OLE - overhead contact line maintenance','N/A (consumable)','OB',3,28,'N/A','Release spray for seized mast bolts, registration arm clamps, balance-weight carriages and section-insulator hardware on outdoor catenary structures. Apply ahead of dismantling and keep off current-carrying contact surfaces.','https://www.wurth.co.uk/rost-off-plus'],
+  ['t22','T','OUTILS','Lubricant grease for tensioning pulleys and balance weight guides','Molykote / Klüber','Molykote G-1000 / Klüber Grease NCA 15','OLE - overhead contact line maintenance','-','OB',2,38,'N/A (consumable)','Lubrication of tensioning pulley bearings, balance weight guide rods, turnbuckles, and swivel clamps on auto-tensioning systems. Annual application at each auto-tensioning structure.','https://uk.rs-online.com/web/c/adhesives-sealants-maintenance-chemicals/greases/'],
+  ['t23','T','OUTILS','Abrasive cloth 80/120/240 grit - lot 30 sheets - outdoor use','Bosch / Würth','Bosch Expert C355 / Würth abrasive cloth','OLE - overhead contact line maintenance','-','OB',1,22,'N/A (consumable)','Contact surface preparation before bonding clamp installation, copper contact cleaning before electrical measurements, deburring cut wire ends before crimping.','https://www.bosch-professional.com/gb/en/products/'],
+  ['t24','T','PPE','Hi-visibility Short-sleeve Work Polo Class 2','Portwest','RT22','OLE - overhead contact line maintenance','EN ISO 20471 Class 2','OB',1,24,'1 year or replace when faded','Base high-visibility upper-body workwear for warmer OLE interventions and night possessions when a durable HV garment is preferred to a simple vest during the full shift.','https://www.hiviskings.com/portwest-rt22-class-2-hi-vis-safety-polo-rt22'],
+  ['t25','P','OUTILS','1/2 Ratchet Socket Set 8-34 mm - 30 pcs','Facom','S.161-5P6','OLE - overhead contact line maintenance','-','OB',1,309,'Replace if worn','Project/depot shared 1/2 inch ratchet socket set for heavier OLE bolting, anchor hardware and structural fasteners where a larger drive and wider metric range are needed.','https://www.facom.com/product/s161-5p6/12-socket-set-mbox-performance-round-head-ratchet-30-pc'],
+  ['e04','E','OUTILS','Come-along cable puller / chain hoist 1.5 t - insulated handles - wire tensioning','Tractel / Yale','Tractel Tirfor T-516 / Yale CLX 1.5t','OLE - overhead contact line maintenance','-','OB',1,485,'Annual (inspection + load test)','Tensioning messenger wire and contact wire during re-tensioning operations, wire replacement, and span repairs. Requires min. 2 operators. Insulated handles for proximity HV work. Attached to platform anchor points during team operations.','https://www.tractel.com/en/products/hoists-and-pullers/'],
+  ['e05','E','COLLECTIF','Mobile Workshop Roller Cabinet 6 drawers','Beta Tools','RSC24A/6','OLE - overhead contact line maintenance','-','OB',1,669,'Replace if worn','Shared team roller cabinet with drawers for OLE instruments, gauges, consumables and work-front equipment in a standardised workshop format.','https://www.beta-tools.com/en/mobile-roller-cab-with-6-drawers-with-anti-tilt-system.html'],
+  ['e06','E','COLLECTIF','Portable inverter generator 2kVA - silent - 230V - night maintenance','Honda / Yamaha','Honda EU22i / Yamaha EF2200iS','OLE - overhead contact line maintenance','-','OB',1,1250,'Annual (service)','Power supply for battery tool charging on remote catenary sections, portable lighting during night possessions, laptop and measuring equipment. Silent inverter type for night maintenance windows. Carried on team vehicle.','https://www.honda.co.uk/power-products/generators/eu22i.html'],
+  ['e07','E','COLLECTIF','Portable LED floodlights 100W - tripod - IP65 - night possession work','Peli / Brennenstuhl','Peli 9430 RALS / Brennenstuhl 1178800003','OLE - overhead contact line maintenance','-','OB',2,285,'Annual (lamp check)','Area lighting for catenary maintenance during night possessions (standard OLE working window). IP65 outdoor rated. Tripod-mounted for hands-free working. Two units provide adequate lighting for a single-span work zone.','https://www.peli.com/en/product/lights/remote-area-lighting/'],
+  ['e08','E','CABLE','Battery hydraulic contact wire kink remover / straightener','Stanley Dubuis','BDL041 + XDH41','OLE - overhead contact line maintenance','-','OB',1,2850,'Annual (pressure + function test)','Battery-powered hydraulic straightening tool set for removing local kinks and deformations in contact wire without immediate cutting. BDL041 is the mobile battery unit and XDH41 the dedicated straightening head / hydraulic variant used for corrective OLE maintenance after minor wire damage. Price kept as a prudent estimate pending supplier quote for the confirmed straightening configuration.','https://www.powerandcables.com/catenary-wire-straighteners-tools-to-remove-kinks-from-overhead-rail-cables/'],
+  ['e09','E','DIAG','Contact wire tension dynamometer - 0-30 kN - hook-on type','Vetek','Dynalink ERT-3ton','OLE - overhead contact line maintenance','-','OB',1,849,'Annual (calibration)','Verification of contact wire mechanical tension after section repair, balance-weight adjustment and temperature-related retensioning, using a portable digital dynamometer with standard shackles and kN display. The 3-tonne capacity corresponds to about 29.4 kN, which fits the intended OLE measurement range.','https://www.vetek.com/en/article/dynalink-dynamometer-3-tonnes-with-2pcs-schakel-ert-3ton'],
+  ['e10','E','DIAG','Portable laser height and stagger gauge - +/-3 mm accuracy - IP54','Steinmeyer','Steinmeyer FM4-LO','OLE - overhead contact line maintenance','-','OB',1,2800,'Annual (calibration)','Manual measurement of contact wire height and stagger at structures and midspan using the Steinmeyer FM4-LO portable OLE gauge. Suitable for installation checks, maintenance verification and geometry audits.','https://www.steinmeyer-railway.com/en/measuringdevices/messgeraet-fahrdrahthoehe-fahrdrahtlage'],
+  ['e11','E','SAFETY','Portable earthing + short-circuit set 25kV / 1500V DC - catenary clamp + rail clamp + copper braid','CATU / Stanley Dubuis','CATU CT-246 / Stanley Dubuis TPU + MPR set','OLE - overhead contact line maintenance','-','OB',1,650,'Annual (visual + resistance test)','Critical safety equipment - mandatory after voltage detector confirms de-energisation. Shorts and earths the catenary wire to the running rail. Icc rated per network fault current (12kA/150ms for 25kV AC, 35kA/25ms for 1500V DC). Includes rail foot clamp MPR + catenary clamp + copper braid.','https://industrialtoolsandattachments.com/products/catenary-maintenance'],
+  ['e12','E','SAFETY','Adjustable telescopic insulating stick for catenary earthing and voltage detection','CATU','CE-9-5603','OLE - overhead contact line maintenance','-','OB',2,285,'Annual (dielectric test + visual)','Placement of earthing sets, voltage detector and bonding cable on catenary wire from ground or platform. Telescopic for transport and adapted to OLE de-energised work using approved accessories. Min. 2 poles per technician team set when applying catenary-to-rail earthing.','https://www.catuelec.com/productcatu/Voltage%20detectors/Voltage%20detectors%20%3E%201%20000%20V%20AC/166241/166250'],
+  ['e13','E','OUTILS','Contact wire self-locking clamp pliers - autolock - contact wire groove fit','CATU / Stanley Dubuis','CATU PF-602 / Stanley Dubuis pince fil de contact','OLE - overhead contact line maintenance','-','OB',2,95,'Annual (visual)','Holding and repositioning contact wire during clamp replacement, dropper fitting, and kink repair without releasing wire tension. Auto-locking jaw grips grooved copper wire securely. 2 per technician for clamping either side of work zone.','https://galland-sas.com/wp-content/uploads/2024/08/GALLAND-CATALOGUE-OUTILLAGE-2020.pdf'],
+  ['e14','E','CABLE','Battery hydraulic crimping tool - 50-240 mm2 - die set for catenary connectors','CATU / Stanley Dubuis','CATU TTMH-S-240 / Stanley Dubuis crimping tool','OLE - overhead contact line maintenance','-','OB',1,2450,'Annual (pressure calibration + dies)','Hydraulic crimping of catenary connectors and terminations on messenger wire (70–185 mm2 CuCd/BzII), contact wire joints, and feeder cable lugs. Battery-powered for mobility on platform. Die set covers all standard catenary sections. SNCF homologated dies available.','https://galland-sas.com/wp-content/uploads/2024/08/GALLAND-CATALOGUE-OUTILLAGE-2020.pdf'],
+  ['e15','E','OUTILS','Mechanical Torque Wrench with display 40-200 Nm and 14x18 insert mount','Facom','Facom S.307A200','OLE - overhead contact line maintenance','-','OB',1,389,'Annual (COFRAC)','Controlled torque on cantilever fixings, steady-arm clamps, registration hardware and other medium-range OLE bolting where traceable tightening is required without the high-range 100-600 Nm wrench.','https://www.facom.com/product/s307a200/12-digi-cal-mechanical-torque-wrench-removable-ratchet-attachment-14-x-18-range-40-200nm'],
+  ['e17','E','DIAG','Laser distance meter 0.05-200 m +/-1 mm - IP54 - tilt sensor - Leica DISTO D5','Leica Geosystems','Leica DISTO D5 (ref 803067)','OLE - overhead contact line maintenance','-','OB',1,520,'Annual','Span length measurement, mast spacing, clearance checks to structures (bridges, tunnels, platforms). Tilt sensor for angled distances. Bluetooth data transfer to tablet. Used for geometry surveys and clearance audits.','https://shop.leica-geosystems.com/fr-FR/measurement-tools/disto/leica-disto-d5/buy'],
+  ['e18','E','OUTILS','Wire brush + stainless scraper + corrosion inhibitor spray - mast treatment kit','Würth','Würth corrosion protection kit - stainless brush + Rost-Off spray','OLE - overhead contact line maintenance','-','OB',1,45,'N/A (consumable)','Shared team kit for corrosion removal and protection on mast fasteners, brackets and exposed structural hardware during OLE preventive maintenance and corrective interventions.','https://www.wurth.co.uk/rost-off-plus'],
+  ['e20','P','MHTA','Earth Resistance Tester 3 and 4-pole – GEO Kit','Fluke','1625-2 GEO Kit','OLE - overhead contact line maintenance','IEC 61557-5','RC',1,4903,'Annual (calibration)','3- and 4-pole earth resistance measurement for mast foundations, structure bonding points and OLE earthing verification after repair or renewal works. Suitable for detailed earthing campaigns where clamp-on measurement is not sufficient.','https://www.fluke.com/fr-fr/produit/mesure-resistance-terre/fluke-1625-2-geo'],
+  ['e21','P','OUTILS','Section insulator adjustment gauge','Galland','MC.210','Tram OLE - section insulator setting','Supplier quote','OB',1,650,'Annual (inspection)','Project/depot tram-specific gauge used to set the skid position of a section insulator relative to the contact wire in order to secure smooth pantograph passage and avoid shocks, vibration and local wear on urban OLE systems. Current price kept as an internal estimate pending Galland quote.','https://galland-sas.com/wp-content/uploads/2024/08/GALLAND-CATALOGUE-OUTILLAGE-2020.pdf'],
+  ['e22','E','OUTILS','Contact wire manoeuvring vice','Galland','MC.80','OLE - overhead contact line maintenance','Supplier quote','OB',1,180,'Annual (inspection)','Team mechanical tool used to twist back and locally rectify deformed contact wire by taking support in the groove, especially during corrective catenary interventions after pantograph incidents or wire handling damage. Current price kept as a conservative internal estimate pending Galland quote.','https://galland-sas.com/wp-content/uploads/2024/08/GALLAND-CATALOGUE-OUTILLAGE-2020.pdf'],
+  ['e23','E','LEVAGE','Textile sling set - flat and round slings for catenary handling','SpanSet / Lift-All','Assorted webbing and roundsling set 1-2 t','OLE - overhead contact line maintenance','EN 1492-1 / EN 1492-2','OB',1,240,'Annual (inspection)','Shared lifting sling kit for controlled handling of pulleys, hoists, small structural parts, temporary support loads and protected rigging during catenary maintenance operations. Set includes mixed flat web slings and roundslings for non-marking lifting on painted or galvanised parts.','https://www.spanset.com/fr-fr/products/elingues-textiles'],
+  ],
   PSD: [
   ['t01','T','MBTDC','TRMS Multimeter CAT III 600V','Fluke','117','PSD control panels','CAT III 600V','OB',1,349,'Annual (calibration)','Daily diagnostic multimeter for PSD control panels, door circuits and live troubleshooting on 24VDC, 48VDC and 110VAC auxiliaries.','https://www.fluke.com/fr-fr/produit/multimetres/multimetres-numeriques/fluke-117'],
   ['t02','T','PPE','Safety Glasses anti-scratch anti-fog','Bolle Safety','Cobra COBPSI','Platform and technical rooms','EN 166 / EN 170','OB',1,22,'1 year or if scratched','Eye protection during all PSD interventions, including guide rail work, spring handling and glass-panel operations.','https://www.bollesafety.com/en-int/sport/cobra'],
@@ -271,7 +315,6 @@ const RAW_BY_SUBSYSTEM = {
   ['e19','E','COLLECTIF','Maintenance Access Platform / PIR 8 steps - indoor work up to about 3.8 m','Tubesca-Comabi','Sherpamatic Fixe 8 marches (02272158)','PSD header beam / upper sensors / cable routes','EN 131-7 / PIR-PIRL / Decree 2004-924','OB',1,1043.4,'Annual (inspection)','Safe elevated access platform for PSD header beams, upper sensors, cable routes and fascia elements when stable repeated work at height is needed with guardrails and a larger standing area than a simple stepladder.','https://www.tubesca-comabi.com/fr/sherpamatic-fixe'],
   ['e20','E','MBTDC','TRMS AC/DC Clamp Meter 1000A with iFlex','Fluke','376 FC','Advanced current diagnostics / PSD power circuits','CAT IV 600V - CAT III 1000V','RC',1,703,'Annual (calibration)','Shared advanced current-diagnostic clamp meter for PSD teams, especially on inaccessible conductors, overload investigations and current confirmation on door power/control circuits.','https://www.fluke.com/fr-fr/produit/mesure-courant/pinces-amperemetriques/fluke-376-fc'],
   ],
-  CAT: [],
   TRACK: [],
   '3RD': [],
   AFC: [],
@@ -360,6 +403,16 @@ const DEFAULT_CONTEXT_IDS = CONTEXTS.map(context => context.id);
 const contextOverridesFor = (uids, contexts) =>
   Object.fromEntries(uids.map(uid => [uid, [...contexts]]));
 const TOOL_CONTEXT_OVERRIDES = {
+  ...contextOverridesFor([
+    'CAT:t01','CAT:t03','CAT:t04','CAT:t05','CAT:t06','CAT:t07','CAT:t09','CAT:t10',
+    'CAT:t11','CAT:t12','CAT:t13','CAT:t14','CAT:t15','CAT:t16','CAT:t17','CAT:t18','CAT:t19','CAT:t20',
+    'CAT:t21','CAT:t22','CAT:t23','CAT:t24','CAT:t25',
+    'CAT:e04','CAT:e05','CAT:e06','CAT:e07','CAT:e08','CAT:e09','CAT:e10',
+    'CAT:e11','CAT:e12','CAT:e13','CAT:e14','CAT:e15','CAT:e17','CAT:e18','CAT:e20','CAT:e22','CAT:e23',
+  ], ['metro', 'tram', 'heavy']),
+  ...contextOverridesFor([
+    'CAT:e21',
+  ], ['tram']),
   ...contextOverridesFor([
     'PSD:t01','PSD:t02','PSD:t03','PSD:t04','PSD:t05','PSD:t06','PSD:t07','PSD:t08','PSD:t09','PSD:t10',
     'PSD:t11','PSD:t12','PSD:t13','PSD:t14','PSD:t15','PSD:t16','PSD:t17','PSD:t18','PSD:t19','PSD:t20',
@@ -1022,6 +1075,87 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
+  ...lifecycleDefaultsFor(['CAT:t01', 'CAT:t04', 'CAT:t10', 'CAT:t18', 'CAT:t20'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated CAT field equipment replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:t03'], {
+    type: 'periodic_replacement',
+    intervalValue: '24',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated hi-visibility work trouser replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:t05', 'CAT:t11', 'CAT:t12', 'CAT:t13', 'CAT:t14', 'CAT:t15', 'CAT:t16', 'CAT:t17', 'CAT:t19', 'CAT:t25', 'CAT:e04', 'CAT:e05', 'CAT:e09', 'CAT:e10', 'CAT:e11', 'CAT:e12', 'CAT:e15', 'CAT:e20', 'CAT:e21', 'CAT:e22'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated CAT durable asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:t06', 'CAT:t07', 'CAT:t09'], {
+    type: 'periodic_replacement',
+    intervalValue: '24',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated CAT technician PPE renewal cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:t24'], {
+    type: 'periodic_replacement',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated hi-visibility polo replacement cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:t21', 'CAT:t22', 'CAT:t23', 'CAT:e18'], {
+    type: 'consumable',
+    intervalValue: '12',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated CAT consumable replenishment rule',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:e06', 'CAT:e07', 'CAT:e08', 'CAT:e14'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated CAT team asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:e17'], {
+    type: 'periodic_replacement',
+    intervalValue: '96',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated CAT advanced diagnostic platform life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['CAT:e23'], {
+    type: 'periodic_replacement',
+    intervalValue: '60',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated CAT lifting sling renewal cycle',
+    year: '2026',
+    basis: 'estimated',
+  }),
 };
 
 const serviceDefaultsFor = (uids, config) =>
@@ -1420,6 +1554,111 @@ export const TOOLING_SERVICE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
+  ...serviceDefaultsFor(['CAT:t01'], {
+    type: 'calibration',
+    cost: '95',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:t11'], {
+    type: 'calibration',
+    cost: '137',
+    source: 'GMC-I calibration price list aligned with Fluke 376 FC baseline',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['CAT:t12'], {
+    type: 'calibration',
+    cost: '256',
+    source: 'GMC-I calibration price list aligned with Fluke 289 baseline',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['CAT:t13'], {
+    type: 'calibration',
+    cost: '55',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e14'], {
+    type: 'calibration',
+    cost: '185',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e09'], {
+    type: 'calibration',
+    cost: '379',
+    source: 'Vetek ISO376 calibration accessory price for Dynalink family',
+    year: '2026',
+    basis: 'source_based',
+  }),
+  ...serviceDefaultsFor(['CAT:e10'], {
+    type: 'calibration',
+    cost: '250',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e11'], {
+    type: 'inspection',
+    cost: '120',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e12'], {
+    type: 'dielectric_test',
+    cost: '95',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e15'], {
+    type: 'calibration',
+    cost: '95',
+    source: 'Maintenance planning baseline for Facom S.307A200 mechanical-display torque wrench',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e17'], {
+    type: 'calibration',
+    cost: '90',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e20'], {
+    type: 'calibration',
+    cost: '110',
+    source: 'CAT workbook baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e21'], {
+    type: 'inspection',
+    cost: '75',
+    source: 'Estimated Galland section-insulator gauge annual inspection baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e22'], {
+    type: 'inspection',
+    cost: '75',
+    source: 'Estimated Galland manoeuvring vice annual inspection baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['CAT:e23'], {
+    type: 'inspection',
+    cost: '45',
+    source: 'Estimated textile sling set annual inspection baseline',
+    year: '2026',
+    basis: 'estimated',
+  }),
 };
 
 function loadStoredPriceOverrides() {
@@ -1637,6 +1876,28 @@ const TOOL_IMAGE_OVERRIDES = {
   'POS:t42': 't42_portwest_pw340.jpg',
   'POS:t43': 't43_portwest_rt22.jpg',
   'POS:t44': 't44_portwest_c465.jpg',
+  'CAT:t04': 't05_jsp_evo_vistashield.jpg',
+  'CAT:t03': 't42_portwest_pw340.jpg',
+  'CAT:t05': 'e40_3m_dbi_sala_exofit_xe50_safety_harness.jpg',
+  'CAT:t06': 't44_portwest_c465.jpg',
+  'CAT:t07': 't40_puma_safety_krypton_mid_634200.jpg',
+  'CAT:t24': 't43_portwest_rt22.jpg',
+  'CAT:t10': 't25_stanley_stht36334_fatmax.jpg',
+  'CAT:t11': 't15_fluke_376_fc.jpg',
+  'CAT:t12': 't01_fluke_289.jpg',
+  'CAT:t14': 'e49_facom_440_je25.jpg',
+  'CAT:t16': 't09_wiha_36295_softfinish_vde_set.jpg',
+  'CAT:t17': 't09_knipex_00_20_12_vde.jpg',
+  'CAT:t18': 't12_knipex_00_21_02_le_tool_bag_classic.jpg',
+  'CAT:t19': 't11_wiha_352_sb_18_t_handle.jpg',
+  'CAT:t20': 't16_gedore_718.webp',
+  'CAT:t21': 't33_wurth_0890_200_004.jpg',
+  'CAT:t22': 't24_interflon_fin_grease_aerosol.webp',
+  'CAT:t15': 't13_facom_j_161_4p12.jpg',
+  'CAT:t25': 't36_facom_s_161_5p6.jpg',
+  'CAT:e05': 'e12_beta_tools_rsc24a.webp',
+  'CAT:e15': 'e12_facom_s_307a200.jpg',
+  'CAT:e20': 'e30_fluke_1625_2_geo_kit.webp',
   'PSD:t22': 't40_puma_safety_krypton_mid_634200.jpg',
   'PSD:t23': 't42_portwest_pw340.jpg',
   'PSD:t24': 't43_portwest_rt22.jpg',
@@ -2151,7 +2412,7 @@ export default function App({
       return `${tool.lifecycleSource} · ${tool.lifecycleYear}${suffix}`;
     }
     if (tool.lifecycleSource) return tool.lifecycleSource;
-    if (tool.lifecycleYear) return `Reference year Â· ${tool.lifecycleYear}`;
+    if (tool.lifecycleYear) return `Reference year · ${tool.lifecycleYear}`;
     if (tool.hasLifecycleOverride) return 'Manual lifecycle assumption';
     return tool.lifecycleBasis === 'derived' ? 'Derived from current maintenance note' : 'Default lifecycle baseline';
   };
@@ -2162,9 +2423,9 @@ export default function App({
       const interval = tool.lifecycleIntervalValue
         ? `${tool.lifecycleIntervalValue} ${tool.lifecycleIntervalUnit}`
         : 'interval not set';
-      return `${typeLabel} Â· every ${interval} Â· ${ratioLabel}`;
+      return `${typeLabel} · every ${interval} · ${ratioLabel}`;
     }
-    return `${typeLabel} Â· ${ratioLabel}`;
+    return `${typeLabel} · ${ratioLabel}`;
   };
   const getServiceReferenceLabel = tool => {
     if (tool.serviceSource && tool.serviceYear) {
@@ -2328,7 +2589,7 @@ export default function App({
                 padding:'5px 13px', borderRadius:20, cursor:contextLocked?'default':'pointer', fontSize:12, fontWeight:600,
                 fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em', transition:'all 0.15s',
                 opacity:contextLocked && ctx!==c.id ? 0.45 : 1,
-              }}>{c.icon} {c.label}</button>
+              }}>{c.label}</button>
             ))}
             {contextLocked && (
               <div style={{ fontSize:11, color:C.textSub, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
@@ -2403,7 +2664,7 @@ export default function App({
               borderRadius:10, fontSize:11, outline:'none', cursor:'pointer', fontFamily:"'Barlow', sans-serif",
             }}>
               <option value="ALL">All categories</option>
-              {Object.entries(CATS).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
+              {Object.entries(CATS).map(([k,v])=><option key={k} value={k}>{v.label}</option>)}
             </select>
 
             <div style={{ marginLeft:isMobile?0:'auto', display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', width:isMobile?'100%':'auto' }}>
@@ -2457,7 +2718,7 @@ export default function App({
                         <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:10 }}>
                           <div style={{ display:'grid', gap:8, minWidth:0 }}>
                             <span style={{ alignSelf:'flex-start', background:`${c.color}14`, color:c.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
-                              {c.icon} {c.label}
+                              {c.label}
                             </span>
                             <div style={{ fontFamily:"'Space Grotesk', sans-serif", fontSize:17, fontWeight:700, lineHeight:1.25, color:'#191C1E' }}>{t.name}</div>
                             <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap' }}>
@@ -2537,7 +2798,7 @@ export default function App({
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:6 }}>
                         <div style={{ display:'flex', gap:4, flexWrap:'wrap' }}>
                           <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}30`, borderRadius:999, padding:'3px 8px', fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
-                            {c.icon} {t.cat}
+                            {c.label}
                           </span>
                           <span style={{ background:`${s.color}15`, color:s.color, border:`1px solid ${s.color}30`, borderRadius:999, padding:'3px 8px', fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
                             {s.label}
@@ -2673,7 +2934,7 @@ export default function App({
                 return (
                   <div key={c.key} style={{ marginBottom:11 }}>
                     <div style={{ display:'flex', justifyContent:'space-between', marginBottom:5 }}>
-                      <span style={{ fontSize:11, color:'#191C1E', fontWeight:600 }}>{c.icon} {c.label}</span>
+                      <span style={{ fontSize:11, color:'#191C1E', fontWeight:600 }}>{c.label}</span>
                       <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:c.color }}>{fmt(c.total)} €</span>
                     </div>
                     <div style={{ height:6, background:'#EFF2F5', borderRadius:999, overflow:'hidden' }}>
@@ -2821,7 +3082,7 @@ export default function App({
                   return (
                     <div key={c.key} style={{ marginBottom:9 }}>
                       <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-                        <span style={{ fontSize:10, color:c.color, fontWeight:600 }}>{c.icon} {c.label}</span>
+                        <span style={{ fontSize:10, color:c.color, fontWeight:600 }}>{c.label}</span>
                         <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:10, color:C.text }}>{fmt(c.total)} €</span>
                       </div>
                       <div style={{ height:4, background:C.border, borderRadius:2 }}>
@@ -2938,7 +3199,7 @@ export default function App({
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:16 }}>
                     <div style={{ minWidth:0 }}>
                       <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', marginBottom:12 }}>
-                        <span style={{ background:`${c.color}15`, color:c.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{c.icon} {c.label}</span>
+                        <span style={{ background:`${c.color}15`, color:c.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{c.label}</span>
                         <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>{s.label}</span>
                         <span style={{ background:levelMeta.bgLight, color:levelMeta.color, borderRadius:999, padding:'6px 12px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.05em' }}>
                           {levelMeta.label}
@@ -3320,10 +3581,10 @@ export default function App({
               <div style={{ background:C.bgMid, padding:'16px 22px', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:16, borderBottom:`1px solid ${C.border}` }}>
                 <div style={{ minWidth:0 }}>
                   <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap', marginBottom:10 }}>
-                    <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}35`, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{c.icon} {c.label}</span>
+                    <span style={{ background:`${c.color}18`, color:c.color, border:`1px solid ${c.color}35`, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{c.label}</span>
                     <span style={{ background:`${s.color}15`, color:s.color, border:`1px solid ${s.color}30`, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>{s.label}</span>
                     <span style={{ background:levelMeta.bgDark, color:levelMeta.colorDark, borderRadius:999, padding:'4px 11px', fontSize:11, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif" }}>
-                      {levelMeta.emoji} {levelMeta.label}
+                      {levelMeta.label}
                     </span>
                   </div>
                   <div style={{ fontSize:20, fontWeight:700, lineHeight:1.25, color:C.text, marginBottom:8 }}>{modal.name}</div>
