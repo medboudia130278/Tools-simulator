@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Archive,
   CopyPlus,
@@ -61,17 +61,13 @@ export default function ProjectsPage() {
   const [draftContractUnit, setDraftContractUnit] = useState("years");
   const [importMessage, setImportMessage] = useState("");
 
-  const projectCards = useMemo(
-    () =>
-      projects.map((project) => {
-        const metrics = getProjectBudgetMetrics(project);
-        const coverage = metrics.mandatoryTotal
-          ? Math.round((metrics.mandatorySelected / metrics.mandatoryTotal) * 100)
-          : 0;
-        return { project, metrics, coverage };
-      }),
-    [projects]
-  );
+  const projectCards = projects.map((project) => {
+    const metrics = getProjectBudgetMetrics(project);
+    const coverage = metrics.mandatoryTotal
+      ? Math.round((metrics.mandatorySelected / metrics.mandatoryTotal) * 100)
+      : 0;
+    return { project, metrics, coverage };
+  });
 
   const activeProjects = projectCards.filter(({ project }) => projectStatus(project) === "active");
   const archivedProjects = projectCards.filter(({ project }) => projectStatus(project) === "archived");
@@ -152,7 +148,7 @@ export default function ProjectsPage() {
 
     return (
       <div
-        key={project.id}
+        key={`${project.id}:${project.updatedAt}`}
         style={{
           ...cardStyle,
           border: `1px solid ${
@@ -243,7 +239,9 @@ export default function ProjectsPage() {
           }}
         >
           <div style={{ background: palette.surfaceLow, borderRadius: "12px", padding: "12px 14px" }}>
-            <div style={{ fontSize: "12px", color: palette.inkMuted, marginBottom: "6px" }}>Allocated budget</div>
+            <div style={{ fontSize: "12px", color: palette.inkMuted, marginBottom: "6px" }}>
+              Initial budget (Mobilization)
+            </div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: palette.primary }}>
               {fmt(metrics.totalAllocated)} EUR
             </div>
