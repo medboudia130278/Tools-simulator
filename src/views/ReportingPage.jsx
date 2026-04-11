@@ -16,6 +16,12 @@ import {
   getProjectSubsystemIds,
 } from "../projects/projectSelectors.js";
 
+const SHARED_POOL_META = {
+  id: "SHARED",
+  label: "Shared / depot pool",
+  full: "Shared project tooling",
+};
+
 const cardStyle = {
   background: palette.surfaceLowest,
   borderRadius: "18px",
@@ -618,7 +624,11 @@ export default function ReportingPage() {
   );
 
   const subsystemMetaMap = useMemo(
-    () => Object.fromEntries(TOOLING_SUBSYSTEMS.map((subsystem) => [subsystem.id, subsystem])),
+    () =>
+      Object.fromEntries([
+        ...TOOLING_SUBSYSTEMS.map((subsystem) => [subsystem.id, subsystem]),
+        [SHARED_POOL_META.id, SHARED_POOL_META],
+      ]),
     []
   );
 
@@ -653,11 +663,11 @@ export default function ReportingPage() {
 
   const detailTabs = useMemo(
     () =>
-      activeSubsystemIds.map((subsystemId) => ({
+      Object.keys(metrics.subsystemCategoryRows).map((subsystemId) => ({
         id: subsystemId,
         label: subsystemMetaMap[subsystemId]?.label || subsystemId,
       })),
-    [activeSubsystemIds, subsystemMetaMap]
+    [metrics.subsystemCategoryRows, subsystemMetaMap]
   );
 
   const activeSubsystemRows = metrics.subsystemCategoryRows[activeSubsystemDetail] || [];

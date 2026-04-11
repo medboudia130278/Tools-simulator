@@ -255,7 +255,7 @@ export default function ProjectsPage() {
           <div style={{ background: palette.surfaceLow, borderRadius: "12px", padding: "12px 14px" }}>
             <div style={{ fontSize: "12px", color: palette.inkMuted, marginBottom: "6px" }}>Subsystem footprint</div>
             <div style={{ fontWeight: 700, color: palette.ink }}>
-              {metrics.subsystemTotals.length || 0} subsystem(s)
+              {subsystemIds.length || 0} subsystem(s)
             </div>
           </div>
           <div style={{ background: palette.surfaceLow, borderRadius: "12px", padding: "12px 14px" }}>

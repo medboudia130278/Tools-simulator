@@ -123,7 +123,6 @@ const SUBSYSTEMS = [
   { id:'PSD',   label:'PSD',     full:'Platform Doors' },
   { id:'CAT',   label:'CAT',     full:'Catenary' },
   { id:'TRACK', label:'TRACK',   full:'Track' },
-  { id:'3RD',   label:'3rd Rail',full:'Conductor Rail' },
   { id:'AFC',   label:'AFC',     full:'Ticketing' },
   { id:'DEQ',   label:'DEQ',     full:'Depot Equipment' },
   { id:'MEP',   label:'MEP',     full:'Mechanical Electrical Plumbing' },
@@ -170,7 +169,6 @@ const RAW_BY_SUBSYSTEM = {
   ['t37','T','OUTILS','Portable Tool Container with shoulder strap','Wera','Wera 2go 2 Tool Container','All domains – mobile maintenance','–','OB',1,115,'Replace when worn','Current official Wera mobile container system with shoulder strap and detachable quiver. Good fit for a technician who must keep essential hand tools on him while moving between rooms, cabinets and platforms.','https://www.wera.de/en/tools/wera-2go-2-tool-container'],
   ['t38','T','OUTILS','Open-end / Ring Wrench Set 8-19 mm in roll-up pouch','Stahlwille','96401007','All domains – daily fastening','DIN 3113 Form B / ISO 7738 Form B','OB',1,185,'Replace when worn','Current official STAHLWILLE set covering the most common small and medium metric sizes for day-to-day fastening. It gives the technician both open-end and ring ends in one compact pouch.','https://stahlwille.com/fr_fr/products/detail/26151321'],
   ['t39','T','OUTILS','Compact 1/4" Spinner Ratchet and Socket Set – 6 pcs','Facom','R.360NANOPB','All domains – compact fastening','ISO 2725 / DIN 3122','OB',1,163,'Replace when worn','Compact FACOM rotating-handle 1/4 inch ratchet and socket set suited to technician carry. Added as a personal fastener-access set for cramped cabinets and small hardware where a full team ratchet set is unnecessary.','https://www.manomano.fr/p/facom-coffret-cliquet-manche-rotatif-360-avec-douilles-14-6-r360nanopb-94034707?model_id=6124264'],
-  ['e07','E','OUTILS','Mobile Workshop Roller Cabinet 6 drawers','Beta Tools','RSC24A/6','All domains','–','OB',1,669,'Replace when worn','Shared team roller cabinet with drawers for storing tools, testers, consumables and work-front equipment in a more usable workshop format than a simple carry chest.','https://www.beta-tools.com/en/mobile-roller-cab-with-6-drawers-with-anti-tilt-system.html'],
   ['e08','E','OUTILS','VDE 3/8" insulated socket/tool set – 23 pcs','Stahlwille','12171/19/4 VDE','LV / MV – Protected bolting','IEC 60900','OB',1,670,'Replace when worn','Official insulated 23-piece socket/tool set reference still online. The previous wording understated the full TCS kit content.','https://stahlwille.com/en_us/products/detail/893236'],
   ['e09','E','OUTILS','Cordless Impact Wrench 18V 400 Nm 1/2"','Bosch','GDS 18V-400 Professional','MV / HV – Heavy bolting','–','RC',1,494,'Replace if defective','Official Bosch impact wrench page for the 400 Nm 1/2 inch heavy-bolting tool. This entry is the impact wrench for loosening and tightening bolts, distinct from the drill/driver entry below.','https://www.bosch-professional.com/ge/en/products/gds-18v-400-06019K0020'],
   ['e10','E','OUTILS','Team Hammer Drill/Driver 18V for heavier fixing work','Bosch','GSB 18V-55 Professional','All domains – heavier drilling and fixing','–','RC',1,355,'Replace if defective','Team-level hammer drill/driver reserved for heavier work than the personal technician driver: masonry anchors, metal supports, cable tray fixings and jobs where hammer mode is needed. One shared unit per team.','https://www.bosch-professional.com/fr/fr/products/gsb-18v-55-06019H5301'],
@@ -206,8 +204,8 @@ const RAW_BY_SUBSYSTEM = {
   ['e48','E','COLLECTIF','Rugged Laptop Toughbook 55 Series','Panasonic','TOUGHBOOK 55 mk3','All domains – Diagnostics','IP53 – MIL-STD-810H','RC',1,2595,'5-year replacement','Current official Panasonic Connect page for the Toughbook 55 platform used for IEC 61850 relay connection, SCADA and drive diagnostics. Entry aligned to a current base mk3 market configuration.','https://eu.connect.panasonic.com/de/en/products/toughbook/toughbook-55-series'],
   ['e49','E','OUTILS','Open-end / Ring Wrench Set 6-34 mm – 25 pcs','Facom','440.JE25','All domains – heavy bolting','NF ISO 1711-1 / NF ISO 691 / NF ISO 7738','RC',1,305,'Replace when worn','Current official FACOM large-range set covering the heavier fastening sizes that are not practical to carry at technician level. Suitable as the team-level wrench base for cabinets, supports and heavier mechanical interfaces.','https://www.facom.com/product/440je25/6mm-34mm-combination-wrench-set-25-pc'],
   ['e51','E','OUTILS','Maintenance Pliers Set – cutting, combination, long-nose, multigrip','Facom','CPE.A4','All domains – team hand tools','ISO 5746 / ISO 5748 / ISO 8976','OB',1,145,'Replace when worn','Official FACOM 4-piece maintenance plier set including combination pliers, diagonal cutters, half-round long-nose pliers and locking multigrip pliers. Good team-level complement to the insulated technician kit when broader mechanical handling and gripping are needed.','https://www.facom.com/product/cpea4/maintenance-plier-set-4-pc'],
-  ['e52','E','COLLECTIF','Maintenance Access Platform / PIR 8 steps - indoor work up to about 3.8 m','Tubesca-Comabi','Sherpamatic Fixe 8 marches (02272158)','Indoor substation / technical rooms','EN 131-7 / PIR-PIRL / Decree 2004-924','RC',1,1043.4,'Annual (inspection)','Secure maintenance access platform with guardrail, stabilisers and wide treads for indoor elevated work in substations, technical rooms and equipment spaces. Added as a safer team-level access solution than a generic domestic stepladder when technicians need stable repeated access above cabinets or cable routes.','https://www.tubesca-comabi.com/fr/sherpamatic-fixe'],
-  ['e53','E','COLLECTIF','Antistatic Industrial Vacuum Cleaner for electrical cabinets and panels','Karcher','NT 30/1 Tact Te M','Substations / switchboards / electrical rooms','Dust class M / antistatic system','OB',1,659,'Annual (inspection + filter replacement)','Professional vacuum cleaner with antistatic system and conductive accessories for controlled cleaning of electrical cabinets, LV panels and technical rooms. Added to favour dust extraction in de-energised equipment instead of uncontrolled blowing that would redistribute conductive dust.','https://www.kaercher.com/int/professional/vacuums/wet-and-dry-vacuum-cleaners/safety-vacuum-cleaners/nt-30-1-tact-te-m-11482350.html'],
+  ['e52','E','COLLECTIF','Maintenance Access Platform / PIR 8 steps - indoor work up to about 3.8 m','Tubesca-Comabi','Sherpamatic Fixe 8 marches (02272158)','All domains - indoor height access','EN 131-7 / PIR-PIRL / Decree 2004-924','OB',1,1043.4,'Annual (inspection)','Shared indoor maintenance access platform with guardrails and wide standing area for repeated work at height on luminaires, cabinets, overhead cable routes and upper-level technical equipment.','https://www.tubesca-comabi.com/fr/sherpamatic-fixe'],
+  ['e53','E','COLLECTIF','Antistatic Industrial Vacuum Cleaner for electrical cabinets and panels','Karcher','NT 30/1 Tact Te M','All domains - de-energised cleaning support','Dust class M / antistatic system','OB',1,659,'Annual (inspection + filter replacement)','Shared antistatic vacuum cleaner with conductive accessories for controlled cleaning of de-energised cabinets, technical rooms and workshop equipment without redistributing conductive dust.','https://www.kaercher.com/int/professional/vacuums/wet-and-dry-vacuum-cleaners/safety-vacuum-cleaners/nt-30-1-tact-te-m-11482350.html'],
   ['e54','E','CONSUM','Electrical contact grease / dielectric grease 85 g - LV terminals and connectors','CRC','02085 Di-Electric Grease','LV auxiliaries and low-current electrical connectors','N/A (consumable)','RC',1,25,'N/A','Shared team consumable for low-voltage connector sealing, terminal anti-moisture protection and auxiliary plug maintenance in humid or dust-prone environments. Apply on seals, backshells and low-current connectors only; do not use on power contact faces or bolted traction-current joints.','https://www.crcindustries.com/media/msdsen/default/msds_en-1003199.pdf'],
   ],
   CAT: [
@@ -235,7 +233,7 @@ const RAW_BY_SUBSYSTEM = {
   ['t24','T','PPE','Hi-visibility Short-sleeve Work Polo Class 2','Portwest','RT22','OLE - overhead contact line maintenance','EN ISO 20471 Class 2','OB',1,24,'1 year or replace when faded','Base high-visibility upper-body workwear for warmer OLE interventions and night possessions when a durable HV garment is preferred to a simple vest during the full shift.','https://www.hiviskings.com/portwest-rt22-class-2-hi-vis-safety-polo-rt22'],
   ['t25','P','OUTILS','1/2 Ratchet Socket Set 8-34 mm - 30 pcs','Facom','S.161-5P6','OLE - overhead contact line maintenance','-','OB',1,309,'Replace if worn','Project/depot shared 1/2 inch ratchet socket set for heavier OLE bolting, anchor hardware and structural fasteners where a larger drive and wider metric range are needed.','https://www.facom.com/product/s161-5p6/12-socket-set-mbox-performance-round-head-ratchet-30-pc'],
   ['e04','E','OUTILS','Come-along cable puller / chain hoist 1.5 t - insulated handles - wire tensioning','Tractel / Yale','Tractel Tirfor T-516 / Yale CLX 1.5t','OLE - overhead contact line maintenance','-','OB',1,485,'Annual (inspection + load test)','Tensioning messenger wire and contact wire during re-tensioning operations, wire replacement, and span repairs. Requires min. 2 operators. Insulated handles for proximity HV work. Attached to platform anchor points during team operations.','https://www.tractel.com/en/products/hoists-and-pullers/'],
-  ['e05','E','COLLECTIF','Mobile Workshop Roller Cabinet 6 drawers','Beta Tools','RSC24A/6','OLE - overhead contact line maintenance','-','OB',1,669,'Replace if worn','Shared team roller cabinet with drawers for OLE instruments, gauges, consumables and work-front equipment in a standardised workshop format.','https://www.beta-tools.com/en/mobile-roller-cab-with-6-drawers-with-anti-tilt-system.html'],
+  ['e05','E','COLLECTIF','Mobile Workshop Roller Cabinet 6 drawers','Beta Tools','RSC24A/6','Team storage and mobile workshop support','-','OB',1,669,'Replace when worn','Shared team roller cabinet with drawers for storing OLE tools, gauges, consumables and work-front equipment in a standardised workshop format.','https://www.beta-tools.com/en/mobile-roller-cab-with-6-drawers-with-anti-tilt-system.html'],
   ['e06','E','COLLECTIF','Portable inverter generator 2kVA - silent - 230V - night maintenance','Honda / Yamaha','Honda EU22i / Yamaha EF2200iS','OLE - overhead contact line maintenance','-','OB',1,1250,'Annual (service)','Power supply for battery tool charging on remote catenary sections, portable lighting during night possessions, laptop and measuring equipment. Silent inverter type for night maintenance windows. Carried on team vehicle.','https://www.honda.co.uk/power-products/generators/eu22i.html'],
   ['e07','E','COLLECTIF','Portable LED floodlights 100W - tripod - IP65 - night possession work','Peli / Brennenstuhl','Peli 9430 RALS / Brennenstuhl 1178800003','OLE - overhead contact line maintenance','-','OB',2,285,'Annual (lamp check)','Area lighting for catenary maintenance during night possessions (standard OLE working window). IP65 outdoor rated. Tripod-mounted for hands-free working. Two units provide adequate lighting for a single-span work zone.','https://www.peli.com/en/product/lights/remote-area-lighting/'],
   ['e08','E','CABLE','Battery hydraulic contact wire kink remover / straightener','Stanley Dubuis','BDL041 + XDH41','OLE - overhead contact line maintenance','-','OB',1,2850,'Annual (pressure + function test)','Battery-powered hydraulic straightening tool set for removing local kinks and deformations in contact wire without immediate cutting. BDL041 is the mobile battery unit and XDH41 the dedicated straightening head / hydraulic variant used for corrective OLE maintenance after minor wire damage. Price kept as a prudent estimate pending supplier quote for the confirmed straightening configuration.','https://www.powerandcables.com/catenary-wire-straighteners-tools-to-remove-kinks-from-overhead-rail-cables/'],
@@ -287,7 +285,6 @@ const RAW_BY_SUBSYSTEM = {
   ['e03','E','DIAG','Wireless Door Closing Force System','PCE / DriveTest','BIA-600 BT System','Door safety compliance','EN 14752','OB',1,4505,'Annual (ISO calibration + certificate)','Team standard for PSD closing-force campaigns and post-repair safety verification with PinchPilot reporting.','https://www.pce-instruments.com/english/measuring-instruments/test-meters/closing-force-measuring-device-pce-instruments-closing-force-measuring-device-bia-600-bt-for-rail-vehicle-doors-sliding-steps-det_6126436.htm'],
   ['e04','E','DIAG','Sonic Belt Tension Meter','Gates','Sonic Tension Meter 550C','Timing belt drives','-','RC',1,680,'Annual','Non-contact belt-tension measurement for PSD operator belt drives.','https://www.gates.com/en_us/maintenance-tools/belt-maintenance/sonic-tension-meter.html'],
   ['e05','E','DIAG','Laser Line Level 3x360 self-levelling','Bosch Professional','GLL 3-80 (0601063S00)','Alignment campaigns','IP54','OP',1,359.14,'Annual','Alignment verification of panels, header beam and facade geometry after installation or replacement work.','https://www.bosch-professional.com/gb/en/products/gll-3-80-0601063S00.html'],
-  ['e06','P','DIAG','Thermal Imaging Camera 320x240 radiometric','Fluke','TiS60+','Preventive diagnostics','-','RC',1,3812,'Annual (COFRAC)','Thermographic inspection of operator motors, PCB hotspots and poor electrical connections.','https://www.fluke.com/fr-fr/produit/cameras-thermiques/fluke-tis60-plus'],
   ['e08','E','DIAG','Digital Tachometer contact / non-contact','Shimpo','DT-205LR-S12','Motor speed checks','-','RC',1,531.87,'Annual','Checks operator motor speed, pulley speed and deviation against programmed profiles.','https://www.raptorsupplies.es/c/tachometers'],
   ['e09','E','COLLECTIF','Vacuum Suction Lifter 3-cup lever - 100 kg','Bohle Group','Veribor BO603.021','Glass panel replacement','-','OB',2,79.91,'Annual (seal + pressure test)','Safe lifting tool for laminated tempered PSD glass panels during replacement.','https://www.bohle.com/ee-EN/Veribor-Aluminium-Suction-Lifter-3-Cup/BO603.021'],
   ['e10','E','COLLECTIF','Glass Transport Trolley with integrated suction lifter','Bohle Group','Veribor BO680.0','Glass panel transport','-','RC',1,540.5,'Annual (inspection)','Controlled transport of replacement glass panels from storage to installation point.','https://www.bohle.com/fr-FR/Chariot-de-transport-Veribor-avec-ventouse-integree/BO680.0'],
@@ -351,7 +348,6 @@ const RAW_BY_SUBSYSTEM = {
   ['e42','E','OUTILS','Open-end / ring wrench set 6-34 mm - switch machine and turnout hardware','Facom','440.JE25','Switch and turnout maintenance','-','RC',1,305,'10 years','Shared team large-range wrench set for switch machine supports, stretcher bars, lock housings and turnout mechanical interfaces where a full metric range is required.','https://www.facom.com/product/440je25/6mm-34mm-combination-wrench-set-25-pc'],
   ['e43','E','OUTILS','Engineering hand file set 5 pcs - flat / half-round / round / square / second cut','Bahco','1-478-08-1-2 ERGO Engineering File Set','Switch and turnout maintenance','-','OB',1,37,'10 years','Shared general-tooling file set for deburring, local fitting correction, edge dressing and small manual finishing on switch machine brackets, lock housings, stretcher-bar interfaces and turnout mechanical accessories.','https://www.bahco.com/int_en/ergotm-engineering-file-set-4-bastard-1-second-cut-200-mm---5-pcs-1-478-08-1-2.html'],
   ],
-  '3RD': [],
   AFC: [
   // AFC tooling baseline reviewed in AFC_tooling_V1.xlsx before simulator integration.
   // Categories reuse the simulator taxonomy where possible: PPE, LOTO, MBTDC, DIAG, OUTILS, COLLECTIF and CONSUM.
@@ -443,7 +439,6 @@ const RAW_BY_SUBSYSTEM = {
   ['t35','T','CONSUM','Brake Cleaner / Industrial Degreaser Aerosol pack of 3','Wurth','0890 108 7','Cleaning and degreasing','N/A (consumable)','OB',3,25,'N/A','Residue-free brake cleaner and degreaser for components before testing, reassembly, bonding or welding.','https://www.wurth.co.uk/brake-cleaner'],
 
   ['e02','E','SAFETY','4-gas Detector ATEX X-am 2500','Drager Safety','8323919 X-am 2500 4-Gas Set','Confined-space and ventilation risk','Annual (gas calibration)','RC',1,995,'5 years','Gas detector for pits, compressor rooms, battery charging zones and confined-space checks.','https://www.draeger.com/fr_fr/Products/X-am-2500'],
-  ['e03','P','DIAG','Thermal Imaging Camera TiS60+ 320x240','Fluke','TiS60+ Thermal Camera','Electrical and thermal diagnostics','Annual (accredited)','RC',1,3812,'8 years','Project/depot thermal camera for electrical panels, bearings, drives, couplings and hot-spot detection during expert inspections and condition-based maintenance campaigns.','https://www.fluke.com/fr-fr/produit/cameras-thermiques/fluke-tis60-plus'],
   ['e04','E','DIAG','Mobile HP Test Station 0-250 bar','Enerpac','P-392 + calibrated gauge + fittings','Wash-plant pressure testing','Annual','RC',1,685,'10 years','Pressure-test setup for depot washing equipment, high-pressure water lines, hoses, valves and spray circuits during troubleshooting, adjustment and post-repair validation.','https://www.lakeudenhydro.fi/en/hydraulic-components/enerpac-handpump-p-392/p/52427/'],
   ['e05','E','DIAG','Industrial Inspection Camera / Borescope','Extech / Fluke','BR250 / DS703 FC','Internal visual inspection','Annual (optical check)','RC',1,380,'7 years','Borescope for wash pipes, compressor cavities, tanks and inaccessible internal checks.','https://uk.rs-online.com/web/c/test-measurement/test-inspection-equipment/borescopes/'],
   ['e08','E','DIAG','Digital Lifting Dynamometer 0-65 kN','Tractel','Dynafor Pro 6.5t','Overhead crane load testing','Annual (COFRAC)','RC',1,2850,'10 years','For crane load tests, load-limiter checks and certified lifting verification campaigns on overhead cranes and similar lifting equipment.','https://www.tractel.com/en/products/load-monitoring-instrumentation/dynamometers/'],
@@ -532,12 +527,20 @@ const RAW_BY_SUBSYSTEM = {
   ["e41","E","OUTILS","Combination spanner set metric 6-34 mm - extended shared team range","Facom","440.JE25","All MEP domains","-","OB",1,305,"Replace when worn","Shared wide-range spanner set covering the larger fasteners encountered on plant skids, pump sets, fan frames, pipe supports, valve assemblies and workshop jobs beyond the technician 8-19 mm daily kit.","https://www.facom.com/product/440je25/25-piece-metric-combination-spanner-set"],
   ["e42","E","COLLECTIF","Maintenance Access Platform / PIR 8 steps - indoor work up to about 3.8 m","Tubesca-Comabi","Sherpamatic Fixe 8 marches (02272158)","Lighting / technical rooms / plant access","EN 131-7 / PIR-PIRL / Decree 2004-924","RC",1,1043.4,"Annual (inspection)","Shared indoor maintenance access platform with guardrails, stabilisers and wide treads for repeated work at height on luminaires, overhead cable routes, plant-room equipment and upper-level technical installations where a standard stepladder is not stable enough.","https://www.tubesca-comabi.com/fr/sherpamatic-fixe"],
   ["e43","E","COLLECTIF","Antistatic Industrial Vacuum Cleaner for electrical cabinets and panels","Karcher","NT 30/1 Tact Te M","Technical rooms / electrical cabinets / fan plant","Dust class M / antistatic system","OB",1,659,"Annual (inspection + filter replacement)","Shared antistatic vacuum cleaner with conductive accessories for controlled cleaning of de-energised cabinets, LV panels, fan rooms and technical spaces without redistributing conductive dust during MEP maintenance.","https://www.kaercher.com/int/professional/vacuums/wet-and-dry-vacuum-cleaners/safety-vacuum-cleaners/nt-30-1-tact-te-m-11482350.html"],
-  ["p01","P","DIAG","Thermal imaging camera 320×240 – hot spots on motors, panels, connections","Fluke","TiS60+","Cross-domain diagnostics","320x240 radiometric","RC",1,3812,"Annual (calibration)","Level-2 thermographic inspection across all MEP domains: fan motor hot spots and bearing overheat (>80°C alarm on motor frame), lighting panel loose connections (temperature differential >15°C vs adjacent), escalator traction motor and brake, HVAC compressor/condenser, substation traction equipment, and heating distribution manifolds. Annual thermographic survey of all LV distribution boards is best practice (BS 7671 / IEC 60364).","https://www.fluke.com/fr-fr/produit/cameras-thermiques/fluke-tis60-plus"],
   ["p07","P","DIAG","Pipe inspection camera / CCTV endoscope 30m cable – drain and buried pipe survey","Ridgid / Wohler","Ridgid SeeSnake Compact2 / Wohler VIS 250 inspection camera","Depot plumbing / sump pumps","-","RC",1,2850,"Annual (inspection)","Visual inspection of buried and concealed drainage pipes at depot, sump pump discharge lines, and underground water mains to identify blockage origin, pipe condition, and collapse without excavation. 30m cable with 40mm camera head navigates 100mm–200mm pipes.","https://www.ridgid.com/eu/en/seesnake-compact2"],
   ["p08","P","COLLECTIF","Confined-space tripod + winch + retrieval set - sump / pit / shaft rescue standby (conditional)","3M DBI-SALA","3M DBI-SALA tripod / winch / retrieval set","Depot plumbing / sump pumps","-","OP",1,2950,"Annual (inspection by competent person)","Only required if entry into pits, shafts, wet wells or similar confined spaces is authorised in the MEP maintenance concept. This is not a work-at-height convenience item; it is rescue standby equipment that must be available before entry.","https://www.3m.com/3M/en_US/p/d/v101679053/"],
   ["p09","P","MBTDC","Multifunction installation tester - RCD, loop impedance, continuity, insulation - LV lighting and socket circuits","Fluke","Fluke 1664 FC Multifunction","Lighting / station and depot","IEC 61557 / IEC 60364","OB",1,1998,"Annual (calibration)","Commissioning and post-maintenance verification of LV lighting boards, technical-room auxiliaries, small power circuits and modified final circuits. Confirms protective conductor continuity, loop impedance, RCD tripping and core IEC 60364 / NF C 15-100 compliance before return to service.","https://media.fluke.com/4505bf82-3ba6-413d-b84b-b10800c11e39_original%20file.pdf"],
   ],
 };
+
+const SHARED_PROJECT_RAW_TOOLS = [
+  {
+    raw: ['p01','P','DIAG','Thermal Imaging Camera 320x240 radiometric','Fluke','TiS60+','Cross-domain diagnostics','320x240 radiometric','RC',1,3812,'Annual (COFRAC)','Shared depot/project thermal camera for thermographic inspection of electrical panels, motors, drives, bearings and poor connections during expert inspections, condition-based maintenance campaigns and cross-subsystem diagnostics.','https://www.fluke.com/fr-fr/produit/cameras-thermiques/fluke-tis60-plus'],
+    identifiedBy: ['PSD', 'DEQ', 'MEP'],
+    applicableSubsystems: ['PSD', 'DEQ', 'MEP'],
+    qtyRule: 'max',
+  },
+];
 
 const TOOL_IMAGE_MODULES = import.meta.glob("./images/*.{png,jpg,jpeg,webp,avif,gif}", {
   eager: true,
@@ -575,7 +578,7 @@ const TOOL_CONTEXT_OVERRIDES = {
     'PSD:t01','PSD:t02','PSD:t03','PSD:t04','PSD:t05','PSD:t06','PSD:t07','PSD:t08','PSD:t09','PSD:t10',
     'PSD:t11','PSD:t12','PSD:t13','PSD:t14','PSD:t15','PSD:t16','PSD:t17','PSD:t18','PSD:t19','PSD:t20',
     'PSD:t21','PSD:t22',
-    'PSD:e01','PSD:e02','PSD:e03','PSD:e04','PSD:e05','PSD:e06','PSD:e08','PSD:e09','PSD:e10',
+    'PSD:e01','PSD:e02','PSD:e03','PSD:e04','PSD:e05','PSD:e08','PSD:e09','PSD:e10',
     'PSD:e11','PSD:e12','PSD:e13','PSD:e14','PSD:e15','PSD:e16','PSD:e17','PSD:e18','PSD:e19','PSD:e20',
   ], ['metro', 'apm']),
   ...contextOverridesFor([
@@ -795,6 +798,24 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
+  ...lifecycleDefaultsFor(['POS:e52'], {
+    type: 'periodic_replacement',
+    intervalValue: '120',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated access platform asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...lifecycleDefaultsFor(['POS:e53'], {
+    type: 'periodic_replacement',
+    intervalValue: '84',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Estimated industrial vacuum asset life',
+    year: '2026',
+    basis: 'estimated',
+  }),
   ...lifecycleDefaultsFor(['POS:t32'], {
     type: 'periodic_replacement',
     intervalValue: '60',
@@ -846,24 +867,6 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     intervalUnit: 'months',
     replacementRatio: '100',
     source: 'Estimated rugged laptop refresh cycle',
-    year: '2026',
-    basis: 'estimated',
-  }),
-  ...lifecycleDefaultsFor(['POS:e52'], {
-    type: 'periodic_replacement',
-    intervalValue: '120',
-    intervalUnit: 'months',
-    replacementRatio: '100',
-    source: 'Estimated access platform asset life',
-    year: '2026',
-    basis: 'estimated',
-  }),
-  ...lifecycleDefaultsFor(['POS:e53'], {
-    type: 'periodic_replacement',
-    intervalValue: '84',
-    intervalUnit: 'months',
-    replacementRatio: '100',
-    source: 'Estimated industrial vacuum asset life',
     year: '2026',
     basis: 'estimated',
   }),
@@ -984,7 +987,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['PSD:e05', 'PSD:e06', 'PSD:e08'], {
+  ...lifecycleDefaultsFor(['PSD:e05', 'PSD:e08'], {
     type: 'periodic_replacement',
     intervalValue: '96',
     intervalUnit: 'months',
@@ -1128,7 +1131,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['DEQ:e03', 'DEQ:e04', 'DEQ:e05', 'DEQ:e08', 'DEQ:e20', 'DEQ:e21', 'DEQ:e22', 'DEQ:e23', 'DEQ:e24', 'DEQ:e25', 'DEQ:e26', 'DEQ:e47'], {
+  ...lifecycleDefaultsFor(['DEQ:e04', 'DEQ:e05', 'DEQ:e08', 'DEQ:e20', 'DEQ:e21', 'DEQ:e22', 'DEQ:e23', 'DEQ:e24', 'DEQ:e25', 'DEQ:e26', 'DEQ:e47'], {
     type: 'periodic_replacement',
     intervalValue: '96',
     intervalUnit: 'months',
@@ -1470,7 +1473,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(["MEP:t01", "MEP:t05", "MEP:t06", "MEP:t08", "MEP:t09", "MEP:t17", "MEP:t18", "MEP:t19", "MEP:t20", "MEP:t21", "MEP:e08", "MEP:e10", "MEP:e33", "MEP:e36", "MEP:e38", "MEP:e41", "MEP:p01", "MEP:p08", "MEP:p09"], {
+  ...lifecycleDefaultsFor(["MEP:t01", "MEP:t05", "MEP:t06", "MEP:t08", "MEP:t09", "MEP:t17", "MEP:t18", "MEP:t19", "MEP:t20", "MEP:t21", "MEP:e08", "MEP:e10", "MEP:e33", "MEP:e36", "MEP:e38", "MEP:e41", "MEP:p08", "MEP:p09"], {
     type: "periodic_replacement",
     intervalValue: "10",
     intervalUnit: "years",
@@ -1478,6 +1481,15 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     source: "MEP workbook baseline - service life",
     year: "2026",
     basis: "estimated",
+  }),
+  ...lifecycleDefaultsFor(['SHARED:p01'], {
+    type: 'periodic_replacement',
+    intervalValue: '96',
+    intervalUnit: 'months',
+    replacementRatio: '100',
+    source: 'Shared project diagnostic platform life baseline',
+    year: '2026',
+    basis: 'estimated',
   }),
   ...lifecycleDefaultsFor(["MEP:e42"], {
     type: "periodic_replacement",
@@ -1776,13 +1788,6 @@ export const TOOLING_SERVICE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...serviceDefaultsFor(['PSD:e06'], {
-    type: 'calibration',
-    cost: '380',
-    source: 'PSD workbook baseline',
-    year: '2026',
-    basis: 'estimated',
-  }),
   ...serviceDefaultsFor(['PSD:e08'], {
     type: 'calibration',
     cost: '109',
@@ -1835,13 +1840,6 @@ export const TOOLING_SERVICE_DEFAULTS = {
   ...serviceDefaultsFor(['DEQ:e02'], {
     type: 'calibration',
     cost: '195',
-    source: 'DEQ workbook baseline',
-    year: '2026',
-    basis: 'estimated',
-  }),
-  ...serviceDefaultsFor(['DEQ:e03'], {
-    type: 'calibration',
-    cost: '380',
     source: 'DEQ workbook baseline',
     year: '2026',
     basis: 'estimated',
@@ -2217,17 +2215,17 @@ export const TOOLING_SERVICE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...serviceDefaultsFor(['MEP:p01'], {
-    type: 'calibration',
-    cost: '285',
-    source: 'MEP workbook baseline',
-    year: '2026',
-    basis: 'estimated',
-  }),
   ...serviceDefaultsFor(['MEP:p08'], {
     type: 'inspection',
     cost: '185',
     source: 'MEP workbook baseline for competent-person confined-space rescue inspection',
+    year: '2026',
+    basis: 'estimated',
+  }),
+  ...serviceDefaultsFor(['SHARED:p01'], {
+    type: 'calibration',
+    cost: '380',
+    source: 'Shared project thermal camera calibration baseline',
     year: '2026',
     basis: 'estimated',
   }),
@@ -2498,7 +2496,6 @@ const TOOL_IMAGE_OVERRIDES = {
   'DEQ:t14': 't08_wiha_36295_softfinish_vde.jpg',
   'DEQ:t15': 't09_knipex_00_20_12_vde.jpg',
   'DEQ:t18': 't12_knipex_00_21_02_le_tool_bag_classic.jpg',
-  'DEQ:e03': 'e06_fluke_tis60.webp',
   'DEQ:e11': 'e12_beta_tools_rsc24a.webp',
   'DEQ:e12': 'e12_facom_s_307a200.jpg',
   'DEQ:e13': 'e48_panasonic_toughbook_55_mk3.jpg',
@@ -2570,25 +2567,75 @@ const TOOL_IMAGE_OVERRIDES = {
   "MEP:e41": "e49_facom_440_je25.jpg",
   "MEP:e42": "e52_tubesca_comabi_sherpamatic_fixe_8_marches_02272158.png",
   "MEP:e43": "e53_k_rcher_nt_30.jpg",
-  "MEP:p01": "e06_fluke_tis60.webp",
+  'SHARED:p01': 'e06_fluke_tis60.webp',
 };
 
-const TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =>
-  rawTools.map(([id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl]) => {
-    const resolvedNorm = subsystem === 'DEQ' ? '-' : norm;
-    const resolvedPeriod = subsystem === 'DEQ' ? norm : period;
-    // derive imgFile from id + brand slug
-    const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
-    const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
-    const imgBase = `${id}_${brandSlug}_${modelSlug}`.toLowerCase();
-    const uid = `${subsystem}:${id}`;
-    const overrideImgFile = TOOL_IMAGE_OVERRIDES[uid];
-    const matchedImgFile = overrideImgFile || TOOL_IMAGE_FILES_BY_BASE[imgBase] || `${imgBase}.jpg`;
-    const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
-    const imgFile = matchedImgFile;
-    return {id,uid,level,cat,name,brand,model,domain,norm:resolvedNorm,statut,qty,price,period:resolvedPeriod,notes,productUrl,imgFile,imgSrc,subsystem,contexts:TOOL_CONTEXT_OVERRIDES[uid] || DEFAULT_CONTEXT_IDS};
+const buildTool = (subsystem, rawTool, options = {}) => {
+  const [id,level,cat,name,brand,model,domain,norm,statut,qty,price,period,notes,productUrl] = rawTool;
+  const resolvedNorm = subsystem === 'DEQ' ? '-' : norm;
+  const resolvedPeriod = subsystem === 'DEQ' ? norm : period;
+  const brandSlug = brand.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
+  const modelSlug = model.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]/g,'_').replace(/_+/g,'_').replace(/_$/,'');
+  const imgBase = `${id}_${brandSlug}_${modelSlug}`.toLowerCase();
+  const uid = `${subsystem}:${id}`;
+  const overrideImgFile = TOOL_IMAGE_OVERRIDES[uid];
+  const matchedImgFile = overrideImgFile || TOOL_IMAGE_FILES_BY_BASE[imgBase] || `${imgBase}.jpg`;
+  const imgSrc = TOOL_IMAGE_URLS[matchedImgFile] || null;
+  return {
+    id,
+    uid,
+    level,
+    cat,
+    name,
+    brand,
+    model,
+    domain,
+    norm: resolvedNorm,
+    statut,
+    qty,
+    price,
+    period: resolvedPeriod,
+    notes,
+    productUrl,
+    imgFile: matchedImgFile,
+    imgSrc,
+    subsystem,
+    ownership: options.ownership || 'local',
+    identifiedBy: options.identifiedBy || [subsystem],
+    applicableSubsystems: options.applicableSubsystems || [subsystem],
+    qtyRule: options.qtyRule || 'sum',
+    contexts: options.contexts || TOOL_CONTEXT_OVERRIDES[uid] || DEFAULT_CONTEXT_IDS,
+  };
+};
+
+const LOCAL_TOOLS = Object.entries(RAW_BY_SUBSYSTEM).flatMap(([subsystem, rawTools]) =>
+  rawTools.map(rawTool => buildTool(subsystem, rawTool))
+);
+
+const SHARED_PROJECT_TOOLS = SHARED_PROJECT_RAW_TOOLS.map(({ raw, identifiedBy, applicableSubsystems, qtyRule, contexts }) =>
+  buildTool('SHARED', raw, {
+    ownership: 'shared_project',
+    identifiedBy,
+    applicableSubsystems,
+    qtyRule,
+    contexts,
   })
 );
+
+const TOOLS = [...LOCAL_TOOLS, ...SHARED_PROJECT_TOOLS];
+
+const isToolAvailableForSubsystem = (tool, subsystem) =>
+  tool.subsystem === subsystem ||
+  (tool.ownership === 'shared_project' && (tool.applicableSubsystems || []).includes(subsystem));
+
+const getToolBudgetQty = tool => {
+  if (tool.ownership === 'shared_project' && tool.qtyRule === 'max') {
+    return tool.qty;
+  }
+  return tool.qty;
+};
+
+const getToolBudgetCost = tool => getToolBudgetQty(tool) * tool.currentPrice;
 
 const PRIMARY_USE_OVERRIDES = {
   t01: 'Reference handheld meter for troubleshooting live LV and traction DC circuits. Use it to confirm voltage presence, continuity, resistance, current and unstable electrical behavior during diagnosis, fault localisation and post-repair validation.',
@@ -2871,7 +2918,6 @@ export default function App({
     PSD:   { tech:3, equipe:1, project:1 },
     CAT:   { tech:4, equipe:1, project:1 },
     TRACK: { tech:5, equipe:2, project:1 },
-    '3RD': { tech:3, equipe:1, project:1 },
     AFC:   { tech:2, equipe:1, project:1 },
     DEQ:   { tech:2, equipe:1, project:1 },
     MEP:   { tech:3, equipe:1, project:1 },
@@ -2936,7 +2982,7 @@ export default function App({
   const subsystemMeta = SUBSYSTEMS.find(s=>s.id===subsystem);
   const activeTools = useMemo(
     () => TOOLS
-      .filter(t=>t.subsystem===subsystem && (t.contexts || DEFAULT_CONTEXT_IDS).includes(ctx))
+      .filter(t=>isToolAvailableForSubsystem(t, subsystem) && (t.contexts || DEFAULT_CONTEXT_IDS).includes(ctx))
       .map(tool => {
         const override = priceOverrides[tool.uid];
         const currentPrice = typeof override?.price === 'number' ? override.price : tool.price;
@@ -2949,6 +2995,10 @@ export default function App({
           currentPrice,
           priceSource,
           priceYear,
+          isSharedProject: tool.ownership === 'shared_project',
+          sharedSubsystemLabel: tool.ownership === 'shared_project'
+            ? (tool.applicableSubsystems || []).join(' · ')
+            : '',
           ...lifecycle,
           ...service,
           hasPriceOverride: Boolean(override),
@@ -3012,14 +3062,14 @@ export default function App({
 
   const toggle = uid => setSel(p=>{const n=new Set(p);n.has(uid)?n.delete(uid):n.add(uid);return n;});
   const selT   = activeTools.filter(t=>sel.has(t.uid));
-  const total  = selT.reduce((s,t)=>s+t.qty*t.currentPrice,0);
-  const tTotal = selT.filter(t=>t.level==='T').reduce((s,t)=>s+t.qty*t.currentPrice,0);
-  const eTotal = selT.filter(t=>t.level==='E').reduce((s,t)=>s+t.qty*t.currentPrice,0);
-  const pTotal = selT.filter(t=>t.level==='P').reduce((s,t)=>s+t.qty*t.currentPrice,0);
+  const total  = selT.reduce((s,t)=>s+getToolBudgetCost(t),0);
+  const tTotal = selT.filter(t=>t.level==='T').reduce((s,t)=>s+getToolBudgetCost(t),0);
+  const eTotal = selT.filter(t=>t.level==='E').reduce((s,t)=>s+getToolBudgetCost(t),0);
+  const pTotal = selT.filter(t=>t.level==='P').reduce((s,t)=>s+getToolBudgetCost(t),0);
   const mandatorySelected = selT.filter(t=>t.statut==='OB').length;
   const mandatoryTotal = activeTools.filter(t=>t.statut==='OB').length;
   const coveragePct = mandatoryTotal ? Math.round((mandatorySelected / mandatoryTotal) * 100) : 0;
-  const byCat  = Object.entries(CATS).map(([k,v])=>({key:k,...v,total:selT.filter(t=>t.cat===k).reduce((s,t)=>s+t.qty*t.currentPrice,0)})).filter(c=>c.total>0);
+  const byCat  = Object.entries(CATS).map(([k,v])=>({key:k,...v,total:selT.filter(t=>t.cat===k).reduce((s,t)=>s+getToolBudgetCost(t),0)})).filter(c=>c.total>0);
   const fmt    = n => new Intl.NumberFormat('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0}).format(n);
   const currentYear = String(new Date().getFullYear());
   const priceDraftValue = Number.parseFloat(String(priceDraft.price).replace(',', '.'));
@@ -3349,6 +3399,11 @@ export default function App({
                         <div style={{ position:'absolute', inset:'14px 14px auto auto', display:'flex', gap:6, flexWrap:'wrap', justifyContent:'flex-end' }}>
                           <span style={{ background:`${s.color}14`, color:s.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{s.label}</span>
                           <span style={{ background:levelMeta.bgLight, color:levelMeta.color, borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>{levelMeta.short}</span>
+                          {t.isSharedProject && (
+                            <span style={{ background:'rgba(16,24,40,0.08)', color:'#101828', borderRadius:999, padding:'5px 10px', fontSize:10, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                              {t.sharedSubsystemLabel || 'SHARED'}
+                            </span>
+                          )}
                         </div>
                         <ToolVisual tool={t} size={132} radius={18}/>
                       </div>
@@ -3402,9 +3457,9 @@ export default function App({
                           </div>
                           <div style={{ textAlign:'right' }}>
                             <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:12, color:isSel?c.color:'#475467', fontWeight:600 }}>
-                              {fmt(t.qty*t.currentPrice)} €
+                              {fmt(getToolBudgetCost(t))} €
                             </div>
-                            <div style={{ fontSize:10, color:'#98A2B3', marginTop:3 }}>estimated block</div>
+                            <div style={{ fontSize:10, color:'#98A2B3', marginTop:3 }}>{t.isSharedProject ? 'shared project block' : 'estimated block'}</div>
                           </div>
                         </div>
                       </div>
@@ -3447,6 +3502,11 @@ export default function App({
                             padding:'3px 8px', borderRadius:999 }}>
                             {levelMeta.short}
                           </span>
+                          {t.isSharedProject && (
+                            <span style={{ background:'rgba(16,24,40,0.08)', color:'#101828', border:`1px solid rgba(16,24,40,0.12)`, borderRadius:999, padding:'3px 8px', fontSize:9, fontWeight:700, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.04em' }}>
+                              {t.sharedSubsystemLabel || 'SHARED'}
+                            </span>
+                          )}
                         </div>
                         {/* Checkbox */}
                         <div onClick={e=>{e.stopPropagation();toggle(t.uid);}} style={{
@@ -3495,9 +3555,9 @@ export default function App({
                         </div>
                         <div style={{ textAlign:'right' }}>
                           <div style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:11, color:isSel?c.color:C.textSub, fontWeight:600 }}>
-                            {fmt(t.qty*t.currentPrice)} €
+                            {fmt(getToolBudgetCost(t))} €
                           </div>
-                          <div style={{ fontSize:9, color:C.textMuted, marginTop:2 }}>estimated block</div>
+                          <div style={{ fontSize:9, color:C.textMuted, marginTop:2 }}>{t.isSharedProject ? 'shared project block' : 'estimated block'}</div>
                         </div>
                       </div>
                     </div>
@@ -3873,7 +3933,7 @@ export default function App({
                       <div style={{ fontSize:11, opacity:0.86, marginTop:6 }}>{getPriceReferenceLabel(modal)}</div>
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:14, paddingTop:12, borderTop:'1px solid rgba(255,255,255,0.22)' }}>
                         <span style={{ fontSize:11, opacity:0.82 }}>Selection block</span>
-                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700 }}>{fmt(modal.qty*modal.currentPrice)} €</span>
+                        <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:15, fontWeight:700 }}>{fmt(getToolBudgetCost(modal))} €</span>
                       </div>
                     </div>
 
@@ -4250,7 +4310,7 @@ export default function App({
                     <div style={{ fontSize:10, color:C.textSub, marginTop:5 }}>{getPriceReferenceLabel(modal)}</div>
                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:10, paddingTop:10, borderTop:`1px solid ${C.border}` }}>
                       <span style={{ fontSize:10, color:C.textSub }}>Selection block</span>
-                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:13, fontWeight:700, color:C.text }}>{fmt(modal.qty*modal.currentPrice)} €</span>
+                      <span style={{ fontFamily:"'JetBrains Mono', monospace", fontSize:13, fontWeight:700, color:C.text }}>{fmt(getToolBudgetCost(modal))} €</span>
                     </div>
                   </div>
 

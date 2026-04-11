@@ -1,25 +1,36 @@
 import {
   TOOLING_CATALOG,
   TOOLING_CATEGORIES,
+  TOOLING_SUBSYSTEMS,
   inferToolLifecycleBaseline,
   inferToolServiceBaseline,
   inferServiceIntervalMonthsFromPeriod,
 } from "../../railway_tooling.jsx";
 import { createDefaultWorkforce } from "./projectDefaults.js";
 
+const SHARED_SUBSYSTEM_ID = "SHARED";
+const VALID_SUBSYSTEM_IDS = new Set(TOOLING_SUBSYSTEMS.map((subsystem) => subsystem.id));
+
 export function getProjectSubsystemIds(project) {
   if (!project) return [];
-  if (project.subsystemIds?.length) return project.subsystemIds;
-  return project.subsystemId ? [project.subsystemId] : [];
+  const rawSubsystemIds = project.subsystemIds?.length ? project.subsystemIds : [project.subsystemId].filter(Boolean);
+  return [...new Set(rawSubsystemIds.filter((subsystemId) => VALID_SUBSYSTEM_IDS.has(subsystemId)))];
+}
+
+function getVisibleSubsystemIdsForTool(project, tool) {
+  const subsystemIds = getProjectSubsystemIds(project);
+  if (tool.ownership === "shared_project") {
+    return subsystemIds.filter((subsystemId) => (tool.applicableSubsystems || []).includes(subsystemId));
+  }
+  return subsystemIds.includes(tool.subsystem) ? [tool.subsystem] : [];
 }
 
 function getProjectCatalog(project) {
   if (!project) return [];
-  const subsystemIds = getProjectSubsystemIds(project);
   return TOOLING_CATALOG.filter(
     (tool) =>
       (tool.contexts || []).includes(project.contextId) &&
-      (subsystemIds.length === 0 || subsystemIds.includes(tool.subsystem))
+      getVisibleSubsystemIdsForTool(project, tool).length > 0
   );
 }
 
@@ -51,6 +62,19 @@ function getPriceReference(tool, project) {
 
 function getMultiplierForTool(project, tool) {
   const workforce = project?.workforce || createDefaultWorkforce();
+  if (tool.ownership === "shared_project") {
+    const visibleSubsystemIds = getVisibleSubsystemIdsForTool(project, tool);
+    if (tool.qtyRule === "sum") {
+      return visibleSubsystemIds.reduce((sum, subsystemId) => {
+        const counts = workforce[subsystemId] || { tech: 1, equipe: 1, project: 1 };
+        if (tool.level === "T") return sum + counts.tech;
+        if (tool.level === "E") return sum + counts.equipe;
+        if (tool.level === "P") return sum + counts.project;
+        return sum + 1;
+      }, 0);
+    }
+    return 1;
+  }
   const counts = workforce[tool.subsystem] || { tech: 1, equipe: 1, project: 1 };
   if (tool.level === "T") return counts.tech;
   if (tool.level === "E") return counts.equipe;
@@ -166,12 +190,17 @@ function applyToolCost(bucket, tool) {
   return bucket;
 }
 
+function getBudgetBucketId(tool) {
+  return tool.ownership === "shared_project" ? SHARED_SUBSYSTEM_ID : tool.subsystem;
+}
+
 function getResolvedProjectTool(tool, project, contractDurationMonths) {
   const currentPrice = getCurrentPrice(tool, project);
   const priceReference = getPriceReference(tool, project);
   const lifecycle = normalizeLifecycle(tool, project);
   const service = normalizeService(tool, project);
   const multiplier = getMultiplierForTool(project, tool);
+  const visibleSubsystemIds = getVisibleSubsystemIdsForTool(project, tool);
   const mobilizationCost = tool.qty * currentPrice * multiplier;
   const renewalCount = getRenewalCount(contractDurationMonths, lifecycle);
   const renewalCost = mobilizationCost * renewalCount * (lifecycle.replacementRatio / 100);
@@ -187,6 +216,8 @@ function getResolvedProjectTool(tool, project, contractDurationMonths) {
     lifecycle,
     service,
     multiplier,
+    visibleSubsystemIds,
+    budgetBucketId: getBudgetBucketId(tool),
     mobilizationCost,
     renewalCount,
     renewalCost,
@@ -206,6 +237,7 @@ export function getSelectedProjectTools(project) {
 
 export function getProjectBudgetMetrics(project) {
   const catalog = getProjectCatalog(project);
+  const subsystemIds = getProjectSubsystemIds(project);
   const contractDurationMonths = getContractDurationMonths(project);
   const contractDurationLabel = getContractDurationLabel(project);
   const selectedTools = getSelectedProjectTools(project);
@@ -268,8 +300,9 @@ export function getProjectBudgetMetrics(project) {
 
   const subsystemTotals = Array.from(
     selectedTools.reduce((map, tool) => {
-      const current = map.get(tool.subsystem) || {
-        subsystem: tool.subsystem,
+      const bucketId = tool.budgetBucketId || tool.subsystem;
+      const current = map.get(bucketId) || {
+        subsystem: bucketId,
         mobilization: 0,
         renewals: 0,
         service: 0,
@@ -281,7 +314,7 @@ export function getProjectBudgetMetrics(project) {
       current.renewals += tool.renewalCost;
       current.service += tool.serviceCost;
       current.total += tool.contractCost;
-      map.set(tool.subsystem, current);
+      map.set(bucketId, current);
       return map;
     }, new Map())
   )
@@ -302,7 +335,9 @@ export function getProjectBudgetMetrics(project) {
 
   return {
     catalog,
+    subsystemIds,
     selectedTools,
+    hasSharedProjectPool: selectedTools.some((tool) => tool.ownership === "shared_project"),
     mandatoryTotal,
     mandatorySelected,
     totalAllocated: initialMobilization,
@@ -399,8 +434,24 @@ export function getProjectReportingMetrics(project) {
     };
   });
 
-  const subsystemLevelRows = subsystemIds.map((subsystemId) => {
-    const tools = selectedTools.filter((tool) => tool.subsystem === subsystemId);
+  if (selectedTools.some((tool) => tool.ownership === "shared_project")) {
+    const sharedBucket = createCostBucket(SHARED_SUBSYSTEM_ID, "Shared / depot pool");
+    selectedTools
+      .filter((tool) => tool.budgetBucketId === SHARED_SUBSYSTEM_ID)
+      .forEach((tool) => applyToolCost(sharedBucket, tool));
+    subsystemCostRows.push({
+      ...sharedBucket,
+      annualRenewals: annualizeCost(sharedBucket.renewals, contractDurationMonths),
+      annualService: annualizeCost(sharedBucket.service, contractDurationMonths),
+    });
+  }
+
+  const reportingSubsystemIds = selectedTools.some((tool) => tool.ownership === "shared_project")
+    ? [...subsystemIds, SHARED_SUBSYSTEM_ID]
+    : subsystemIds;
+
+  const subsystemLevelRows = reportingSubsystemIds.map((subsystemId) => {
+    const tools = selectedTools.filter((tool) => (tool.budgetBucketId || tool.subsystem) === subsystemId);
     const techMob = tools.filter((tool) => tool.level === "T").reduce((sum, tool) => sum + tool.mobilizationCost, 0);
     const teamMob = tools.filter((tool) => tool.level === "E").reduce((sum, tool) => sum + tool.mobilizationCost, 0);
     const projectMob = tools.filter((tool) => tool.level === "P").reduce((sum, tool) => sum + tool.mobilizationCost, 0);
@@ -442,10 +493,10 @@ export function getProjectReportingMetrics(project) {
   });
 
   const subsystemCategoryRows = Object.fromEntries(
-    subsystemIds.map((subsystemId) => {
+    reportingSubsystemIds.map((subsystemId) => {
       const rows = Array.from(
         selectedTools
-          .filter((tool) => tool.subsystem === subsystemId)
+          .filter((tool) => (tool.budgetBucketId || tool.subsystem) === subsystemId)
           .reduce((map, tool) => {
             const categoryMeta = TOOLING_CATEGORIES[tool.cat] || { label: tool.cat };
             const current = map.get(tool.cat) || {
@@ -509,9 +560,9 @@ export function getProjectReportingMetrics(project) {
   );
 
   const subsystemCoverage = subsystemIds.map((subsystemId) => {
-    const visibleTools = catalog.filter((tool) => tool.subsystem === subsystemId);
+    const visibleTools = catalog.filter((tool) => getVisibleSubsystemIdsForTool(project, tool).includes(subsystemId));
     const visibleMandatory = visibleTools.filter((tool) => tool.statut === "OB");
-    const selectedInSubsystem = selectedTools.filter((tool) => tool.subsystem === subsystemId);
+    const selectedInSubsystem = selectedTools.filter((tool) => (tool.visibleSubsystemIds || []).includes(subsystemId));
     const selectedMandatory = selectedInSubsystem.filter((tool) => tool.statut === "OB");
     const renewalSensitive = selectedInSubsystem.filter((tool) => tool.renewalCount > 0);
 

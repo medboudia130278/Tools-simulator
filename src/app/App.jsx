@@ -1,10 +1,8 @@
 import React, { useMemo } from "react";
 import {
-  ActivitySquare,
   CopyPlus,
   ChevronRight,
   ClipboardList,
-  Database,
   FolderKanban,
   LayoutGrid,
   Plus,
@@ -26,10 +24,9 @@ const pages = [
     eyebrow: "Portfolio workspace",
     title: "Project portfolio and persistence workspace",
     description:
-      "Gère plusieurs projets, leur contexte, leur sous-système de départ et les opérations d’archivage ou d’export JSON.",
+      "Manage project setup, selected subsystems, contract duration and portfolio persistence from one workspace.",
     icon: FolderKanban,
     component: ProjectsPage,
-    status: "Live",
   },
   {
     id: "inventory",
@@ -37,10 +34,9 @@ const pages = [
     eyebrow: "Operational selection",
     title: "Tool catalog and technician allocation",
     description:
-      "Vue active de migration. Elle conserve la logique actuelle de sélection et sert de base au découpage futur.",
+      "Select the tooling baseline, review subsystem applicability and build the project allocation from the active catalog.",
     icon: LayoutGrid,
     component: InventoryPage,
-    status: "Live",
   },
   {
     id: "budget",
@@ -48,10 +44,9 @@ const pages = [
     eyebrow: "Cost planning",
     title: "Budget monolith and workforce projection",
     description:
-      "Première page Stitch dédiée au coût. Les indicateurs catalogue sont posés, la vraie projection partagée arrive à l’étape suivante.",
+      "Review mobilization cost, renewals and service cost by subsystem, level and category for the active project.",
     icon: WalletCards,
     component: BudgetPage,
-    status: "Preview",
   },
   {
     id: "reporting",
@@ -59,24 +54,11 @@ const pages = [
     eyebrow: "Compliance cockpit",
     title: "Operational reporting and maintenance signals",
     description:
-      "Prépare la future vue de conformité, d’alertes et de suivi maintenance avec une hiérarchie proche de Stitch.",
+      "Review compliance, calibration exposure, missing mandatory tools and contract-level maintenance signals for the active project.",
     icon: ClipboardList,
     component: ReportingPage,
-    status: "Preview",
   },
 ];
-
-const badgeStyle = (tone, color) => ({
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "8px",
-  padding: "8px 12px",
-  borderRadius: "999px",
-  background: tone,
-  color,
-  fontSize: "12px",
-  fontWeight: 700,
-});
 
 export default function App() {
   const [activePage, setActivePage] = React.useState("inventory");
@@ -130,7 +112,7 @@ export default function App() {
     return (
       <div style={shellStyles.app}>
         <style>{shellFontStyle}</style>
-        <div style={{ padding: "48px", color: palette.ink }}>Loading project workspace…</div>
+        <div style={{ padding: "48px", color: palette.ink }}>Loading project workspace...</div>
       </div>
     );
   }
@@ -141,10 +123,6 @@ export default function App() {
       <div style={shellStyles.shell} className="app-shell">
         <aside style={shellStyles.sidebar} className="app-sidebar">
           <div>
-            <div style={{ ...badgeStyle(palette.primarySoft, palette.primary), marginBottom: "18px" }}>
-              <Database size={14} />
-              Stitch migration
-            </div>
             <div
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
@@ -157,8 +135,7 @@ export default function App() {
               Railway tooling simulator
             </div>
             <div style={{ color: palette.inkSoft, lineHeight: 1.65 }}>
-              Nouveau shell industriel inspiré des propositions Stitch. `Inventory` reste la
-              première vue fonctionnelle; `Budget` et `Reporting` deviennent les prochaines zones de migration.
+              Multi-project tooling workspace for inventory selection, budget projection and compliance reporting.
             </div>
           </div>
 
@@ -200,7 +177,6 @@ export default function App() {
                       </div>
                       <div>
                         <div style={{ fontWeight: 700, marginBottom: "4px" }}>{page.label}</div>
-                        <div style={{ fontSize: "12px", color: palette.inkMuted }}>{page.status}</div>
                       </div>
                     </div>
                     <ChevronRight size={16} color={active ? palette.primary : palette.inkMuted} />
@@ -208,23 +184,6 @@ export default function App() {
                 </button>
               );
             })}
-          </div>
-
-          <div
-            style={{
-              marginTop: "auto",
-              padding: "18px",
-              borderRadius: "18px",
-              background: "rgba(28, 96, 144, 0.08)",
-              color: palette.inkSoft,
-              lineHeight: 1.6,
-            }}
-          >
-            <div style={{ fontWeight: 700, color: palette.ink, marginBottom: "8px" }}>Current step</div>
-            <div>
-              Shell multi-pages en place. L’étape suivante est l’extraction de l’état partagé pour
-              alimenter réellement `Budget` et `Reporting`.
-            </div>
           </div>
         </aside>
 
@@ -349,8 +308,7 @@ export default function App() {
                   </button>
                 </div>
                 <div style={{ marginTop: "10px", color: palette.inkMuted, fontSize: "13px", lineHeight: 1.55 }}>
-                  Chaque projet garde son contexte, son sous-système actif, sa sélection d’outils,
-                  sa workforce et ses ajustements de prix dans le navigateur.
+                  Each project keeps its context, active subsystem, tool selection, workforce and price overrides in the browser.
                 </div>
               </div>
 
@@ -489,20 +447,12 @@ export default function App() {
                       </div>
                       <div style={{ fontSize: "12px", color: palette.inkMuted, lineHeight: 1.45 }}>
                         {subsystem.full}
-                        {!subsystem.ready ? " · soon" : ""}
+                        {!subsystem.ready ? " - soon" : ""}
                       </div>
                     </button>
                   );
                 })}
               </div>
-            </div>
-
-            <div style={{ display: "grid", gap: "10px", flexShrink: 0 }}>
-              <div style={badgeStyle(palette.primarySoft, palette.primary)}>
-                <ActivitySquare size={14} />
-                {current.status}
-              </div>
-              <div style={badgeStyle(palette.surfaceHigh, palette.inkSoft)}>Industrial Precision</div>
             </div>
           </header>
 

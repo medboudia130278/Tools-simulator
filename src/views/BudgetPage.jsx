@@ -5,6 +5,12 @@ import { palette } from "../app/theme.js";
 import { useProjects } from "../projects/ProjectStore.jsx";
 import { getProjectBudgetMetrics, getProjectSubsystemIds } from "../projects/projectSelectors.js";
 
+const SHARED_POOL_META = {
+  id: "SHARED",
+  label: "Shared / depot pool",
+  full: "Shared project tooling",
+};
+
 const fmt = (value) =>
   new Intl.NumberFormat("fr-FR", {
     minimumFractionDigits: 0,
@@ -621,14 +627,18 @@ export default function BudgetPage() {
     : 0;
 
   const subsystemRows = useMemo(
-    () =>
-      activeSubsystemIds.map((subsystemId) => {
+    () => {
+      const rowIds = metrics.hasSharedProjectPool ? [...activeSubsystemIds, SHARED_POOL_META.id] : activeSubsystemIds;
+      return rowIds.map((subsystemId) => {
         const meta = TOOLING_SUBSYSTEMS.find((item) => item.id === subsystemId);
-        const counts = activeProject?.workforce?.[subsystemId] || {
-          tech: 0,
-          equipe: 0,
-          project: 0,
-        };
+        const counts =
+          subsystemId === SHARED_POOL_META.id
+            ? { tech: "—", equipe: "—", project: "1" }
+            : activeProject?.workforce?.[subsystemId] || {
+                tech: 0,
+                equipe: 0,
+                project: 0,
+              };
         const totals = metrics.subsystemTotals.find((item) => item.subsystem === subsystemId) || {
           mobilization: 0,
           renewals: 0,
@@ -640,8 +650,8 @@ export default function BudgetPage() {
 
         return {
           subsystemId,
-          label: meta?.label || subsystemId,
-          full: meta?.full || subsystemId,
+          label: meta?.label || (subsystemId === SHARED_POOL_META.id ? SHARED_POOL_META.label : subsystemId),
+          full: meta?.full || (subsystemId === SHARED_POOL_META.id ? SHARED_POOL_META.full : subsystemId),
           counts,
           mobilization: totals.mobilization,
           renewals: totals.renewals,
@@ -650,8 +660,9 @@ export default function BudgetPage() {
           annualService: totals.annualService,
           total: totals.total,
         };
-      }),
-    [activeProject, activeSubsystemIds, metrics.subsystemTotals]
+      });
+    },
+    [activeProject, activeSubsystemIds, metrics.hasSharedProjectPool, metrics.subsystemTotals]
   );
 
   return (
