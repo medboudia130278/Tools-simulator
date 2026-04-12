@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { createProject, normalizeProject, touchProject } from "./projectDefaults.js";
 import { loadProjectState, saveProjectState } from "./projectStorage.js";
+import { createRecommendedFleetLine } from "../fleet/fleetSelectors.js";
 
 const ProjectContext = createContext(null);
 
@@ -97,6 +98,7 @@ export function ProjectProvider({ children }) {
         priceOverrides: JSON.parse(JSON.stringify(source.priceOverrides || {})),
         lifecycleOverrides: JSON.parse(JSON.stringify(source.lifecycleOverrides || {})),
         serviceOverrides: JSON.parse(JSON.stringify(source.serviceOverrides || {})),
+        fleet: JSON.parse(JSON.stringify(source.fleet || {})),
         notes: source.notes,
       });
       duplicated.name = `Project ${String(nextIndex).padStart(2, "0")} - Copy`;
@@ -209,6 +211,71 @@ export function ProjectProvider({ children }) {
       activeProject && updateProject(activeProject.id, { serviceOverrides }),
     setProjectMaintenanceContract: (maintenanceContract) =>
       activeProject && updateProject(activeProject.id, { maintenanceContract }),
+    setProjectFleetRegion: (regionId) =>
+      activeProject &&
+      updateProject(activeProject.id, {
+        fleet: {
+          ...(activeProject.fleet || {}),
+          regionId,
+        },
+      }),
+    addProjectFleetLine: (line) =>
+      activeProject &&
+      updateProject(activeProject.id, {
+        fleet: {
+          ...(activeProject.fleet || {}),
+          lines: [...(activeProject.fleet?.lines || []), line || createRecommendedFleetLine(activeProject)],
+        },
+      }),
+    updateProjectFleetLine: (lineId, patch) =>
+      activeProject &&
+      updateProject(activeProject.id, {
+        fleet: {
+          ...(activeProject.fleet || {}),
+          lines: (activeProject.fleet?.lines || []).map((line) =>
+            line.id === lineId
+              ? {
+                  ...line,
+                  ...patch,
+                  overrides: patch?.overrides ? { ...(line.overrides || {}), ...patch.overrides } : line.overrides,
+                }
+              : line
+          ),
+        },
+      }),
+    removeProjectFleetLine: (lineId) =>
+      activeProject &&
+      updateProject(activeProject.id, {
+        fleet: {
+          ...(activeProject.fleet || {}),
+          lines: (activeProject.fleet?.lines || []).filter((line) => line.id !== lineId),
+        },
+      }),
+    resetProjectFleetLineOverrides: (lineId) =>
+      activeProject &&
+      updateProject(activeProject.id, {
+        fleet: {
+          ...(activeProject.fleet || {}),
+          lines: (activeProject.fleet?.lines || []).map((line) =>
+            line.id === lineId
+              ? {
+                  ...line,
+                  overrides: {
+                    consumptionLPer100Km: null,
+                    monthlyRental: null,
+                    purchasePrice: null,
+                    annualMaintenance: null,
+                    annualL1Maintenance: null,
+                    fuelPricePerLitre: null,
+                    annualInsurance: null,
+                    annualRegistration: null,
+                    annualTyresReserve: null,
+                  },
+                }
+              : line
+          ),
+        },
+      }),
   };
 
   return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;

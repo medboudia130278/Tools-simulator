@@ -6,6 +6,7 @@ import {
   FolderKanban,
   Layers3,
   ShieldAlert,
+  Truck,
 } from "lucide-react";
 import { TOOLING_CONTEXTS, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { palette } from "../app/theme.js";
@@ -182,7 +183,7 @@ function CostBySubsystemTable({ rows }) {
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
-        title="Cost by subsystem"
+        title="Tooling cost by subsystem"
         description="Financial footprint of each subsystem selected on the active project, including recurring service-cost assumptions."
       />
       <SimpleTable
@@ -221,7 +222,7 @@ function AllocationLevelMatrix({ rows }) {
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
-        title="Subsystem x allocation level matrix"
+        title="Tooling subsystem x allocation level matrix"
         description="Mobilization, project-phase renewals, calibration / verification cost and annualized recurring exposure split between Technician, Team and Project / depot."
       />
       <SimpleTable
@@ -270,7 +271,7 @@ function DetailedSubsystemBreakdown({ subsystemTabs, activeSubsystem, onChange, 
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
-        title="Detailed subsystem breakdown"
+        title="Detailed tooling subsystem breakdown"
         description="Category-level cost split inside each subsystem, with separate Technician, Team and Project / depot views for mobilization, renewals and recurring service."
       />
 
@@ -343,7 +344,7 @@ function ComplianceMatrix({ rows }) {
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
       <SectionTitle
-        title="Compliance by subsystem"
+        title="Tooling compliance by subsystem"
         description="Mandatory tooling coverage and renewal exposure for each subsystem enabled on the active project."
       />
       <SimpleTable
@@ -383,6 +384,19 @@ function ComplianceMatrix({ rows }) {
           </tr>
         )}
       />
+    </div>
+  );
+}
+
+function FleetReportingTable({ title, description, headers, rows, renderRow, minWidth = "720px", emptyState }) {
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
+      <SectionTitle title={title} description={description} />
+      {rows.length ? (
+        <SimpleTable headers={headers} rows={rows} renderRow={renderRow} minWidth={minWidth} />
+      ) : (
+        <div style={{ color: palette.inkMuted, lineHeight: 1.6 }}>{emptyState}</div>
+      )}
     </div>
   );
 }
@@ -651,6 +665,24 @@ export default function ReportingPage() {
       })),
     [metrics.subsystemCostRows, subsystemMetaMap]
   );
+  const fleetSubsystemRows = useMemo(
+    () =>
+      metrics.fleetMetrics.bySubsystem.map((row) => ({
+        ...row,
+        label: subsystemMetaMap[row.subsystemId]?.label || row.subsystemId,
+        full: subsystemMetaMap[row.subsystemId]?.full || row.subsystemId,
+      })),
+    [metrics.fleetMetrics.bySubsystem, subsystemMetaMap]
+  );
+  const fleetStrategyRows = useMemo(
+    () =>
+      metrics.fleetMetrics.byStrategy.map((row) => ({
+        ...row,
+        label: row.strategy === "investment" ? "Investment" : "Rental",
+      })),
+    [metrics.fleetMetrics.byStrategy]
+  );
+  const fleetVehicleTypeRows = useMemo(() => metrics.fleetMetrics.byVehicleType, [metrics.fleetMetrics.byVehicleType]);
 
   const subsystemLevelRows = useMemo(
     () =>
@@ -686,7 +718,7 @@ export default function ReportingPage() {
           selectedCount: projectMetrics.selectedCount,
           coverage: projectMetrics.coveragePct,
           renewalExposure: projectMetrics.renewalExposure,
-          contractTotal: projectBudget.contractTotal,
+          contractTotal: projectBudget.combinedContractTotal,
           contractLabel: projectBudget.contractDurationLabel,
           status: project.status === "archived" ? "archived" : "active",
         };
@@ -740,6 +772,14 @@ export default function ReportingPage() {
       tone: "rgba(249, 115, 22, 0.10)",
     },
     {
+      label: "Fleet contract total",
+      value: `${fmt(metrics.fleetMetrics.contractTotal)} EUR`,
+      note: `${metrics.fleetMetrics.lines.length} vehicle line(s). Avg renewal CAPEX ${fmt(metrics.fleetMetrics.annualRenewalCapex)} EUR/year.`,
+      icon: Truck,
+      accent: palette.teal,
+      tone: palette.tealSoft,
+    },
+    {
       label: "Data quality issues",
       value: `${issueCount}`,
       note: `${metrics.selectedWithoutPriceReferenceCount} price gaps · ${metrics.selectedWithoutLifecycleReferenceCount} lifecycle gaps · ${metrics.selectedWithoutServiceReferenceCount} service gaps.`,
@@ -775,7 +815,7 @@ export default function ReportingPage() {
         </div>
         <div style={{ maxWidth: "920px", lineHeight: 1.6, opacity: 0.92 }}>
           Reporting is the dense pilotage view: it combines conformity, category costs, subsystem costs,
-          allocation-level split, renewal-sensitive tooling, calibration / verification exposure and portfolio exposure.
+          allocation-level split, renewal-sensitive tooling, calibration / verification exposure, fleet cost visibility and portfolio exposure.
         </div>
         <div style={{ marginTop: "18px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
           <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
@@ -794,6 +834,10 @@ export default function ReportingPage() {
             <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Catalog image coverage</div>
             <div style={{ ...monoStyle }}>{metrics.imageCoveragePct}%</div>
           </div>
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
+            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Fleet region</div>
+            <div style={{ ...monoStyle }}>{metrics.fleetMetrics.region.label}</div>
+          </div>
         </div>
       </div>
 
@@ -807,6 +851,103 @@ export default function ReportingPage() {
         <CostByCategoryTable rows={metrics.categoryCostRows} contractTotal={budgetMetrics.contractTotal} />
         <CostBySubsystemTable rows={subsystemCostRows} />
       </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(360px, 0.9fr)", gap: "18px" }}>
+        <FleetReportingTable
+          title="Fleet cost by subsystem"
+          description="Simple fleet footprint by subsystem. Fleet stays outside the tooling allocation-level logic."
+          headers={["Subsystem", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
+          rows={fleetSubsystemRows}
+          emptyState="No fleet line configured on the active project."
+          renderRow={(row) => (
+            <tr key={row.subsystemId}>
+              <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}` }}>
+                <div style={{ fontWeight: 700, color: palette.ink }}>{row.label}</div>
+                <div style={{ color: palette.inkMuted, fontSize: "12px", marginTop: "4px" }}>{row.full}</div>
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}` }}>{row.quantity}</td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.teal, ...monoStyle }}>
+                {fmt(row.mobilizationCapex)} EUR
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>
+                {fmt(row.renewalCapexNet)} EUR
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>
+                {fmt(row.annualRenewalCapex)} EUR
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>
+                {fmt(row.annualCost)} EUR
+              </td>
+              <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, ...monoStyle }}>
+                {fmt(row.contractTotal)} EUR
+              </td>
+            </tr>
+          )}
+        />
+        <FleetReportingTable
+          title="Fleet cost by strategy"
+          description="Rental and investment kept separate for a direct strategy readout."
+          headers={["Strategy", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
+          rows={fleetStrategyRows}
+          minWidth="920px"
+          emptyState="No fleet strategy is configured yet."
+          renderRow={(row) => (
+            <tr key={row.strategy}>
+              <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}`, fontWeight: 700, color: palette.ink }}>
+                {row.label}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}` }}>{row.quantity}</td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.teal, ...monoStyle }}>
+                {fmt(row.mobilizationCapex)} EUR
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>
+                {fmt(row.renewalCapexNet)} EUR
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>
+                {fmt(row.annualRenewalCapex)} EUR
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>
+                {fmt(row.annualCost)} EUR
+              </td>
+              <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, ...monoStyle }}>
+                {fmt(row.contractTotal)} EUR
+              </td>
+            </tr>
+          )}
+        />
+      </div>
+
+      <FleetReportingTable
+        title="Fleet cost by vehicle type"
+        description="Contract footprint by vehicle family, useful for quickly spotting whether pickups, vans or crew vehicles drive the fleet budget."
+        headers={["Vehicle type", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
+        rows={fleetVehicleTypeRows}
+        minWidth="1040px"
+        emptyState="No vehicle type is configured yet."
+        renderRow={(row) => (
+          <tr key={row.vehicleTypeId}>
+            <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}`, fontWeight: 700, color: palette.ink }}>
+              {row.label}
+            </td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}` }}>{row.quantity}</td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.teal, ...monoStyle }}>
+              {fmt(row.mobilizationCapex)} EUR
+            </td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", ...monoStyle }}>
+              {fmt(row.renewalCapexNet)} EUR
+            </td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, ...monoStyle }}>
+              {fmt(row.annualRenewalCapex)} EUR
+            </td>
+            <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", ...monoStyle }}>
+              {fmt(row.annualCost)} EUR
+            </td>
+            <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, ...monoStyle }}>
+              {fmt(row.contractTotal)} EUR
+            </td>
+          </tr>
+        )}
+      />
 
       <AllocationLevelMatrix rows={subsystemLevelRows} />
 

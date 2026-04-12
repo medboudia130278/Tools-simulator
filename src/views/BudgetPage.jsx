@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { CalendarClock, Layers3, ShieldCheck, Wallet } from "lucide-react";
+import { CalendarClock, Layers3, ShieldCheck, Truck, Wallet } from "lucide-react";
 import { TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { palette } from "../app/theme.js";
 import { useProjects } from "../projects/ProjectStore.jsx";
@@ -90,24 +90,31 @@ function KpiCard({ icon: Icon, label, value, note, accent, tone }) {
   );
 }
 
+function SectionTitle({ title, description }) {
+  return (
+    <div>
+      <div
+        style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: "22px",
+          fontWeight: 700,
+          marginBottom: "8px",
+        }}
+      >
+        {title}
+      </div>
+      <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>{description}</div>
+    </div>
+  );
+}
+
 function StackedBarChart({ rows, total }) {
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "14px" }}>
-      <div>
-        <div
-          style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: "22px",
-            fontWeight: 700,
-            marginBottom: "8px",
-          }}
-        >
-          Cost by subsystem
-        </div>
-        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
-          Mobilization, renewals and calibration / verification service are stacked to show the full contract cost footprint by subsystem.
-        </div>
-      </div>
+      <SectionTitle
+        title="Tooling cost by subsystem"
+        description="Mobilization, renewals and calibration / verification service are stacked to show the full tooling contract footprint by subsystem."
+      />
 
       <div style={{ display: "grid", gap: "14px" }}>
         {rows.map((row) => {
@@ -244,21 +251,10 @@ function DonutLevelChart({ metrics }) {
 
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "18px" }}>
-      <div>
-        <div
-          style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: "22px",
-            fontWeight: 700,
-            marginBottom: "8px",
-          }}
-        >
-          Contract mix by level
-        </div>
-        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
-          Distribution of mobilization, renewals and recurring service across Technician, Team and Project / depot tooling.
-        </div>
-      </div>
+      <SectionTitle
+        title="Tooling contract mix by level"
+        description="Distribution of mobilization, renewals and recurring service across Technician, Team and Project / depot tooling."
+      />
 
       <div style={{ display: "grid", justifyItems: "center", gap: "18px" }}>
         <div
@@ -348,22 +344,10 @@ function DonutLevelChart({ metrics }) {
 function SubsystemTable({ rows, contractTotal }) {
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
-      <div>
-        <div
-          style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: "22px",
-            fontWeight: 700,
-            marginBottom: "8px",
-          }}
-        >
-          Budget table by subsystem
-        </div>
-        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
-          Main operating table for maintenance budgeting. Each row combines workforce footprint,
-          mobilization budget and lifecycle-driven renewals.
-        </div>
-      </div>
+      <SectionTitle
+        title="Tooling budget table by subsystem"
+        description="Main operating table for maintenance budgeting. Each row combines workforce footprint, tooling mobilization budget and lifecycle-driven renewals."
+      />
 
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "980px" }}>
@@ -485,21 +469,10 @@ function SubsystemTable({ rows, contractTotal }) {
 function RenewalDrivers({ metrics }) {
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "14px" }}>
-      <div>
-        <div
-          style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: "22px",
-            fontWeight: 700,
-            marginBottom: "8px",
-          }}
-        >
-          Main renewal drivers
-        </div>
-        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
-          Highest projected renewal costs over the contract, based on the lifecycle assumptions currently stored on the selected tools.
-        </div>
-      </div>
+      <SectionTitle
+        title="Main tooling renewal drivers"
+        description="Highest projected renewal costs over the contract, based on the lifecycle assumptions currently stored on the selected tools."
+      />
 
       <div style={{ display: "grid", gap: "12px" }}>
         {metrics.renewalDrivers.map((tool) => (
@@ -552,21 +525,10 @@ function RenewalDrivers({ metrics }) {
 function ServiceDrivers({ metrics }) {
   return (
     <div style={{ ...cardStyle, display: "grid", gap: "14px" }}>
-      <div>
-        <div
-          style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: "22px",
-            fontWeight: 700,
-            marginBottom: "8px",
-          }}
-        >
-          Main service-cost drivers
-        </div>
-        <div style={{ color: palette.inkSoft, lineHeight: 1.6 }}>
-          Highest projected calibration, verification or dielectric-testing costs over the contract.
-        </div>
-      </div>
+      <SectionTitle
+        title="Main tooling service-cost drivers"
+        description="Highest projected calibration, verification or dielectric-testing costs over the contract."
+      />
 
       <div style={{ display: "grid", gap: "12px" }}>
         {metrics.serviceDrivers.map((tool) => (
@@ -618,6 +580,32 @@ function ServiceDrivers({ metrics }) {
   );
 }
 
+function FleetBudgetTable({ title, description, headers, rows, renderRow, minWidth = "720px", emptyState }) {
+  return (
+    <div style={{ ...cardStyle, display: "grid", gap: "16px" }}>
+      <SectionTitle title={title} description={description} />
+      {rows.length ? (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth }}>
+            <thead>
+              <tr style={{ textAlign: "left", color: palette.inkMuted, fontSize: "12px" }}>
+                {headers.map((label) => (
+                  <th key={label} style={{ padding: "0 0 12px", borderBottom: `1px solid ${palette.surfaceLow}` }}>
+                    {label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>{rows.map(renderRow)}</tbody>
+          </table>
+        </div>
+      ) : (
+        <div style={{ color: palette.inkMuted, lineHeight: 1.6 }}>{emptyState}</div>
+      )}
+    </div>
+  );
+}
+
 export default function BudgetPage() {
   const { activeProject } = useProjects();
   const metrics = useMemo(() => getProjectBudgetMetrics(activeProject), [activeProject]);
@@ -664,6 +652,26 @@ export default function BudgetPage() {
     },
     [activeProject, activeSubsystemIds, metrics.hasSharedProjectPool, metrics.subsystemTotals]
   );
+  const fleetSubsystemRows = useMemo(
+    () =>
+      metrics.fleetMetrics.bySubsystem.map((row) => {
+        const meta = TOOLING_SUBSYSTEMS.find((item) => item.id === row.subsystemId);
+        return {
+          ...row,
+          label: meta?.label || row.subsystemId,
+          full: meta?.full || row.subsystemId,
+        };
+      }),
+    [metrics.fleetMetrics.bySubsystem]
+  );
+  const fleetStrategyRows = useMemo(
+    () =>
+      metrics.fleetMetrics.byStrategy.map((row) => ({
+        ...row,
+        label: row.strategy === "investment" ? "Investment" : "Rental",
+      })),
+    [metrics.fleetMetrics.byStrategy]
+  );
 
   return (
     <div style={{ display: "grid", gap: "20px" }}>
@@ -695,11 +703,10 @@ export default function BudgetPage() {
             marginBottom: "12px",
           }}
         >
-          {fmt(metrics.contractTotal)} EUR
+          {fmt(metrics.combinedContractTotal)} EUR
         </div>
         <div style={{ maxWidth: "820px", lineHeight: 1.6, opacity: 0.92 }}>
-          The budget view is now organized as an analysis workspace: a small KPI strip, a stacked
-          subsystem histogram, a level mix donut, an operating table and focused recurring-cost driver lists.
+          Unified project view combining tooling and fleet. Tooling remains analyzed with lifecycle detail, while fleet stays on a simpler CAPEX/OPEX breakdown by subsystem and strategy.
         </div>
         <div
           style={{
@@ -716,15 +723,15 @@ export default function BudgetPage() {
             </div>
           </div>
           <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
-            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Renewals / year</div>
+            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Tooling recurring / year</div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
-              {fmt(metrics.annualRenewalBudget)} EUR
+              {fmt(metrics.annualRenewalBudget + metrics.annualServiceBudget)} EUR
             </div>
           </div>
           <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
-            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Service / year</div>
+            <div style={{ fontSize: "11px", opacity: 0.82, marginBottom: "6px" }}>Fleet OPEX / year</div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
-              {fmt(metrics.annualServiceBudget)} EUR
+              {fmt(metrics.fleetMetrics.annualOperatingCost)} EUR
             </div>
           </div>
           <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: "14px", padding: "14px 16px" }}>
@@ -778,6 +785,47 @@ export default function BudgetPage() {
       <div
         style={{
           display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "18px",
+        }}
+      >
+        <KpiCard
+          icon={Truck}
+          label="Fleet mobilization CAPEX"
+          value={`${fmt(metrics.fleetMetrics.mobilizationCapex)} EUR`}
+          note="Initial owned-vehicle CAPEX only. Rental stays at zero here."
+          accent={palette.teal}
+          tone={palette.tealSoft}
+        />
+        <KpiCard
+          icon={CalendarClock}
+          label="Fleet renewal CAPEX net"
+          value={`${fmt(metrics.fleetMetrics.renewalCapexNet)} EUR`}
+          note={`Avg ${fmt(metrics.fleetMetrics.annualRenewalCapex)} EUR/year. End residual credit: ${fmt(metrics.fleetMetrics.endOfContractResidualCredit)} EUR.`}
+          accent="#7c3aed"
+          tone="rgba(124, 58, 237, 0.08)"
+        />
+        <KpiCard
+          icon={ShieldCheck}
+          label="Fleet annual OPEX"
+          value={`${fmt(metrics.fleetMetrics.annualOperatingCost)} EUR`}
+          note={`Fuel ${fmt(metrics.fleetMetrics.annualFuelCost)} EUR/year. Region: ${metrics.fleetMetrics.region.label}.`}
+          accent="#f97316"
+          tone="rgba(249, 115, 22, 0.10)"
+        />
+        <KpiCard
+          icon={Wallet}
+          label="Total contract incl. fleet"
+          value={`${fmt(metrics.combinedContractTotal)} EUR`}
+          note={`Tooling ${fmt(metrics.contractTotal)} EUR + Fleet ${fmt(metrics.fleetMetrics.contractTotal)} EUR.`}
+          accent={palette.primary}
+          tone={palette.primarySoft}
+        />
+      </div>
+
+      <div
+        style={{
+          display: "grid",
           gridTemplateColumns: "minmax(420px, 1.15fr) minmax(320px, 0.85fr)",
           gap: "18px",
         }}
@@ -787,6 +835,81 @@ export default function BudgetPage() {
       </div>
 
       <SubsystemTable rows={subsystemRows} contractTotal={metrics.contractTotal} />
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(360px, 1fr) minmax(320px, 0.9fr)",
+          gap: "18px",
+        }}
+      >
+        <FleetBudgetTable
+          title="Fleet cost by subsystem"
+          description="Simple fleet view by subsystem. No technician or team ratios are applied here."
+          headers={["Subsystem", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
+          rows={fleetSubsystemRows}
+          emptyState="No fleet line configured on the active project."
+          renderRow={(row) => (
+            <tr key={row.subsystemId}>
+              <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}` }}>
+                <div style={{ fontWeight: 700, color: palette.ink }}>{row.label}</div>
+                <div style={{ color: palette.inkMuted, fontSize: "12px", marginTop: "4px" }}>{row.full}</div>
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink }}>
+                {row.quantity}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.teal, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.mobilizationCapex)}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.renewalCapexNet)}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.annualRenewalCapex)}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.annualCost)}
+              </td>
+              <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.contractTotal)}
+              </td>
+            </tr>
+          )}
+        />
+        <FleetBudgetTable
+          title="Fleet cost by strategy"
+          description="Rental and investment are kept separate to make the CAPEX versus recurring OPEX split explicit."
+          headers={["Strategy", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
+          rows={fleetStrategyRows}
+          minWidth="920px"
+          emptyState="No fleet strategy is configured yet."
+          renderRow={(row) => (
+            <tr key={row.strategy}>
+              <td style={{ padding: "14px 8px 14px 0", borderBottom: `1px solid ${palette.surfaceLow}`, fontWeight: 700, color: palette.ink }}>
+                {row.label}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink }}>
+                {row.quantity}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.teal, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.mobilizationCapex)}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#7c3aed", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.renewalCapexNet)}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.ink, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.annualRenewalCapex)}
+              </td>
+              <td style={{ padding: "14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: "#f97316", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.annualCost)}
+              </td>
+              <td style={{ padding: "14px 0 14px 8px", borderBottom: `1px solid ${palette.surfaceLow}`, color: palette.primary, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>
+                {fmt(row.contractTotal)}
+              </td>
+            </tr>
+          )}
+        />
+      </div>
 
       <div
         style={{

@@ -5,13 +5,16 @@ import {
   ClipboardList,
   FolderKanban,
   LayoutGrid,
+  Lock,
   Plus,
+  Truck,
   WalletCards,
 } from "lucide-react";
 import { shellFontStyle, shellStyles, palette } from "./theme.js";
 import { TOOLING_CATALOG, TOOLING_CONTEXTS, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import InventoryPage from "../views/InventoryPage.jsx";
 import BudgetPage from "../views/BudgetPage.jsx";
+import FleetPage from "../views/FleetPage.jsx";
 import ReportingPage from "../views/ReportingPage.jsx";
 import ProjectsPage from "../views/ProjectsPage.jsx";
 import { useProjects } from "../projects/ProjectStore.jsx";
@@ -39,6 +42,16 @@ const pages = [
     component: InventoryPage,
   },
   {
+    id: "fleet",
+    label: "Fleet",
+    eyebrow: "Vehicle planning",
+    title: "Commercial fleet strategy and regional costing",
+    description:
+      "Plan service vans and pickups by subsystem, compare rental and investment strategies and adjust regional cost assumptions.",
+    icon: Truck,
+    component: FleetPage,
+  },
+  {
     id: "budget",
     label: "Budget",
     eyebrow: "Cost planning",
@@ -62,6 +75,12 @@ const pages = [
 
 export default function App() {
   const [activePage, setActivePage] = React.useState("inventory");
+  const [accessGranted, setAccessGranted] = React.useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.sessionStorage.getItem("planner_access_granted") === "true";
+  });
+  const [password, setPassword] = React.useState("");
+  const [accessError, setAccessError] = React.useState("");
   const {
     hydrated,
     projects,
@@ -108,6 +127,128 @@ export default function App() {
 
   const CurrentPage = current.component;
 
+  const handleUnlock = (event) => {
+    event.preventDefault();
+    if (password === "mohamed") {
+      window.sessionStorage.setItem("planner_access_granted", "true");
+      setAccessGranted(true);
+      setAccessError("");
+      setPassword("");
+      return;
+    }
+    setAccessError("Incorrect password.");
+  };
+
+  if (!accessGranted) {
+    return (
+      <div style={shellStyles.app}>
+        <style>{shellFontStyle}</style>
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "grid",
+            placeItems: "center",
+            padding: "24px",
+          }}
+        >
+          <form
+            onSubmit={handleUnlock}
+            style={{
+              width: "100%",
+              maxWidth: "460px",
+              borderRadius: "24px",
+              background: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(18px)",
+              boxShadow: palette.shadow,
+              padding: "32px",
+            }}
+          >
+            <div
+              style={{
+                width: "56px",
+                height: "56px",
+                borderRadius: "16px",
+                background: palette.primarySoft,
+                color: palette.primary,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginBottom: "18px",
+              }}
+            >
+              <Lock size={24} />
+            </div>
+            <div
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: "28px",
+                fontWeight: 700,
+                lineHeight: 1.1,
+                marginBottom: "10px",
+              }}
+            >
+              Railway Tools & Fleet Planner
+            </div>
+            <div
+              style={{
+                color: palette.primary,
+                fontSize: "12px",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                fontVariant: "small-caps",
+                marginBottom: "12px",
+              }}
+            >
+              Created by Mohamed BOUDIA
+            </div>
+            <div style={{ color: palette.inkSoft, lineHeight: 1.65, marginBottom: "20px" }}>
+              Enter the access password to open the simulator.
+            </div>
+            <div style={{ display: "grid", gap: "12px" }}>
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  if (accessError) setAccessError("");
+                }}
+                placeholder="Password"
+                autoFocus
+                style={{
+                  border: "1px solid rgba(71, 84, 103, 0.14)",
+                  borderRadius: "14px",
+                  background: palette.surfaceLowest,
+                  color: palette.ink,
+                  padding: "14px 16px",
+                  fontSize: "15px",
+                  outline: "none",
+                }}
+              />
+              {accessError ? (
+                <div style={{ color: palette.safety, fontSize: "13px", fontWeight: 600 }}>{accessError}</div>
+              ) : null}
+              <button
+                type="submit"
+                style={{
+                  border: "1px solid rgba(28, 96, 144, 0.18)",
+                  borderRadius: "14px",
+                  background: palette.primary,
+                  color: palette.surfaceLowest,
+                  padding: "13px 16px",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Unlock simulator
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   if (!hydrated || !activeProject) {
     return (
       <div style={shellStyles.app}>
@@ -132,10 +273,22 @@ export default function App() {
                 marginBottom: "12px",
               }}
             >
-              Railway tooling simulator
+              Railway Tools & Fleet Planner
+            </div>
+            <div
+              style={{
+                color: palette.primary,
+                fontSize: "12px",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                fontVariant: "small-caps",
+                marginBottom: "10px",
+              }}
+            >
+              Created by Mohamed BOUDIA
             </div>
             <div style={{ color: palette.inkSoft, lineHeight: 1.65 }}>
-              Multi-project tooling workspace for inventory selection, budget projection and compliance reporting.
+              Multi-project workspace for tools selection, fleet planning, budget projection and operational reporting.
             </div>
           </div>
 

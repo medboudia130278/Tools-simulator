@@ -6,6 +6,7 @@ import {
   inferToolServiceBaseline,
   inferServiceIntervalMonthsFromPeriod,
 } from "../../railway_tooling.jsx";
+import { getProjectFleetMetrics } from "../fleet/fleetSelectors.js";
 import { createDefaultWorkforce } from "./projectDefaults.js";
 
 const SHARED_SUBSYSTEM_ID = "SHARED";
@@ -253,6 +254,7 @@ export function getProjectBudgetMetrics(project) {
   const contractDurationMonths = getContractDurationMonths(project);
   const contractDurationLabel = getContractDurationLabel(project);
   const selectedTools = getSelectedProjectTools(project);
+  const fleetMetrics = getProjectFleetMetrics(project);
   const mandatoryTotal = catalog.filter((tool) => tool.statut === "OB").length;
   const mandatorySelected = selectedTools.filter((tool) => tool.statut === "OB").length;
 
@@ -260,6 +262,8 @@ export function getProjectBudgetMetrics(project) {
   const renewalBudget = selectedTools.reduce((sum, tool) => sum + tool.renewalCost, 0);
   const serviceBudget = selectedTools.reduce((sum, tool) => sum + tool.serviceCost, 0);
   const contractTotal = initialMobilization + renewalBudget + serviceBudget;
+  const combinedContractTotal = contractTotal + fleetMetrics.contractTotal;
+  const combinedMobilization = initialMobilization + fleetMetrics.mobilizationCapex;
 
   const levelTotals = {
     T: selectedTools
@@ -299,6 +303,8 @@ export function getProjectBudgetMetrics(project) {
 
   const annualRenewalBudget = annualizeCost(renewalBudget, contractDurationMonths);
   const annualServiceBudget = annualizeCost(serviceBudget, contractDurationMonths);
+  const combinedAnnualRecurring =
+    annualRenewalBudget + annualServiceBudget + fleetMetrics.annualOperatingCost;
   const renewalLevelAnnualTotals = {
     T: annualizeCost(renewalLevelTotals.T, contractDurationMonths),
     E: annualizeCost(renewalLevelTotals.E, contractDurationMonths),
@@ -349,6 +355,8 @@ export function getProjectBudgetMetrics(project) {
     catalog,
     subsystemIds,
     selectedTools,
+    fleetMetrics,
+    hasFleet: fleetMetrics.lines.length > 0,
     hasSharedProjectPool: selectedTools.some((tool) => tool.ownership === "shared_project"),
     mandatoryTotal,
     mandatorySelected,
@@ -364,11 +372,14 @@ export function getProjectBudgetMetrics(project) {
     serviceLevelTotals,
     annualRenewalBudget,
     annualServiceBudget,
+    combinedMobilization,
+    combinedAnnualRecurring,
     renewalLevelAnnualTotals,
     serviceLevelAnnualTotals,
     subsystemTotals,
     renewalDrivers,
     serviceDrivers,
+    combinedContractTotal,
   };
 }
 
@@ -594,6 +605,7 @@ export function getProjectReportingMetrics(project) {
   const selectedTools = getSelectedProjectTools(project);
   const subsystemIds = getProjectSubsystemIds(project);
   const contractDurationMonths = getContractDurationMonths(project);
+  const fleetMetrics = getProjectFleetMetrics(project);
   const mandatoryTools = catalog.filter((tool) => tool.statut === "OB");
   const selectedMandatoryTools = selectedTools.filter((tool) => tool.statut === "OB");
   const missingMandatoryTools = mandatoryTools.filter(
@@ -848,6 +860,8 @@ export function getProjectReportingMetrics(project) {
   }
 
   return {
+    fleetMetrics,
+    hasFleet: fleetMetrics.lines.length > 0,
     visibleCatalogCount: catalog.length,
     selectedCount: selectedTools.length,
     mandatoryCount: mandatoryTools.length,
