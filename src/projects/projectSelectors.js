@@ -10,6 +10,18 @@ import { createDefaultWorkforce } from "./projectDefaults.js";
 
 const SHARED_SUBSYSTEM_ID = "SHARED";
 const VALID_SUBSYSTEM_IDS = new Set(TOOLING_SUBSYSTEMS.map((subsystem) => subsystem.id));
+const EXPORT_SHARED_SUBSYSTEM_LABEL = "Shared / depot pool";
+
+const EXPORT_BUCKET_LABELS = {
+  PPE: "PPE",
+  CONSUM: "Consumables",
+};
+
+const EXPORT_LEVEL_LABELS = {
+  T: "Technician",
+  E: "Team",
+  P: "Depot",
+};
 
 export function getProjectSubsystemIds(project) {
   if (!project) return [];
@@ -358,6 +370,223 @@ export function getProjectBudgetMetrics(project) {
     renewalDrivers,
     serviceDrivers,
   };
+}
+
+function getContractDurationYears(project) {
+  return getContractDurationMonths(project) / 12;
+}
+
+function mapExportBucket(categoryId) {
+  return EXPORT_BUCKET_LABELS[categoryId] || "Tooling";
+}
+
+function mapExportLevel(tool) {
+  if (tool.budgetBucketId === SHARED_SUBSYSTEM_ID) return "Depot";
+  return EXPORT_LEVEL_LABELS[tool.level] || "Depot";
+}
+
+function getProjectWorkforceTotals(project) {
+  const workforce = project?.workforce || createDefaultWorkforce();
+  return getProjectSubsystemIds(project).reduce(
+    (totals, subsystemId) => {
+      const counts = workforce[subsystemId] || { tech: 0, equipe: 0, project: 0 };
+      totals.tech += Number(counts.tech) || 0;
+      totals.equipe += Number(counts.equipe) || 0;
+      totals.project += Number(counts.project) || 0;
+      return totals;
+    },
+    { tech: 0, equipe: 0, project: 0 }
+  );
+}
+
+function getExportCounts(project, subsystemId) {
+  const workforce = project?.workforce || createDefaultWorkforce();
+  if (subsystemId === SHARED_SUBSYSTEM_ID) {
+    const totals = getProjectWorkforceTotals(project);
+    return {
+      tech: totals.tech,
+      equipe: totals.equipe,
+      project: 1,
+    };
+  }
+
+  const counts = workforce[subsystemId] || { tech: 0, equipe: 0, project: 0 };
+  return {
+    tech: Number(counts.tech) || 0,
+    equipe: Number(counts.equipe) || 0,
+    project: Number(counts.project) || 0,
+  };
+}
+
+function getExportSubsystemLabel(subsystemId) {
+  if (subsystemId === SHARED_SUBSYSTEM_ID) return EXPORT_SHARED_SUBSYSTEM_LABEL;
+  return TOOLING_SUBSYSTEMS.find((subsystem) => subsystem.id === subsystemId)?.label || subsystemId;
+}
+
+const EXPORT_BUCKET_ORDER = {
+  PPE: 0,
+  Consumables: 1,
+  Tooling: 2,
+};
+
+const EXPORT_LEVEL_ORDER = {
+  Technician: 0,
+  Team: 1,
+  Depot: 2,
+};
+
+const RFQ_LEVEL_ORDER = {
+  Technician: 0,
+  Team: 1,
+  Depot: 2,
+};
+
+function getHigherExportLevel(left, right) {
+  return (RFQ_LEVEL_ORDER[right] ?? -1) > (RFQ_LEVEL_ORDER[left] ?? -1) ? right : left;
+}
+
+export function getProjectCostMatrixRows(project) {
+  if (!project) return [];
+
+  const selectedTools = getSelectedProjectTools(project);
+  const contractDurationYears = getContractDurationYears(project);
+  const contextLabel = project.contextId;
+  const rowsByKey = selectedTools.reduce((map, tool) => {
+    const subsystemId = tool.budgetBucketId || tool.subsystem;
+    const subsystemLabel = getExportSubsystemLabel(subsystemId);
+    const costBucket = mapExportBucket(tool.cat);
+    const allocationLevel = mapExportLevel(tool);
+    const counts = getExportCounts(project, subsystemId);
+    const groupKey = [
+      project.name,
+      contextLabel,
+      subsystemLabel,
+      costBucket,
+      tool.cat,
+      allocationLevel,
+    ].join("|");
+
+    const current =
+      map.get(groupKey) || {
+        "Project Name": project.name,
+        Context: contextLabel,
+        Subsystem: subsystemLabel,
+        "Cost Bucket": costBucket,
+        "Source Category": TOOLING_CATEGORIES[tool.cat]?.label || tool.cat,
+        "Allocation Level": allocationLevel,
+        "Technician Count": counts.tech,
+        "Team Count": counts.equipe,
+        "Depot Count": counts.project,
+        "Contract Duration (Years)": Number(contractDurationYears.toFixed(2)),
+        "Mobilization Unit Cost (€)": 0,
+        "Mobilization Total Cost (€)": 0,
+        "Renewal Contract Total (€)": 0,
+        "Calibration Contract Total (€)": 0,
+        "Recurring Contract Total (€)": 0,
+        "Renewal Avg / Year (€)": 0,
+        "Calibration Avg / Year (€)": 0,
+        "Recurring Avg / Year (€)": 0,
+        "Contract Total Excl. Mobilization (€)": 0,
+        "Contract Grand Total (€)": 0,
+      };
+
+    current["Mobilization Unit Cost (€)"] += tool.qty * tool.currentPrice;
+    current["Mobilization Total Cost (€)"] += tool.mobilizationCost;
+    current["Renewal Contract Total (€)"] += tool.renewalCost;
+    current["Calibration Contract Total (€)"] += tool.serviceCost;
+
+    map.set(groupKey, current);
+    return map;
+  }, new Map());
+
+  return Array.from(rowsByKey.values())
+    .map((row) => {
+      row["Recurring Contract Total (€)"] =
+        row["Renewal Contract Total (€)"] + row["Calibration Contract Total (€)"];
+      row["Renewal Avg / Year (€)"] = contractDurationYears > 0 ? row["Renewal Contract Total (€)"] / contractDurationYears : 0;
+      row["Calibration Avg / Year (€)"] =
+        contractDurationYears > 0 ? row["Calibration Contract Total (€)"] / contractDurationYears : 0;
+      row["Recurring Avg / Year (€)"] =
+        contractDurationYears > 0 ? row["Recurring Contract Total (€)"] / contractDurationYears : 0;
+      row["Contract Total Excl. Mobilization (€)"] = row["Recurring Contract Total (€)"];
+      row["Contract Grand Total (€)"] =
+        row["Mobilization Total Cost (€)"] + row["Recurring Contract Total (€)"];
+      return row;
+    })
+    .sort((left, right) => {
+      const subsystemCompare = String(left.Subsystem).localeCompare(String(right.Subsystem));
+      if (subsystemCompare !== 0) return subsystemCompare;
+
+      const bucketCompare =
+        (EXPORT_BUCKET_ORDER[left["Cost Bucket"]] ?? 99) - (EXPORT_BUCKET_ORDER[right["Cost Bucket"]] ?? 99);
+      if (bucketCompare !== 0) return bucketCompare;
+
+      const levelCompare =
+        (EXPORT_LEVEL_ORDER[left["Allocation Level"]] ?? 99) -
+        (EXPORT_LEVEL_ORDER[right["Allocation Level"]] ?? 99);
+      if (levelCompare !== 0) return levelCompare;
+
+      return String(left["Source Category"]).localeCompare(String(right["Source Category"]));
+    });
+}
+
+function buildSupplierRfqKey(tool) {
+  const brand = String(tool.brand || "").trim().toLowerCase();
+  const model = String(tool.model || "").trim().toLowerCase();
+  const name = String(tool.name || "").trim().toLowerCase();
+  return model ? `${brand}|${model}` : `${brand}|${name}`;
+}
+
+export function getProjectSupplierRfqRows(project) {
+  if (!project) return [];
+
+  const rowsByKey = getSelectedProjectTools(project).reduce((map, tool) => {
+    const key = buildSupplierRfqKey(tool);
+    const level = mapExportLevel(tool);
+    const estimatedQty = tool.qty * tool.multiplier;
+    const calibrationCost =
+      tool.service.type !== "none" && tool.service.costPerEvent > 0 ? tool.service.costPerEvent : 0;
+
+    const current = map.get(key) || {
+      "Tool Description": tool.name,
+      Reference: tool.model,
+      "Supplier / Manufacturer": tool.brand,
+      Category: TOOLING_CATEGORIES[tool.cat]?.label || tool.cat,
+      "Allocation Level": level,
+      "Calibration Required": calibrationCost > 0 ? "Yes" : "No",
+      "Product URL": tool.productUrl || "",
+      "Current Unit Price (EUR)": tool.currentPrice,
+      "Current Calibration Cost (EUR)": calibrationCost,
+      "Estimated Total Qty": 0,
+      "Requested Unit Price (EUR)": "",
+      "Requested Calibration Cost (EUR)": "",
+      "Comments / Supplier Feedback": "",
+    };
+
+    current["Estimated Total Qty"] += estimatedQty;
+    current["Allocation Level"] = getHigherExportLevel(current["Allocation Level"], level);
+    current["Calibration Required"] =
+      current["Calibration Required"] === "Yes" || calibrationCost > 0 ? "Yes" : "No";
+    current["Current Calibration Cost (EUR)"] = Math.max(current["Current Calibration Cost (EUR)"], calibrationCost);
+
+    map.set(key, current);
+    return map;
+  }, new Map());
+
+  return Array.from(rowsByKey.values())
+    .map((row) => ({
+      ...row,
+      "Current Unit Price (EUR)": Number(row["Current Unit Price (EUR)"].toFixed(2)),
+      "Current Calibration Cost (EUR)": Number(row["Current Calibration Cost (EUR)"].toFixed(2)),
+      "Estimated Total Qty": Number(row["Estimated Total Qty"].toFixed(2)),
+    }))
+    .sort((left, right) => {
+      const supplierCompare = String(left["Supplier / Manufacturer"]).localeCompare(
+        String(right["Supplier / Manufacturer"])
+      );
+      if (supplierCompare !== 0) return supplierCompare;
+      return String(left.Reference).localeCompare(String(right.Reference));
+    });
 }
 
 export function getProjectReportingMetrics(project) {

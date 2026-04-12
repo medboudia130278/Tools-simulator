@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { TOOLING_CONTEXTS, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { palette } from "../app/theme.js";
+import { exportProjectCostWorkbook } from "../projects/projectExport.js";
 import { useProjects } from "../projects/ProjectStore.jsx";
 import { getProjectBudgetMetrics, getProjectSubsystemIds } from "../projects/projectSelectors.js";
 
@@ -60,6 +61,7 @@ export default function ProjectsPage() {
   const [draftContractDuration, setDraftContractDuration] = useState(5);
   const [draftContractUnit, setDraftContractUnit] = useState("years");
   const [importMessage, setImportMessage] = useState("");
+  const [exportMessage, setExportMessage] = useState("");
 
   const projectCards = projects.map((project) => {
     const metrics = getProjectBudgetMetrics(project);
@@ -136,6 +138,16 @@ export default function ProjectsPage() {
       setImportMessage("Import failed: invalid JSON file.");
     } finally {
       event.target.value = "";
+    }
+  };
+
+  const handleExportExcel = () => {
+    if (!activeProject) return;
+    try {
+      exportProjectCostWorkbook(activeProject);
+      setExportMessage("Active project Excel exported.");
+    } catch (error) {
+      setExportMessage(error instanceof Error ? error.message : "Excel export failed.");
     }
   };
 
@@ -562,6 +574,27 @@ export default function ProjectsPage() {
           </div>
           <div style={{ display: "grid", gap: "12px" }}>
             <button
+              onClick={handleExportExcel}
+              disabled={!activeProject}
+              style={{
+                border: "1px solid rgba(31, 138, 132, 0.18)",
+                borderRadius: "12px",
+                background: activeProject ? palette.tealSoft : palette.surfaceLow,
+                color: activeProject ? palette.teal : palette.inkMuted,
+                padding: "11px 14px",
+                fontSize: "13px",
+                fontWeight: 700,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                cursor: activeProject ? "pointer" : "not-allowed",
+                justifyContent: "center",
+              }}
+            >
+              <Download size={14} />
+              Export active project Excel
+            </button>
+            <button
               onClick={handleExport}
               style={{
                 border: "1px solid rgba(28, 96, 144, 0.18)",
@@ -622,6 +655,18 @@ export default function ProjectsPage() {
                 }}
               >
                 {importMessage}
+              </div>
+            )}
+            {exportMessage && (
+              <div
+                style={{
+                  background: palette.surfaceLow,
+                  borderRadius: "12px",
+                  padding: "12px 14px",
+                  color: palette.inkSoft,
+                }}
+              >
+                {exportMessage}
               </div>
             )}
           </div>
