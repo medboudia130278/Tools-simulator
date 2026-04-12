@@ -1,4 +1,5 @@
 import { TOOLING_CONTEXTS } from "../../railway_tooling.jsx";
+import { getProjectFleetCostMatrixRows, getProjectFleetRfqRows } from "../fleet/fleetSelectors.js";
 import { getProjectCostMatrixRows, getProjectSupplierRfqRows } from "./projectSelectors.js";
 
 const SHEET_1_COLUMNS = [
@@ -38,6 +39,60 @@ const SHEET_2_COLUMNS = [
   "Requested Unit Price (EUR)",
   "Requested Calibration Cost (EUR)",
   "Comments / Supplier Feedback",
+];
+
+const SHEET_3_COLUMNS = [
+  "Project Name",
+  "Context",
+  "Region",
+  "Subsystem",
+  "Vehicle Type",
+  "Strategy",
+  "Quantity",
+  "km / month",
+  "Contract Duration (Years)",
+  "Fuel Type",
+  "Fuel Price / Litre (EUR)",
+  "Consumption (L/100km)",
+  "Monthly Rental (EUR)",
+  "Purchase Price (EUR)",
+  "Annual L1 Maintenance (EUR)",
+  "Annual Full Maintenance (EUR)",
+  "Annual Insurance (EUR)",
+  "Annual Registration (EUR)",
+  "Annual Tyres Reserve (EUR)",
+  "Mobilization CAPEX (EUR)",
+  "Renewal CAPEX Net (EUR)",
+  "Avg Annual Renewal CAPEX (EUR)",
+  "End Residual Credit (EUR)",
+  "Annual Fuel Cost (EUR)",
+  "Annual Operating Cost (EUR)",
+  "Contract Total (EUR)",
+];
+
+const SHEET_4_COLUMNS = [
+  "Vehicle Type",
+  "Subsystem",
+  "Region",
+  "Strategy Requested",
+  "Estimated Qty",
+  "Estimated km / month",
+  "Fuel Type",
+  "Benchmark Model / Example",
+  "Current Monthly Rental (EUR)",
+  "Current Purchase Price (EUR)",
+  "Current Annual Maintenance (EUR)",
+  "Current Annual L1 Maintenance (EUR)",
+  "Current Annual Tyres Reserve (EUR)",
+  "Current Fuel Price / Litre (EUR)",
+  "Supplier / Lessor",
+  "Quoted Monthly Rental (EUR)",
+  "Quoted Purchase Price (EUR)",
+  "Quoted Annual Maintenance (EUR)",
+  "Quoted Insurance Included",
+  "Quoted Registration Included",
+  "Quoted km limit / month",
+  "Comments",
 ];
 
 const LEGACY_SHEET_1_KEY_MAP = {
@@ -164,6 +219,20 @@ function normalizeRfqRow(row) {
   }, {});
 }
 
+function normalizeFleetCostMatrixRow(row) {
+  return SHEET_3_COLUMNS.reduce((acc, column) => {
+    acc[column] = roundIfNumeric(row[column]);
+    return acc;
+  }, {});
+}
+
+function normalizeFleetRfqRow(row) {
+  return SHEET_4_COLUMNS.reduce((acc, column) => {
+    acc[column] = roundIfNumeric(row[column]);
+    return acc;
+  }, {});
+}
+
 export function exportProjectCostWorkbook(project) {
   if (!project) {
     throw new Error("No active project to export.");
@@ -171,17 +240,21 @@ export function exportProjectCostWorkbook(project) {
 
   const costMatrixRows = getProjectCostMatrixRows(project).map(normalizeCostMatrixRow);
   const supplierRfqRows = getProjectSupplierRfqRows(project).map(normalizeRfqRow);
+  const fleetCostMatrixRows = getProjectFleetCostMatrixRows(project).map(normalizeFleetCostMatrixRow);
+  const fleetRfqRows = getProjectFleetRfqRows(project).map(normalizeFleetRfqRow);
 
   const xml = buildWorkbookXml([
     buildSheet("Project Cost Matrix", SHEET_1_COLUMNS, costMatrixRows),
     buildSheet("Supplier RFQ", SHEET_2_COLUMNS, supplierRfqRows),
+    buildSheet("Fleet Cost Matrix", SHEET_3_COLUMNS, fleetCostMatrixRows),
+    buildSheet("Fleet RFQ", SHEET_4_COLUMNS, fleetRfqRows),
   ]);
 
   const blob = new Blob([xml], { type: "application/vnd.ms-excel" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `${sanitizeFilePart(project.name)}_cost_matrix.xls`;
+  anchor.download = `${sanitizeFilePart(project.name)}_planning_workbook.xls`;
   anchor.click();
   URL.revokeObjectURL(url);
 }

@@ -1,4 +1,4 @@
-import { TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
+import { TOOLING_CONTEXTS, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { getContractDurationMonths, getProjectSubsystemIds } from "../projects/projectSelectors.js";
 import {
   FLEET_MAINTENANCE_MODES,
@@ -357,6 +357,139 @@ export function getProjectFleetMetrics(project) {
   });
 
   return summary;
+}
+
+function getContextLabel(contextId) {
+  return TOOLING_CONTEXTS.find((context) => context.id === contextId)?.label || contextId;
+}
+
+function roundIfNumber(value) {
+  return typeof value === "number" && Number.isFinite(value) ? roundAmount(value) : value;
+}
+
+export function getProjectFleetCostMatrixRows(project) {
+  if (!project) return [];
+
+  return getProjectFleetMetrics(project).lines
+    .map((line) => ({
+      "Project Name": project.name,
+      Context: getContextLabel(project.contextId),
+      Region: line.regionLabel,
+      Subsystem: line.subsystemLabel,
+      "Vehicle Type": line.vehicle.label,
+      Strategy: line.strategy === "investment" ? "Investment" : "Rental",
+      Quantity: line.quantity,
+      "km / month": line.kmPerMonth,
+      "Contract Duration (Years)": roundAmount(line.contractYears),
+      "Fuel Type": line.vehicle.defaultFuelType,
+      "Fuel Price / Litre (EUR)": line.fuelPricePerLitre,
+      "Consumption (L/100km)": line.consumptionLPer100Km,
+      "Monthly Rental (EUR)": line.monthlyRental,
+      "Purchase Price (EUR)": line.purchasePrice,
+      "Annual L1 Maintenance (EUR)": line.annualL1Maintenance,
+      "Annual Full Maintenance (EUR)": line.annualMaintenance,
+      "Annual Insurance (EUR)": line.strategy === "investment" ? line.annualInsurance : 0,
+      "Annual Registration (EUR)": line.strategy === "investment" ? line.annualRegistration : 0,
+      "Annual Tyres Reserve (EUR)": line.annualTyresReserve,
+      "Mobilization CAPEX (EUR)": line.mobilizationCapex,
+      "Renewal CAPEX Net (EUR)": line.renewalCapexNet,
+      "Avg Annual Renewal CAPEX (EUR)": line.renewalCapexNet / Math.max(line.contractYears, 1),
+      "End Residual Credit (EUR)": line.endOfContractResidualCredit,
+      "Annual Fuel Cost (EUR)": line.annualFuelCost,
+      "Annual Operating Cost (EUR)": line.annualOperatingCost,
+      "Contract Total (EUR)": line.contractTotal,
+    }))
+    .map((row) =>
+      Object.fromEntries(Object.entries(row).map(([key, value]) => [key, roundIfNumber(value)]))
+    )
+    .sort((left, right) => {
+      const subsystemCompare = String(left.Subsystem).localeCompare(String(right.Subsystem));
+      if (subsystemCompare !== 0) return subsystemCompare;
+      const strategyCompare = String(left.Strategy).localeCompare(String(right.Strategy));
+      if (strategyCompare !== 0) return strategyCompare;
+      return String(left["Vehicle Type"]).localeCompare(String(right["Vehicle Type"]));
+    });
+}
+
+export function getProjectFleetRfqRows(project) {
+  if (!project) return [];
+
+  const rowsByKey = getProjectFleetMetrics(project).lines.reduce((map, line) => {
+    const key = [line.regionId, line.vehicle.id, line.strategy].join("|");
+    const current = map.get(key) || {
+      "Vehicle Type": line.vehicle.label,
+      Subsystem: line.subsystemLabel,
+      Region: line.regionLabel,
+      "Strategy Requested": line.strategy === "investment" ? "Investment" : "Rental",
+      "Estimated Qty": 0,
+      "Estimated km / month": 0,
+      "Fuel Type": line.vehicle.defaultFuelType,
+      "Benchmark Model / Example": line.vehicle.notes,
+      "Current Monthly Rental (EUR)": line.monthlyRental,
+      "Current Purchase Price (EUR)": line.purchasePrice,
+      "Current Annual Maintenance (EUR)": line.annualMaintenance,
+      "Current Annual L1 Maintenance (EUR)": line.annualL1Maintenance,
+      "Current Annual Tyres Reserve (EUR)": line.annualTyresReserve,
+      "Current Fuel Price / Litre (EUR)": line.fuelPricePerLitre,
+      "Supplier / Lessor": "",
+      "Quoted Monthly Rental (EUR)": "",
+      "Quoted Purchase Price (EUR)": "",
+      "Quoted Annual Maintenance (EUR)": "",
+      "Quoted Insurance Included": "",
+      "Quoted Registration Included": "",
+      "Quoted km limit / month": "",
+      Comments: "",
+      _subsystemSet: new Set(),
+      _weightedKm: 0,
+    };
+
+    current._subsystemSet.add(line.subsystemLabel);
+    current["Estimated Qty"] += line.quantity;
+    current._weightedKm += line.kmPerMonth * line.quantity;
+    current["Current Monthly Rental (EUR)"] = Math.max(current["Current Monthly Rental (EUR)"], line.monthlyRental);
+    current["Current Purchase Price (EUR)"] = Math.max(current["Current Purchase Price (EUR)"], line.purchasePrice);
+    current["Current Annual Maintenance (EUR)"] = Math.max(
+      current["Current Annual Maintenance (EUR)"],
+      line.annualMaintenance
+    );
+    current["Current Annual L1 Maintenance (EUR)"] = Math.max(
+      current["Current Annual L1 Maintenance (EUR)"],
+      line.annualL1Maintenance
+    );
+    current["Current Annual Tyres Reserve (EUR)"] = Math.max(
+      current["Current Annual Tyres Reserve (EUR)"],
+      line.annualTyresReserve
+    );
+    current["Current Fuel Price / Litre (EUR)"] = Math.max(
+      current["Current Fuel Price / Litre (EUR)"],
+      line.fuelPricePerLitre
+    );
+
+    map.set(key, current);
+    return map;
+  }, new Map());
+
+  return Array.from(rowsByKey.values())
+    .map((row) => {
+      const quantity = row["Estimated Qty"] || 0;
+      const normalized = {
+        ...row,
+        Subsystem: Array.from(row._subsystemSet).sort((left, right) => left.localeCompare(right)).join(", "),
+        "Estimated Qty": roundAmount(quantity),
+        "Estimated km / month": quantity > 0 ? roundAmount(row._weightedKm / quantity) : 0,
+      };
+      delete normalized._subsystemSet;
+      delete normalized._weightedKm;
+
+      return Object.fromEntries(Object.entries(normalized).map(([key, value]) => [key, roundIfNumber(value)]));
+    })
+    .sort((left, right) => {
+      const regionCompare = String(left.Region).localeCompare(String(right.Region));
+      if (regionCompare !== 0) return regionCompare;
+      const strategyCompare = String(left["Strategy Requested"]).localeCompare(String(right["Strategy Requested"]));
+      if (strategyCompare !== 0) return strategyCompare;
+      return String(left["Vehicle Type"]).localeCompare(String(right["Vehicle Type"]));
+    });
 }
 
 export { FLEET_MAINTENANCE_MODES, FLEET_REGIONS, FLEET_VEHICLE_TYPES };
