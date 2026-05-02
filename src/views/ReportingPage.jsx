@@ -23,6 +23,12 @@ const SHARED_POOL_META = {
   full: "Shared project tooling",
 };
 
+const MANAGEMENT_FLEET_META = {
+  id: "MANAGEMENT",
+  label: "Management / project support",
+  full: "Management and project support fleet",
+};
+
 const cardStyle = {
   background: palette.surfaceLowest,
   borderRadius: "18px",
@@ -669,8 +675,8 @@ export default function ReportingPage() {
     () =>
       metrics.fleetMetrics.bySubsystem.map((row) => ({
         ...row,
-        label: subsystemMetaMap[row.subsystemId]?.label || row.subsystemId,
-        full: subsystemMetaMap[row.subsystemId]?.full || row.subsystemId,
+        label: subsystemMetaMap[row.subsystemId]?.label || (row.subsystemId === MANAGEMENT_FLEET_META.id ? MANAGEMENT_FLEET_META.label : row.subsystemId),
+        full: subsystemMetaMap[row.subsystemId]?.full || (row.subsystemId === MANAGEMENT_FLEET_META.id ? MANAGEMENT_FLEET_META.full : row.subsystemId),
       })),
     [metrics.fleetMetrics.bySubsystem, subsystemMetaMap]
   );
@@ -854,9 +860,9 @@ export default function ReportingPage() {
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(360px, 0.9fr)", gap: "18px" }}>
         <FleetReportingTable
-          title="Fleet cost by subsystem"
-          description="Simple fleet footprint by subsystem. Fleet stays outside the tooling allocation-level logic."
-          headers={["Subsystem", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
+          title="Fleet cost by allocation"
+          description="Simple fleet footprint by subsystem or management allocation. Fleet stays outside the tooling allocation-level logic."
+          headers={["Allocation", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
           rows={fleetSubsystemRows}
           emptyState="No fleet line configured on the active project."
           renderRow={(row) => (

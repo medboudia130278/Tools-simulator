@@ -4,6 +4,7 @@ import { TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { palette } from "../app/theme.js";
 import {
   createRecommendedFleetLine,
+  FLEET_ALLOCATION_TYPES,
   FLEET_MAINTENANCE_MODES,
   FLEET_REGIONS,
   FLEET_VEHICLE_TYPES,
@@ -410,8 +411,36 @@ export default function FleetPage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px" }}>
                 <label style={{ display: "grid", gap: "6px" }}>
+                  <span style={{ fontSize: "12px", color: palette.inkMuted }}>Category</span>
+                  <select
+                    value={line.allocationType || "subsystem"}
+                    onChange={(event) => handleLinePatch(line.id, { allocationType: event.target.value })}
+                    style={inputStyle}
+                  >
+                    {FLEET_ALLOCATION_TYPES.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label style={{ display: "grid", gap: "6px" }}>
                   <span style={{ fontSize: "12px", color: palette.inkMuted }}>Subsystem</span>
-                  <select value={line.subsystemId} onChange={(event) => handleLinePatch(line.id, { subsystemId: event.target.value })} style={inputStyle}>
+                  <select
+                    value={line.subsystemId}
+                    onChange={(event) => handleLinePatch(line.id, { subsystemId: event.target.value })}
+                    disabled={line.allocationType === "management"}
+                    style={{
+                      ...inputStyle,
+                      ...(line.allocationType === "management"
+                        ? {
+                            background: palette.surfaceLow,
+                            color: palette.inkMuted,
+                            cursor: "not-allowed",
+                          }
+                        : null),
+                    }}
+                  >
                     {subsystemIds.map((subsystemId) => {
                       const meta = TOOLING_SUBSYSTEMS.find((item) => item.id === subsystemId);
                       return (

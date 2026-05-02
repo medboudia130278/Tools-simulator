@@ -11,6 +11,12 @@ const SHARED_POOL_META = {
   full: "Shared project tooling",
 };
 
+const MANAGEMENT_FLEET_META = {
+  id: "MANAGEMENT",
+  label: "Management / project support",
+  full: "Management and project support fleet",
+};
+
 const fmt = (value) =>
   new Intl.NumberFormat("fr-FR", {
     minimumFractionDigits: 0,
@@ -658,8 +664,8 @@ export default function BudgetPage() {
         const meta = TOOLING_SUBSYSTEMS.find((item) => item.id === row.subsystemId);
         return {
           ...row,
-          label: meta?.label || row.subsystemId,
-          full: meta?.full || row.subsystemId,
+          label: meta?.label || (row.subsystemId === MANAGEMENT_FLEET_META.id ? MANAGEMENT_FLEET_META.label : row.subsystemId),
+          full: meta?.full || (row.subsystemId === MANAGEMENT_FLEET_META.id ? MANAGEMENT_FLEET_META.full : row.subsystemId),
         };
       }),
     [metrics.fleetMetrics.bySubsystem]
@@ -844,9 +850,9 @@ export default function BudgetPage() {
         }}
       >
         <FleetBudgetTable
-          title="Fleet cost by subsystem"
-          description="Simple fleet view by subsystem. No technician or team ratios are applied here."
-          headers={["Subsystem", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
+          title="Fleet cost by allocation"
+          description="Simple fleet view by subsystem or management allocation. No technician or team ratios are applied here."
+          headers={["Allocation", "Vehicles", "Mobilization CAPEX", "Renewal CAPEX net", "Avg annual renewal CAPEX", "Annual OPEX", "Contract total"]}
           rows={fleetSubsystemRows}
           emptyState="No fleet line configured on the active project."
           renderRow={(row) => (

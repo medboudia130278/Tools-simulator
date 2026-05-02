@@ -2,6 +2,7 @@ import { TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import {
   createFleetLine,
   getDefaultInvestmentPolicy,
+  isFleetAllocationTypeId,
   isFleetMaintenanceModeId,
   isFleetVehicleTypeId,
 } from "../fleet/fleetCatalog.js";
@@ -69,6 +70,7 @@ function normalizeFleetLine(line, fallbackSubsystemId = "POS") {
   const defaultInvestmentPolicy = getDefaultInvestmentPolicy(vehicleTypeId);
   return createFleetLine({
     ...line,
+    allocationType: isFleetAllocationTypeId(line.allocationType) ? line.allocationType : "subsystem",
     subsystemId: VALID_SUBSYSTEM_IDS.has(line.subsystemId) ? line.subsystemId : fallbackSubsystemId,
     vehicleTypeId,
     strategy: line.strategy === "investment" ? "investment" : "rental",

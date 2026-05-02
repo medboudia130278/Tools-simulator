@@ -1,11 +1,13 @@
 import { TOOLING_CONTEXTS, TOOLING_SUBSYSTEMS } from "../../railway_tooling.jsx";
 import { getContractDurationMonths, getProjectSubsystemIds } from "../projects/projectSelectors.js";
 import {
+  FLEET_ALLOCATION_TYPES,
   FLEET_MAINTENANCE_MODES,
   FLEET_VEHICLE_TYPES,
   createFleetLine,
   getDefaultInvestmentPolicy,
   getFleetVehicleType,
+  isFleetAllocationTypeId,
 } from "./fleetCatalog.js";
 import {
   DEFAULT_FLEET_REGION_ID,
@@ -15,6 +17,8 @@ import {
 } from "./fleetRegionalDefaults.js";
 
 const SUBSYSTEM_LABELS = Object.fromEntries(TOOLING_SUBSYSTEMS.map((subsystem) => [subsystem.id, subsystem.label]));
+const MANAGEMENT_ALLOCATION_ID = "MANAGEMENT";
+const MANAGEMENT_ALLOCATION_LABEL = "Management / project support";
 const MAINTENANCE_AGE_CURVES = {
   flat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   age_standard: [1, 1, 1.05, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7],
@@ -82,6 +86,12 @@ function getEndOfContractResidualPct(vehicleAgeMonths, renewalCycleYears, residu
 export function getResolvedFleetLine(project, line) {
   const fleet = getProjectFleet(project);
   const regionId = fleet.regionId || DEFAULT_FLEET_REGION_ID;
+  const allocationType = isFleetAllocationTypeId(line?.allocationType) ? line.allocationType : "subsystem";
+  const allocationId = allocationType === "management" ? MANAGEMENT_ALLOCATION_ID : line?.subsystemId;
+  const allocationLabel =
+    allocationType === "management"
+      ? MANAGEMENT_ALLOCATION_LABEL
+      : SUBSYSTEM_LABELS[line?.subsystemId] || line?.subsystemId || "Unknown";
   const vehicle = getFleetVehicleType(line?.vehicleTypeId);
   const regionalDefaults = getFleetRegionalVehicleDefaults(regionId, vehicle.id);
   const overrides = line?.overrides || {};
@@ -210,7 +220,10 @@ export function getResolvedFleetLine(project, line) {
 
   return {
     ...line,
-    subsystemLabel: SUBSYSTEM_LABELS[line?.subsystemId] || line?.subsystemId || "Unknown",
+    allocationType,
+    allocationId,
+    allocationLabel,
+    subsystemLabel: allocationLabel,
     vehicle,
     regionId,
     regionLabel: getFleetRegion(regionId).label,
@@ -298,9 +311,9 @@ export function getProjectFleetMetrics(project) {
       summary.annualRentalCost += line.quantity * line.monthlyRental * 12;
     }
 
-    const subsystemBucket = bySubsystem.get(line.subsystemId) || {
-      subsystemId: line.subsystemId,
-      label: line.subsystemLabel,
+    const subsystemBucket = bySubsystem.get(line.allocationId) || {
+      subsystemId: line.allocationId,
+      label: line.allocationLabel,
       quantity: 0,
       mobilizationCapex: 0,
       renewalCapexNet: 0,
@@ -314,7 +327,7 @@ export function getProjectFleetMetrics(project) {
     subsystemBucket.annualRenewalCapex += line.renewalCapexNet / Math.max(summary.contractYears, 1);
     subsystemBucket.annualCost += line.annualOperatingCost;
     subsystemBucket.contractTotal += line.contractTotal;
-    bySubsystem.set(line.subsystemId, subsystemBucket);
+    bySubsystem.set(line.allocationId, subsystemBucket);
 
     const strategyBucket = byStrategy.get(line.strategy) || {
       strategy: line.strategy,
@@ -500,4 +513,4 @@ export function getProjectFleetRfqRows(project) {
     });
 }
 
-export { FLEET_MAINTENANCE_MODES, FLEET_REGIONS, FLEET_VEHICLE_TYPES };
+export { FLEET_ALLOCATION_TYPES, FLEET_MAINTENANCE_MODES, FLEET_REGIONS, FLEET_VEHICLE_TYPES };

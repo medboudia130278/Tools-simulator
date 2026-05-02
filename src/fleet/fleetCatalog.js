@@ -57,6 +57,11 @@ export const FLEET_MAINTENANCE_MODES = [
   { id: "age_heavy_duty", label: "Age-based heavy-duty" },
 ];
 
+export const FLEET_ALLOCATION_TYPES = [
+  { id: "subsystem", label: "Subsystem" },
+  { id: "management", label: "Management" },
+];
+
 const INVESTMENT_POLICY_DEFAULTS = {
   small_van: { renewalCycleYears: 5, residualValuePct: 35, maintenanceMode: "age_standard" },
   medium_van: { renewalCycleYears: 5, residualValuePct: 35, maintenanceMode: "age_standard" },
@@ -67,6 +72,7 @@ const INVESTMENT_POLICY_DEFAULTS = {
 
 const VEHICLE_TYPE_IDS = new Set(FLEET_VEHICLE_TYPES.map((vehicle) => vehicle.id));
 const MAINTENANCE_MODE_IDS = new Set(FLEET_MAINTENANCE_MODES.map((mode) => mode.id));
+const ALLOCATION_TYPE_IDS = new Set(FLEET_ALLOCATION_TYPES.map((type) => type.id));
 
 function createFleetLineId() {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -106,6 +112,10 @@ export function isFleetMaintenanceModeId(modeId) {
   return MAINTENANCE_MODE_IDS.has(modeId);
 }
 
+export function isFleetAllocationTypeId(allocationType) {
+  return ALLOCATION_TYPE_IDS.has(allocationType);
+}
+
 export function getDefaultInvestmentPolicy(vehicleTypeId) {
   return {
     ...(INVESTMENT_POLICY_DEFAULTS[vehicleTypeId] || INVESTMENT_POLICY_DEFAULTS.small_van),
@@ -117,6 +127,7 @@ export function createFleetLine(overrides = {}) {
   const vehicleTypeId = overrides.vehicleTypeId || getRecommendedVehicleTypeId(subsystemId);
   return {
     id: overrides.id || createFleetLineId(),
+    allocationType: isFleetAllocationTypeId(overrides.allocationType) ? overrides.allocationType : "subsystem",
     subsystemId,
     vehicleTypeId,
     strategy: overrides.strategy === "investment" ? "investment" : "rental",
