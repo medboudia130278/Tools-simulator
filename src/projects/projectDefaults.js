@@ -31,6 +31,18 @@ function normalizeSubsystemIds(subsystemIds, fallback = "POS") {
   return filtered.length ? filtered : [fallback];
 }
 
+function normalizeNonNegativeNumber(value, fallback = 0) {
+  if (value === null || value === undefined || value === "") return fallback;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric >= 0 ? numeric : fallback;
+}
+
+function normalizePositiveNumber(value, fallback = 1) {
+  if (value === null || value === undefined || value === "") return fallback;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : fallback;
+}
+
 function normalizeWorkforce(workforce) {
   const defaults = createDefaultWorkforce();
   if (!workforce || typeof workforce !== "object") return defaults;
@@ -40,9 +52,9 @@ function normalizeWorkforce(workforce) {
       return [
         subsystemId,
         {
-          tech: Math.max(0, Number(incoming.tech) || counts.tech),
-          equipe: Math.max(0, Number(incoming.equipe) || counts.equipe),
-          project: Math.max(0, Number(incoming.project) || counts.project),
+          tech: normalizeNonNegativeNumber(incoming.tech, counts.tech),
+          equipe: normalizeNonNegativeNumber(incoming.equipe, counts.equipe),
+          project: normalizeNonNegativeNumber(incoming.project, counts.project),
         },
       ];
     })
@@ -60,19 +72,19 @@ function normalizeFleetLine(line, fallbackSubsystemId = "POS") {
     subsystemId: VALID_SUBSYSTEM_IDS.has(line.subsystemId) ? line.subsystemId : fallbackSubsystemId,
     vehicleTypeId,
     strategy: line.strategy === "investment" ? "investment" : "rental",
-    quantity: Math.max(1, Number(line.quantity) || 1),
-    kmPerMonth: Math.max(0, Number(line.kmPerMonth) || 0),
+    quantity: normalizePositiveNumber(line.quantity, 1),
+    kmPerMonth: normalizeNonNegativeNumber(line.kmPerMonth, 0),
     overrides: {
       ...(line.overrides || {}),
     },
     investmentPolicy: {
-      renewalCycleYears: Math.max(
-        1,
-        Number(line.investmentPolicy?.renewalCycleYears) || defaultInvestmentPolicy.renewalCycleYears
+      renewalCycleYears: normalizePositiveNumber(
+        line.investmentPolicy?.renewalCycleYears,
+        defaultInvestmentPolicy.renewalCycleYears
       ),
-      residualValuePct: Math.max(
-        0,
-        Math.min(90, Number(line.investmentPolicy?.residualValuePct) || defaultInvestmentPolicy.residualValuePct)
+      residualValuePct: Math.min(
+        90,
+        normalizeNonNegativeNumber(line.investmentPolicy?.residualValuePct, defaultInvestmentPolicy.residualValuePct)
       ),
       maintenanceMode: isFleetMaintenanceModeId(line.investmentPolicy?.maintenanceMode)
         ? line.investmentPolicy.maintenanceMode

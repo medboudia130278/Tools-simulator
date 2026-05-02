@@ -75,6 +75,18 @@ function createFleetLineId() {
   return `fleet-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+function normalizeNonNegativeNumber(value, fallback = 0) {
+  if (value === null || value === undefined || value === "") return fallback;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric >= 0 ? numeric : fallback;
+}
+
+function normalizePositiveNumber(value, fallback = 1) {
+  if (value === null || value === undefined || value === "") return fallback;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : fallback;
+}
+
 export function isFleetVehicleTypeId(vehicleTypeId) {
   return VEHICLE_TYPE_IDS.has(vehicleTypeId);
 }
@@ -108,8 +120,8 @@ export function createFleetLine(overrides = {}) {
     subsystemId,
     vehicleTypeId,
     strategy: overrides.strategy === "investment" ? "investment" : "rental",
-    quantity: Math.max(1, Number(overrides.quantity) || 1),
-    kmPerMonth: Math.max(0, Number(overrides.kmPerMonth) || 2500),
+    quantity: normalizePositiveNumber(overrides.quantity, 1),
+    kmPerMonth: normalizeNonNegativeNumber(overrides.kmPerMonth, 2500),
     overrides: {
       consumptionLPer100Km: null,
       monthlyRental: null,

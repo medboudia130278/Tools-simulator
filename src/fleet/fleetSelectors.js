@@ -33,6 +33,14 @@ function normalizePositiveNumber(value, fallback = 0) {
   return Number.isFinite(numeric) && numeric >= 0 ? numeric : fallback;
 }
 
+function normalizeStrictlyPositiveNumber(value, fallback = 1) {
+  if (value === null || value === undefined || value === "") {
+    return fallback;
+  }
+  const numeric = Number(value);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : fallback;
+}
+
 export function getDefaultProjectFleet() {
   return {
     regionId: DEFAULT_FLEET_REGION_ID,
@@ -102,13 +110,13 @@ export function getResolvedFleetLine(project, line) {
   );
   const defaultInvestmentPolicy = getDefaultInvestmentPolicy(vehicle.id);
   const investmentPolicy = {
-    renewalCycleYears: Math.max(
-      1,
-      Number(line?.investmentPolicy?.renewalCycleYears) || defaultInvestmentPolicy.renewalCycleYears
+    renewalCycleYears: normalizeStrictlyPositiveNumber(
+      line?.investmentPolicy?.renewalCycleYears,
+      defaultInvestmentPolicy.renewalCycleYears
     ),
-    residualValuePct: Math.max(
-      0,
-      Math.min(90, Number(line?.investmentPolicy?.residualValuePct) || defaultInvestmentPolicy.residualValuePct)
+    residualValuePct: Math.min(
+      90,
+      normalizePositiveNumber(line?.investmentPolicy?.residualValuePct, defaultInvestmentPolicy.residualValuePct)
     ),
     maintenanceMode: line?.investmentPolicy?.maintenanceMode || defaultInvestmentPolicy.maintenanceMode,
   };
