@@ -9,6 +9,8 @@ import {
 import { getProjectFleetMetrics } from "../fleet/fleetSelectors.js";
 import { createDefaultWorkforce } from "./projectDefaults.js";
 
+const MANAGEMENT_SUBSYSTEM_ID = "MANAGEMENT";
+
 const SHARED_SUBSYSTEM_ID = "SHARED";
 const VALID_SUBSYSTEM_IDS = new Set(TOOLING_SUBSYSTEMS.map((subsystem) => subsystem.id));
 const EXPORT_SHARED_SUBSYSTEM_LABEL = "Shared / depot pool";
@@ -43,7 +45,8 @@ function getProjectCatalog(project) {
   return TOOLING_CATALOG.filter(
     (tool) =>
       (tool.contexts || []).includes(project.contextId) &&
-      getVisibleSubsystemIdsForTool(project, tool).length > 0
+      (tool.subsystem === MANAGEMENT_SUBSYSTEM_ID ||
+        getVisibleSubsystemIdsForTool(project, tool).length > 0)
   );
 }
 
@@ -392,6 +395,7 @@ function mapExportBucket(categoryId) {
 }
 
 function mapExportLevel(tool) {
+  if (tool.subsystem === MANAGEMENT_SUBSYSTEM_ID) return "Manager";
   if (tool.budgetBucketId === SHARED_SUBSYSTEM_ID) return "Depot";
   return EXPORT_LEVEL_LABELS[tool.level] || "Depot";
 }
@@ -510,7 +514,7 @@ export function getProjectCostMatrixRows(project) {
     return map;
   }, new Map());
 
-  return Array.from(rowsByKey.values())
+  const toolingRows = Array.from(rowsByKey.values())
     .map((row) => {
       row["Recurring Contract Total (€)"] =
         row["Renewal Contract Total (€)"] + row["Calibration Contract Total (€)"];
@@ -539,6 +543,8 @@ export function getProjectCostMatrixRows(project) {
 
       return String(left["Source Category"]).localeCompare(String(right["Source Category"]));
     });
+
+  return toolingRows;
 }
 
 function buildSupplierRfqKey(tool) {
@@ -584,7 +590,7 @@ export function getProjectSupplierRfqRows(project) {
     return map;
   }, new Map());
 
-  return Array.from(rowsByKey.values())
+  const toolingRfqRows = Array.from(rowsByKey.values())
     .map((row) => ({
       ...row,
       "Current Unit Price (EUR)": Number(row["Current Unit Price (EUR)"].toFixed(2)),
@@ -598,6 +604,8 @@ export function getProjectSupplierRfqRows(project) {
       if (supplierCompare !== 0) return supplierCompare;
       return String(left.Reference).localeCompare(String(right.Reference));
     });
+
+  return toolingRfqRows;
 }
 
 export function getProjectReportingMetrics(project) {
@@ -687,9 +695,24 @@ export function getProjectReportingMetrics(project) {
     });
   }
 
-  const reportingSubsystemIds = selectedTools.some((tool) => tool.ownership === "shared_project")
-    ? [...subsystemIds, SHARED_SUBSYSTEM_ID]
-    : subsystemIds;
+  const managementTools = selectedTools.filter((tool) => tool.subsystem === MANAGEMENT_SUBSYSTEM_ID);
+  if (managementTools.length > 0) {
+    const mgmtBucket = createCostBucket(MANAGEMENT_SUBSYSTEM_ID, "Management");
+    managementTools.forEach((tool) => applyToolCost(mgmtBucket, tool));
+    subsystemCostRows.push({
+      ...mgmtBucket,
+      annualRenewals: annualizeCost(mgmtBucket.renewals, contractDurationMonths),
+      annualService: annualizeCost(mgmtBucket.service, contractDurationMonths),
+    });
+  }
+
+  const hasSharedPool = selectedTools.some((tool) => tool.ownership === "shared_project");
+  const hasManagementSelection = managementTools.length > 0;
+  const reportingSubsystemIds = [
+    ...subsystemIds,
+    ...(hasSharedPool ? [SHARED_SUBSYSTEM_ID] : []),
+    ...(hasManagementSelection ? [MANAGEMENT_SUBSYSTEM_ID] : []),
+  ];
 
   const subsystemLevelRows = reportingSubsystemIds.map((subsystemId) => {
     const tools = selectedTools.filter((tool) => (tool.budgetBucketId || tool.subsystem) === subsystemId);
@@ -821,6 +844,27 @@ export function getProjectReportingMetrics(project) {
       missingMandatoryCount: Math.max(0, visibleMandatory.length - selectedMandatory.length),
     };
   });
+
+  const allManagementCatalog = catalog.filter((tool) => tool.subsystem === MANAGEMENT_SUBSYSTEM_ID);
+  if (allManagementCatalog.length > 0) {
+    const visibleMandatory = allManagementCatalog.filter((tool) => tool.statut === "OB");
+    const selectedMgmt = selectedTools.filter((tool) => tool.subsystem === MANAGEMENT_SUBSYSTEM_ID);
+    const selectedMandatory = selectedMgmt.filter((tool) => tool.statut === "OB");
+    const renewalSensitive = selectedMgmt.filter((tool) => tool.renewalCount > 0);
+    subsystemCoverage.push({
+      subsystem: MANAGEMENT_SUBSYSTEM_ID,
+      visibleCount: allManagementCatalog.length,
+      selectedCount: selectedMgmt.length,
+      mandatoryCount: visibleMandatory.length,
+      selectedMandatoryCount: selectedMandatory.length,
+      coveragePct: visibleMandatory.length
+        ? Math.round((selectedMandatory.length / visibleMandatory.length) * 100)
+        : 100,
+      renewalSensitiveCount: renewalSensitive.length,
+      renewalBudget: renewalSensitive.reduce((sum, tool) => sum + tool.renewalCost, 0),
+      missingMandatoryCount: Math.max(0, visibleMandatory.length - selectedMandatory.length),
+    });
+  }
 
   const alerts = [];
   if (missingMandatoryTools.length > 0) {

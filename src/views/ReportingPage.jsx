@@ -29,6 +29,12 @@ const MANAGEMENT_FLEET_META = {
   full: "Management and project support fleet",
 };
 
+const MANAGEMENT_PPE_META = {
+  id: "MANAGEMENT",
+  label: "Management",
+  full: "Management team PPE",
+};
+
 const cardStyle = {
   background: palette.surfaceLowest,
   borderRadius: "18px",
@@ -632,11 +638,16 @@ export default function ReportingPage() {
   const budgetMetrics = useMemo(() => getProjectBudgetMetrics(activeProject), [activeProject]);
   const activeSubsystemIds = useMemo(() => getProjectSubsystemIds(activeProject), [activeProject]);
 
+  const validDetailIds = useMemo(
+    () => new Set([...activeSubsystemIds, ...Object.keys(metrics.subsystemCategoryRows)]),
+    [activeSubsystemIds, metrics.subsystemCategoryRows]
+  );
+
   useEffect(() => {
-    if (!activeSubsystemIds.includes(activeSubsystemDetail)) {
+    if (!validDetailIds.has(activeSubsystemDetail)) {
       setActiveSubsystemDetail(activeSubsystemIds[0] || "POS");
     }
-  }, [activeSubsystemIds, activeSubsystemDetail]);
+  }, [validDetailIds, activeSubsystemDetail, activeSubsystemIds]);
 
   const context = useMemo(
     () => TOOLING_CONTEXTS.find((item) => item.id === activeProject?.contextId),
@@ -648,6 +659,7 @@ export default function ReportingPage() {
       Object.fromEntries([
         ...TOOLING_SUBSYSTEMS.map((subsystem) => [subsystem.id, subsystem]),
         [SHARED_POOL_META.id, SHARED_POOL_META],
+        [MANAGEMENT_PPE_META.id, MANAGEMENT_PPE_META],
       ]),
     []
   );

@@ -16,6 +16,7 @@ const DEFAULT_WORKFORCE = {
   AFC: { tech: 2, equipe: 1, project: 1 },
   DEQ: { tech: 2, equipe: 1, project: 1 },
   MEP: { tech: 3, equipe: 1, project: 1 },
+  MANAGEMENT: { tech: 2, equipe: 0, project: 0 },
 };
 
 const TOOL_UID_MIGRATIONS = {

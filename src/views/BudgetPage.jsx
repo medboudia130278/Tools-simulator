@@ -17,6 +17,12 @@ const MANAGEMENT_FLEET_META = {
   full: "Management and project support fleet",
 };
 
+const MANAGEMENT_PPE_META = {
+  id: "MANAGEMENT",
+  label: "Management",
+  full: "Management team PPE",
+};
+
 const fmt = (value) =>
   new Intl.NumberFormat("fr-FR", {
     minimumFractionDigits: 0,
@@ -622,17 +628,18 @@ export default function BudgetPage() {
 
   const subsystemRows = useMemo(
     () => {
-      const rowIds = metrics.hasSharedProjectPool ? [...activeSubsystemIds, SHARED_POOL_META.id] : activeSubsystemIds;
+      const hasManagement = metrics.subsystemTotals.some((item) => item.subsystem === MANAGEMENT_PPE_META.id);
+      const rowIds = [
+        ...activeSubsystemIds,
+        ...(metrics.hasSharedProjectPool ? [SHARED_POOL_META.id] : []),
+        ...(hasManagement ? [MANAGEMENT_PPE_META.id] : []),
+      ];
       return rowIds.map((subsystemId) => {
         const meta = TOOLING_SUBSYSTEMS.find((item) => item.id === subsystemId);
         const counts =
           subsystemId === SHARED_POOL_META.id
             ? { tech: "—", equipe: "—", project: "1" }
-            : activeProject?.workforce?.[subsystemId] || {
-                tech: 0,
-                equipe: 0,
-                project: 0,
-              };
+            : activeProject?.workforce?.[subsystemId] || { tech: 0, equipe: 0, project: 0 };
         const totals = metrics.subsystemTotals.find((item) => item.subsystem === subsystemId) || {
           mobilization: 0,
           renewals: 0,
@@ -641,11 +648,25 @@ export default function BudgetPage() {
           annualService: 0,
           total: 0,
         };
+        const label =
+          meta?.label ||
+          (subsystemId === SHARED_POOL_META.id
+            ? SHARED_POOL_META.label
+            : subsystemId === MANAGEMENT_PPE_META.id
+              ? MANAGEMENT_PPE_META.label
+              : subsystemId);
+        const full =
+          meta?.full ||
+          (subsystemId === SHARED_POOL_META.id
+            ? SHARED_POOL_META.full
+            : subsystemId === MANAGEMENT_PPE_META.id
+              ? MANAGEMENT_PPE_META.full
+              : subsystemId);
 
         return {
           subsystemId,
-          label: meta?.label || (subsystemId === SHARED_POOL_META.id ? SHARED_POOL_META.label : subsystemId),
-          full: meta?.full || (subsystemId === SHARED_POOL_META.id ? SHARED_POOL_META.full : subsystemId),
+          label,
+          full,
           counts,
           mobilization: totals.mobilization,
           renewals: totals.renewals,

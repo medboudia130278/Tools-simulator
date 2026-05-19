@@ -4,6 +4,7 @@ import {
   ChevronRight,
   ClipboardList,
   FolderKanban,
+  HardHat,
   LayoutGrid,
   Lock,
   Plus,
@@ -15,6 +16,7 @@ import { TOOLING_CATALOG, TOOLING_CONTEXTS, TOOLING_SUBSYSTEMS } from "../../rai
 import InventoryPage from "../views/InventoryPage.jsx";
 import BudgetPage from "../views/BudgetPage.jsx";
 import FleetPage from "../views/FleetPage.jsx";
+import ManagementPage from "../views/ManagementPage.jsx";
 import ReportingPage from "../views/ReportingPage.jsx";
 import ProjectsPage from "../views/ProjectsPage.jsx";
 import { useProjects } from "../projects/ProjectStore.jsx";
@@ -50,6 +52,16 @@ const pages = [
       "Plan service vans and pickups by subsystem, compare rental and investment strategies and adjust regional cost assumptions.",
     icon: Truck,
     component: FleetPage,
+  },
+  {
+    id: "management",
+    label: "Management",
+    eyebrow: "Management PPE",
+    title: "Management team PPE allocation",
+    description:
+      "Select PPE items for the management team, set the number of managers and review the cost impact per project.",
+    icon: HardHat,
+    component: ManagementPage,
   },
   {
     id: "budget",

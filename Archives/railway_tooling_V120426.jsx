@@ -306,7 +306,6 @@ const RAW_BY_SUBSYSTEM = {
   ['t04','T','PPE','Safety spectacles EN166 - anti-fog + impact rated - wraparound','Bolle Safety','Bolle Safety COBRA COBPSI','Trackside maintenance','EN 166','OB',1,22,'1 year','Eye protection during rail cutting, drilling, grinding, aluminothermic welding prep, and ballast work. Anti-fog for tunnel and cold weather use. Mandatory during all power-tool operations.','https://www.bollesafety.com/en-int/sport/cobra'],
   ['t05','T','PPE','Anti-vibration gloves EN ISO 10819 + anti-cut liner - trackside work','Ejendals / Delta Plus','Ejendals Tegera 9105 / Delta Plus VV750','Trackside maintenance','EN ISO 10819','OB',1,35,'6 months','Anti-vibration (EN ISO 10819) for prolonged use of tirefonneuse (screwing machine) and impact wrench. Anti-cut liner for rail handling and fastener work. Daily use.','https://uk.rs-online.com/web/c/safety-security/personal-protective-equipment/anti-vibration-gloves/'],
   ['t06','T','PPE','Ear defenders EN 352-1 - SNR 30 dB - headband - for machinery use','3M Peltor / JSP','3M Peltor Optime II H520A / JSP Sonis 2','Trackside maintenance','EN 352-1','OB',1,25,'2 years','Mandatory during screwing-machine operation, rail cutting and impact-wrench use. SNR 30 dB brings exposure below the usual railway action level during heavy mechanical work.','https://uk.rs-online.com/web/c/safety-security/personal-protective-equipment/ear-defenders/'],
-  ['t07','T','PPE','Hi-visibility Work Trousers Class 2','Portwest','PW340','Trackside maintenance and possession work','EN ISO 20471 Class 2','OB',1,79,'2 years or replace when worn','Base high-visibility lower-body PPE for track technicians walking on ballast, working in possessions and moving through access routes where visibility must be maintained throughout the intervention.','https://www.lyreco.com/webshop/FRCH/pantalon-haute-visibilite-portwest-pw340-classe-2-orange-noir-taille-58-product-000000000016482764.html'],
   ['t08','T','PPE','Track worker safety vest - integrated detector port + reflective - EN 20471','Becker Minty / Portwest','Becker Minty PEW35 / Portwest trackworker vest','Trackside maintenance','-','OB',1,85,'2 years','Trackworker-specific vest with pocket for personal warning device and high visibility for active possession sites.','https://www.portwest.com/en-gb/collections/hi-vis-vests'],
   ['t09','T','PPE','Knee pads EN 14404 Type 2 - hard shell - extended wear','Portwest','Portwest KP20','Trackside maintenance','EN 14404','OB',1,35,'2 years','Kneeling work on ballast and sleepers during fastener replacement, rail drilling and turnout maintenance.','https://portwest.com/products/view/KP20'],
   ['t10','T','DIAG','Digital rail thermometer - Bluetooth magnetic contact - web attachment - range -40 C to +80 C','Goldschmidt','RAIL TEMP BT-10','Plain track inspection','-','OB',1,185,'7 years','Rail temperature measurement before welding, re-stressing or CWR adjustment. Magnetic web-contact gives a reliable bulk rail temperature for records and decision-making.','https://www.goldschmidt.com/wp-content/uploads/Original-Thermit-accessories-catalogue.pdf'],
@@ -314,7 +313,6 @@ const RAW_BY_SUBSYSTEM = {
   ['t12','E','OUTILS','Manual FASTCLIP insertion lever - Pandrol elastic clip installation','Pouget Rail','Manual FASTCLIP insertion lever 107-CL','Track fastening','-','OB',2,85,'5 years','Shared team lever dedicated to installation of Pandrol FASTCLIP elastic rail clips during corrective maintenance without machine support.','https://www.pougetrail.com/en/products-page/outillage-a-main/leviers-fastclip/'],
   ['t13','T','OUTILS','T-hand wrench for fishplate bolts - 38 mm AF','Pouget Rail','51','Track fastening','-','OB',1,45,'7 years','Manual T-hand wrench for 38 mm fishplate nuts on jointed track and similar rail connections where a railway-specific long T-handle spanner is preferred.','https://www.pougetrail.com/products-page/outillages-a-main/cles-a-main-en-t/'],
   ['t14','T','OUTILS','Feeler gauge set 10-leaf 0.05-0.80 mm - tongue/stock rail contact check','Mitutoyo','184-306S feeler gage set','Switch and turnout inspection','-','OB',1,28,'5 years','Critical check of tongue rail contact with stock rail and other small switch clearances.','https://dev.pim.mitutoyo.com/products/small-tool-instruments-and-data-management/instruments-and-reference-gages/reference-gages/thickness-feeler-gages/'],
-  ['t15','T','PPE','Technical Work Sweatshirt / Mid-layer','Portwest','KX377','Track workshop clothing and cool-weather access','-','OB',1,45,'1 year','Durable mid-layer workwear for early-morning possessions, cool-weather track access and depot preparation work where technicians need an additional layer under the hi-vis outerwear.','https://www.portwest.com/products/view/KX377/MGR'],
   ['t16','E','OUTILS','Manual FASTCLIP extraction lever - Pandrol elastic clip removal','Pouget Rail','Manual FASTCLIP extraction lever 107-DCL','Track fastening','-','OB',2,85,'5 years','Shared team lever dedicated to removal of Pandrol FASTCLIP elastic rail clips during corrective maintenance without machine support.','https://www.pougetrail.com/en/products-page/outillage-a-main/leviers-fastclip/'],
   ['t17','T','OUTILS','Compact 1/4 inch spinner ratchet and socket set - switch machine cramped access','Facom','R.360NANOPB','Switch machine maintenance','-','OB',1,163,'5 years','Compact personal ratchet and socket set for cramped switch machine housings, limit switch brackets, terminal covers and small hardware where a full team ratchet set is unnecessary.','https://www.manomano.fr/p/facom-coffret-cliquet-manche-rotatif-360-avec-douilles-14-6-r360nanopb-94034707?model_id=6124264'],
   ['e01','P','LEVAGE','Chain hoist 3t - short-travel - rail and ADV panel handling','Yale','Yalelift 360 3t hand chain hoist','Project and depot lifting support','-','RC',1,485,'10 years','Project/depot manual chain hoist for short-lift rail and turnout panel handling, insulated-joint support, component positioning and controlled lifting tasks where a compact 3t hand hoist is sufficient.','https://www.cmco.com/globalassets/catalogs--documents/emea/en/chapters-no5/02_cmco_no5_2024_04_wup_en-hoisting-equipment.pdf'],
@@ -533,17 +531,6 @@ const RAW_BY_SUBSYSTEM = {
   ["p08","P","COLLECTIF","Confined-space tripod + winch + retrieval set - sump / pit / shaft rescue standby (conditional)","3M DBI-SALA","3M DBI-SALA tripod / winch / retrieval set","Depot plumbing / sump pumps","-","OP",1,2950,"Annual (inspection by competent person)","Only required if entry into pits, shafts, wet wells or similar confined spaces is authorised in the MEP maintenance concept. This is not a work-at-height convenience item; it is rescue standby equipment that must be available before entry.","https://www.3m.com/3M/en_US/p/d/v101679053/"],
   ["p09","P","MBTDC","Multifunction installation tester - RCD, loop impedance, continuity, insulation - LV lighting and socket circuits","Fluke","Fluke 1664 FC Multifunction","Lighting / station and depot","IEC 61557 / IEC 60364","OB",1,1998,"Annual (calibration)","Commissioning and post-maintenance verification of LV lighting boards, technical-room auxiliaries, small power circuits and modified final circuits. Confirms protective conductor continuity, loop impedance, RCD tripping and core IEC 60364 / NF C 15-100 compliance before return to service.","https://media.fluke.com/4505bf82-3ba6-413d-b84b-b10800c11e39_original%20file.pdf"],
   ],
-  MANAGEMENT: [
-  // PPE for the management team — exact same items and data as their source subsystems (POS / MEP).
-  ['t01','T','PPE','Hi-visibility bump cap - baseball style anti-bump cap','Portwest','PS59 AirTech Bump Cap','MEP indoor technical rooms and low-clearance areas','EN 812','OB',1,18,'3 years or replace if damaged','Light head protection for MEP technicians working in low-clearance plant rooms, under cable trays, inside HVAC voids and around technical-room obstacles. This is a bump cap, not a substitute for an EN 397 helmet where falling-object risk exists.','https://www.portwest.com/products/view/PS59'],
-  ['t02','T','PPE','Arc-flash Safety Glasses EN166','Bolle Safety','Cobra COBPSI','All domains','EN 166 / EN 170','OB',1,22,'1 year','Anti-scratch, anti-fog. Systematic use during all interventions.','https://www.bollesafety.com/fr/lunettes-de-securite/cobra'],
-  ['t03','T','SAFETY','ATEX Headlamp – 115 lm','Peli','2755Z0','All domains','ATEX Zone 0 – IP54','OB',1,118,'Annual (battery)','Current official intrinsically safe headlamp page. Suitable for hazardous environments and easier to source than the obsolete PIXA 3 ATEX reference.','https://www.peli.com/es/en/product/flashlights/headlamp/2755z0/'],
-  ['t04','T','PPE','Safety Shoes S3 ESD SRC mid-cut','PUMA Safety','KRYPTON MID 634200','All domains','EN ISO 20345 – S3 ESD SRC','OB',1,119.39,'2 years or replace when worn','Mid-cut safety footwear for daily maintenance mobility, slip resistance and toe protection in stations, substations, technical rooms and depot areas.','https://www.puma-safety.com/eu/de/maenner/schuhe/sicherheitsschuhe/sicherheitsschuhe-s3/231/krypton-mid-puma-safety-sicherheitsschuhe-s3-esd'],
-  ['t05','T','PPE','Hi-visibility Vest Class 2','Seton','CPS4375052','Platform work zones / worksite visibility','EN ISO 20471 Class 2','OB',1,9.9,'2 years','Mandatory visibility PPE for service windows, platform-side activity and any intervention where technician conspicuity must be maintained.','https://www.seton.fr/gilet-securite-haute-visibilite-2-ceintures.html'],
-  ['t06','T','PPE','Hi-visibility Work Trousers Class 2','Portwest','PW340','All domains – daily rail-side and technical-room work','EN ISO 20471 Class 2','OB',1,79,'2 years or replace when worn','Base hi-vis lower-body PPE for daily maintenance activity in stations, technical rooms, substations and access routes where technician visibility must be maintained throughout the shift.','https://www.lyreco.com/webshop/FRCH/pantalon-haute-visibilite-portwest-pw340-classe-2-orange-noir-taille-58-product-000000000016482764.html'],
-  ['t07','T','PPE','Hi-visibility Short-sleeve Work Polo Class 2','Portwest','RT22','All domains – daily rail-side and technical-room work','EN ISO 20471 Class 2','OB',1,24,'1 year or replace when faded','Base high-visibility upper-body workwear for daily operations in warmer periods, inspections and service windows where a vest alone is not the preferred permanent garment.','https://www.hiviskings.com/portwest-rt22-class-2-hi-vis-safety-polo-rt22'],
-  ['t08','T','PPE','Hi-visibility Winter Bomber Jacket Class 3','Portwest','C465','All domains – winter outdoor and draft-exposed work','EN ISO 20471 Class 3 – EN 343','OB',1,69,'3 years or replace when damaged','Cold-weather high-visibility outer layer for winter interventions, outdoor access, platform-side standby and exposed technical-room work where warmth and visibility are both required.','https://www.lyreco.com/webshop/FRLU/veste-bomber-hi-vis-portwest-c465-orange-bleu-marine-taille-m-la-piece-product-000000000007875167.html'],
-  ],
 };
 
 const SHARED_PROJECT_RAW_TOOLS = [
@@ -565,16 +552,16 @@ const contextOverridesFor = (uids, contexts) =>
   Object.fromEntries(uids.map(uid => [uid, [...contexts]]));
 const TOOL_CONTEXT_OVERRIDES = {
   ...contextOverridesFor([
-    'TRACK:t01','TRACK:t02','TRACK:t03','TRACK:t04','TRACK:t05','TRACK:t06','TRACK:t07','TRACK:t08','TRACK:t09','TRACK:t10',
-    'TRACK:t11','TRACK:t12','TRACK:t13','TRACK:t14','TRACK:t15','TRACK:t16','TRACK:t17',
+    'TRACK:t01','TRACK:t02','TRACK:t03','TRACK:t04','TRACK:t05','TRACK:t06','TRACK:t08','TRACK:t09','TRACK:t10',
+    'TRACK:t11','TRACK:t12','TRACK:t13','TRACK:t14','TRACK:t16','TRACK:t17',
     'TRACK:e01','TRACK:e02','TRACK:e03','TRACK:e05','TRACK:e06','TRACK:e08','TRACK:e09',
     'TRACK:e11','TRACK:e14','TRACK:e15','TRACK:e16','TRACK:e17','TRACK:e18','TRACK:e19','TRACK:e20',
     'TRACK:e21','TRACK:e22','TRACK:e23','TRACK:e24','TRACK:e25','TRACK:e26','TRACK:e27','TRACK:e28','TRACK:e29','TRACK:e30',
     'TRACK:e31','TRACK:e32','TRACK:e33','TRACK:e40','TRACK:e41','TRACK:e42','TRACK:e43',
   ], ['metro', 'tram', 'heavy']),
   ...contextOverridesFor([
-    'TRACK:t01','TRACK:t02','TRACK:t03','TRACK:t04','TRACK:t05','TRACK:t06','TRACK:t07','TRACK:t08','TRACK:t09',
-    'TRACK:t11','TRACK:t14','TRACK:t15','TRACK:t17',
+    'TRACK:t01','TRACK:t02','TRACK:t03','TRACK:t04','TRACK:t05','TRACK:t06','TRACK:t08','TRACK:t09',
+    'TRACK:t11','TRACK:t14','TRACK:t17',
     'TRACK:e01','TRACK:e05','TRACK:e06','TRACK:e15','TRACK:e19','TRACK:e20','TRACK:e23','TRACK:e27','TRACK:e28','TRACK:e30','TRACK:e31','TRACK:e42','TRACK:e43',
   ], ['metro', 'tram', 'heavy', 'apm']),
   ...contextOverridesFor([
@@ -1333,7 +1320,7 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     year: '2026',
     basis: 'estimated',
   }),
-  ...lifecycleDefaultsFor(['TRACK:t01', 'TRACK:t02', 'TRACK:t06', 'TRACK:t07', 'TRACK:t08', 'TRACK:t09'], {
+  ...lifecycleDefaultsFor(['TRACK:t01', 'TRACK:t02', 'TRACK:t06', 'TRACK:t08', 'TRACK:t09'], {
     type: 'periodic_replacement',
     intervalValue: '24',
     intervalUnit: 'months',
@@ -1348,15 +1335,6 @@ export const TOOLING_LIFECYCLE_DEFAULTS = {
     intervalUnit: 'months',
     replacementRatio: '100',
     source: 'Track workbook baseline - helmet renewal cycle',
-    year: '2026',
-    basis: 'estimated',
-  }),
-  ...lifecycleDefaultsFor(['TRACK:t15'], {
-    type: 'periodic_replacement',
-    intervalValue: '12',
-    intervalUnit: 'months',
-    replacementRatio: '100',
-    source: 'Track workbook baseline - annual mid-layer renewal',
     year: '2026',
     basis: 'estimated',
   }),
@@ -2528,9 +2506,7 @@ const TOOL_IMAGE_OVERRIDES = {
   'TRACK:t02': 't40_puma_safety_krypton_mid_634200.jpg',
   'TRACK:t03': 't03_jsp_safety_evo3_rev_ajf170.jpg',
   'TRACK:t04': 't02_bolle_safety_cobra_cobpsi.jpg',
-  'TRACK:t07': 't42_portwest_pw340.jpg',
   'TRACK:t09': 't09_portwest_kp20.jpg',
-  'TRACK:t15': 't09_portwest_kx377.jpg',
   'TRACK:t17': 't39_facom_r_360nanopb.jpg',
   'TRACK:e02': 'e27_fluke_376_fc_iflex_kit.webp',
   'TRACK:e05': 'e06_honda_honda_eu22i.jpg',
@@ -2592,13 +2568,6 @@ const TOOL_IMAGE_OVERRIDES = {
   "MEP:e42": "e52_tubesca_comabi_sherpamatic_fixe_8_marches_02272158.png",
   "MEP:e43": "e53_k_rcher_nt_30.jpg",
   'SHARED:p01': 'e06_fluke_tis60.webp',
-  'MANAGEMENT:t01': 't16_portwest_ps59_airtech_bump_cap.jpg',
-  'MANAGEMENT:t03': 't08_peli_2755z0.jpg',
-  'MANAGEMENT:t04': 't40_puma_safety_krypton_mid_634200.jpg',
-  'MANAGEMENT:t05': 't05_seton_cps4375052.jpg',
-  'MANAGEMENT:t06': 't42_portwest_pw340.jpg',
-  'MANAGEMENT:t07': 't43_portwest_rt22.jpg',
-  'MANAGEMENT:t08': 't44_portwest_c465.jpg',
 };
 
 const buildTool = (subsystem, rawTool, options = {}) => {
@@ -2821,7 +2790,7 @@ const CatSVG = ({ cat, size=72 }) => {
   );
 };
 
-export function ToolVisual({ tool, size=72, radius=14 }) {
+function ToolVisual({ tool, size=72, radius=14 }) {
   if (tool.imgSrc) {
     return (
       <img
@@ -2859,7 +2828,7 @@ function CopyBtn({ text, label, accent=C.teal, light=false }) {
   );
 }
 
-export function PrimaryUse({ tool }) {
+function PrimaryUse({ tool }) {
   if (tool.uid && PRIMARY_USE_OVERRIDES[tool.uid]) {
     return PRIMARY_USE_OVERRIDES[tool.uid];
   }
@@ -2871,7 +2840,7 @@ export function PrimaryUse({ tool }) {
   return tool.notes;
 }
 
-export function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border, bodyColor=C.text, labelColor=C.textSub }) {
+function MetaTile({ label, value, accent, surface=C.bgMid, borderColor=C.border, bodyColor=C.text, labelColor=C.textSub }) {
   return (
     <div style={{ background:surface, borderRadius:10, padding:'11px 12px', border:`1px solid ${borderColor}` }}>
       <div style={{ fontSize:9, color:accent||labelColor, marginBottom:5, fontFamily:"'Barlow Condensed', sans-serif", letterSpacing:'0.07em' }}>
@@ -2887,7 +2856,6 @@ export const TOOLING_CATALOG = TOOLS;
 export const TOOLING_SUBSYSTEMS = SUBSYSTEMS;
 export const TOOLING_CONTEXTS = CONTEXTS;
 export const TOOLING_CATEGORIES = CATS;
-export const TOOLING_STATUTS = STATUTS;
 
 export default function App({
   embedded = false,
